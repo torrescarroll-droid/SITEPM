@@ -7,8 +7,10 @@ import {
   tasks,
 } from "@/lib/demo-data";
 import { Card, PageHeader, StatusPill } from "@/components/ui";
+import { checkSupabaseConnection } from "@/lib/supabase/server";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const supabaseStatus = await checkSupabaseConnection();
   const activeProjects = projects.filter((project) => project.status === "active");
   const overdueTasks = tasks.filter((task) => task.overdue);
   const recentField = fieldLogs.slice(0, 3);
@@ -20,6 +22,11 @@ export default function DashboardPage() {
         title="Good morning, Jordan."
         description="Three things require your attention on 184 Willow Ave."
       />
+      <p className="mb-6 text-sm text-stone-500">
+        {supabaseStatus.ok
+          ? "Supabase project reachable. Table data stays in the dashboard until Week 4 login."
+          : `Supabase not reachable: ${supabaseStatus.detail}`}
+      </p>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">

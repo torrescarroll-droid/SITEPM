@@ -42,3 +42,21 @@ Next
 
 Blocked
 - None
+
+Week 3 — Database
+
+Status: IN PROGRESS — ready for review
+
+Done
+- Core tables created in Supabase (companies, profiles, projects, tasks, field_logs)
+- Row Level Security enabled; no anon/public policies
+- Persistence verified in the Supabase Table Editor
+- App uses server-only Supabase client from .env.local
+- Connection check hits Auth health only (no table reads/writes)
+
+Next
+- Week 4: authentication and company-scoped RLS policies
+- Then load real project/task/field data in the app
+
+Blocked
+- None
