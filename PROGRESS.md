@@ -25,3 +25,20 @@ Next
 
 Blocked
 - None
+
+Week 2 — UI Shell
+
+Status: READY FOR REVIEW
+
+Done
+- Responsive app shell (desktop sidebar, phone bottom nav)
+- Dashboard, Projects, Project Detail, Ask SITEPM, Documents, Field, and Tasks screens with demo data
+- No Supabase, auth, AI, or uploads connected
+- App running locally for review
+
+Next
+- Review UI shell at phone and desktop widths
+- Then commit Week 2 when approved
+
+Blocked
+- None
