@@ -8,6 +8,9 @@ export default function Home() {
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-950">
           SITEPM
         </h1>
+        <p className="mt-4 text-xl font-semibold text-zinc-950">
+          SITEPM TEST CHANGE
+        </p>
         <p className="mt-4 text-lg leading-8 text-zinc-600">
           AI Operating Layer for Construction. Local development is running.
         </p>
