@@ -1,8 +1,7 @@
-import { notFound } from "next/navigation";
 import { FieldLogList, NewFieldLogForm } from "@/components/field-log";
 import { ProjectTabs } from "@/components/project-tabs";
 import { PageHeader } from "@/components/ui";
-import { getProject } from "@/lib/demo-data";
+import { getAuthorizedProject } from "@/lib/projects";
 
 export default async function ProjectFieldPage({
   params,
@@ -10,8 +9,7 @@ export default async function ProjectFieldPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const project = getProject(id);
-  if (!project) notFound();
+  const project = await getAuthorizedProject(id);
 
   return (
     <div>

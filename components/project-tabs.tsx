@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { projects } from "@/lib/demo-data";
 
 const tabs = [
   { slug: "", label: "Overview" },
@@ -16,9 +15,6 @@ export function ProjectTabs({
   projectId: string;
   active: "overview" | "ask" | "documents" | "field" | "tasks";
 }) {
-  const project = projects.find((item) => item.id === projectId);
-  if (!project) return null;
-
   return (
     <div className="-mx-1 mb-6 overflow-x-auto">
       <div className="flex min-w-max gap-1 px-1">

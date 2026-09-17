@@ -1,17 +1,31 @@
-import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import { getSupabaseEnv } from "@/lib/supabase/env";
 
-function getSupabaseEnv() {
-  const url = process.env.SUPABASE_URL;
-  const anonKey = process.env.SUPABASE_ANON_KEY;
-  return { url, anonKey };
-}
-
-export function createSupabaseServerClient() {
+export async function createSupabaseServerClient() {
   const { url, anonKey } = getSupabaseEnv();
   if (!url || !anonKey) {
     throw new Error("Missing SUPABASE_URL or SUPABASE_ANON_KEY");
   }
-  return createClient(url, anonKey);
+
+  const cookieStore = await cookies();
+
+  return createServerClient(url, anonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
+      },
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // Called from a Server Component where cookies cannot be set.
+        }
+      },
+    },
+  });
 }
 
 export async function checkSupabaseConnection() {

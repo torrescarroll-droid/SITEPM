@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { fieldLogs, getProject, tasks } from "@/lib/demo-data";
 import { ProjectTabs } from "@/components/project-tabs";
 import { Card, PageHeader, StatusPill } from "@/components/ui";
+import { formatProjectDate, getAuthorizedProject } from "@/lib/projects";
 
 export default async function ProjectOverviewPage({
   params,
@@ -10,15 +9,15 @@ export default async function ProjectOverviewPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const project = getProject(id);
-  if (!project) notFound();
-
-  const projectTasks = tasks.filter((task) => task.projectId === id);
-  const projectLogs = fieldLogs.filter((log) => log.projectId === id);
+  const project = await getAuthorizedProject(id);
 
   return (
     <div>
-      <PageHeader kicker="Project" title={project.name} description={project.address} />
+      <PageHeader
+        kicker="Project"
+        title={project.name}
+        description={project.address ?? undefined}
+      />
       <ProjectTabs projectId={id} active="overview" />
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
@@ -31,24 +30,34 @@ export default async function ProjectOverviewPage({
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-stone-500">Client</dt>
-              <dd className="mt-0.5 font-medium">{project.clientName}</dd>
+              <dd className="mt-0.5 font-medium">
+                {project.client_name ?? "—"}
+              </dd>
             </div>
             <div>
               <dt className="text-stone-500">Status</dt>
               <dd className="mt-0.5 font-medium">
-                {project.status === "on_hold" ? "On hold" : "Active"}
+                {project.status === "on_hold" ? "On hold" : project.status === "complete" ? "Complete" : "Active"}
               </dd>
             </div>
             <div>
               <dt className="text-stone-500">Start</dt>
-              <dd className="mt-0.5 font-medium">{project.startDate}</dd>
+              <dd className="mt-0.5 font-medium">
+                {formatProjectDate(project.start_date)}
+              </dd>
             </div>
             <div>
               <dt className="text-stone-500">Target completion</dt>
-              <dd className="mt-0.5 font-medium">{project.targetCompletionDate}</dd>
+              <dd className="mt-0.5 font-medium">
+                {formatProjectDate(project.target_completion_date)}
+              </dd>
             </div>
           </dl>
-          <p className="mt-4 text-sm leading-6 text-stone-700">{project.description}</p>
+          {project.description ? (
+            <p className="mt-4 text-sm leading-6 text-stone-700">
+              {project.description}
+            </p>
+          ) : null}
         </Card>
         <div className="space-y-4">
           <Card>
@@ -56,7 +65,7 @@ export default async function ProjectOverviewPage({
               Tasks
             </h2>
             <p className="mt-2 text-sm text-stone-600">
-              {projectTasks.length} on this job
+              Task records are not connected to Supabase yet.
             </p>
             <Link href={`/projects/${id}/tasks`} className="mt-2 inline-block text-sm font-medium">
               Open tasks
@@ -67,7 +76,7 @@ export default async function ProjectOverviewPage({
               Field logs
             </h2>
             <p className="mt-2 text-sm text-stone-600">
-              {projectLogs.length} recent entries
+              Field records are not connected to Supabase yet.
             </p>
             <Link href={`/projects/${id}/field`} className="mt-2 inline-block text-sm font-medium">
               Open field

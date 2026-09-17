@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { company } from "@/lib/demo-data";
+import { signOut } from "@/app/auth/actions";
 
 const desktopNav = [
   { href: "/", label: "Home" },
@@ -26,7 +26,17 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({
+  children,
+  userName,
+  companyName,
+  roleLabel,
+}: {
+  children: React.ReactNode;
+  userName: string;
+  companyName: string;
+  roleLabel: string;
+}) {
   const pathname = usePathname();
 
   return (
@@ -60,18 +70,36 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="border-t border-stone-200 px-5 py-4 text-sm">
-          <p className="font-medium">{company.userName}</p>
-          <p className="text-stone-500">{company.name}</p>
-          <p className="text-stone-500">{company.role}</p>
+          <p className="font-medium">{userName}</p>
+          <p className="text-stone-500">{companyName}</p>
+          <p className="text-stone-500 capitalize">{roleLabel}</p>
+          <form action={signOut} className="mt-3">
+            <button
+              type="submit"
+              className="text-sm font-medium text-stone-700 hover:text-stone-950"
+            >
+              Log out
+            </button>
+          </form>
         </div>
       </aside>
 
       <div className="md:pl-64">
-        <header className="sticky top-0 z-10 border-b border-stone-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden">
-          <p className="text-xs font-medium tracking-[0.18em] text-stone-500 uppercase">
-            SITEPM
-          </p>
-          <p className="text-sm text-stone-600">{company.name}</p>
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-stone-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden">
+          <div>
+            <p className="text-xs font-medium tracking-[0.18em] text-stone-500 uppercase">
+              SITEPM
+            </p>
+            <p className="text-sm text-stone-600">{companyName}</p>
+          </div>
+          <form action={signOut}>
+            <button
+              type="submit"
+              className="min-h-11 text-sm font-medium text-stone-700"
+            >
+              Log out
+            </button>
+          </form>
         </header>
         <main className="px-4 py-5 pb-28 md:px-8 md:py-8 md:pb-8">{children}</main>
       </div>
