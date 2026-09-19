@@ -3,19 +3,24 @@ import {
   briefingItems,
   fieldLogs,
   projectName,
-  tasks,
 } from "@/lib/demo-data";
 import { Card, PageHeader, StatusPill } from "@/components/ui";
 import { requireCompanyContext } from "@/lib/auth-context";
 import { formatProjectDate, listCompanyProjects } from "@/lib/projects";
+import { listCompanyTasks } from "@/lib/tasks";
+import { taskIsOverdue } from "@/lib/task-types";
 
 export default async function DashboardPage() {
   const { profile } = await requireCompanyContext();
   const liveProjects = await listCompanyProjects();
+  const liveTasks = await listCompanyTasks();
+  const projectNames = Object.fromEntries(
+    liveProjects.map((project) => [project.id, project.name]),
+  );
   const activeProjects = liveProjects.filter(
     (project) => project.status === "active",
   );
-  const overdueTasks = tasks.filter((task) => task.overdue);
+  const overdueTasks = liveTasks.filter(taskIsOverdue);
   const recentField = fieldLogs.slice(0, 3);
   const firstName =
     profile?.full_name?.trim().split(/\s+/)[0] || "there";
@@ -61,17 +66,21 @@ export default async function DashboardPage() {
             <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
               Overdue tasks
             </h2>
-            <p className="mt-2 text-sm text-stone-500">Demo items — not live.</p>
-            <ul className="mt-3 space-y-3">
-              {overdueTasks.map((task) => (
-                <li key={task.id}>
-                  <p className="text-sm font-medium">{task.title}</p>
-                  <p className="text-sm text-stone-500">
-                    {projectName(task.projectId)} · due {task.dueDate}
-                  </p>
-                </li>
-              ))}
-            </ul>
+            {overdueTasks.length === 0 ? (
+              <p className="mt-2 text-sm text-stone-500">No overdue tasks.</p>
+            ) : (
+              <ul className="mt-3 space-y-3">
+                {overdueTasks.map((task) => (
+                  <li key={task.id}>
+                    <p className="text-sm font-medium">{task.title}</p>
+                    <p className="text-sm text-stone-500">
+                      {projectNames[task.project_id] ?? "Project"} · due{" "}
+                      {formatProjectDate(task.due_date)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
           </Card>
           <Card>
             <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">

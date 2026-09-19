@@ -242,3 +242,65 @@ Next
 
 Blocked
 - None for the Week 4 auth + project persistence checkpoint
+
+Week 5 — Project-scoped tasks
+
+Status: READY FOR REVIEW — do not commit until week5 SQL is applied in Supabase
+
+Done
+- Live tasks on project Tasks tab and global Follow-ups
+- Create, edit, mark done/reopen, delete UI (delete needs Week 5 GRANT)
+- Dashboard overdue tasks from Supabase (done tasks are not overdue)
+- Project overview open-task count from live tasks
+- App authorizes via profile company + project membership; company_id not taken from the client as the boundary
+- sql/week5_task_rls.sql written: align company_id from parent project; SELECT/INSERT/UPDATE/DELETE require current_company_id() and matching project; no anon policies
+
+Schema
+- Existing public.tasks table used (no duplicate table)
+- No new columns (no updated_at; completed_at used for done)
+
+RLS
+- Week 4 already had authenticated company_id policies for select/insert/update
+- Week 5 SQL tightens WITH CHECK to the parent project and adds DELETE — file is in the repo, not yet executed in the Supabase SQL editor
+
+Persistence tests (Company A Isolation, project 184 Maple Isolation Job)
+- Created “Confirm isolation panel follow-up” (id 3e45b9ad-ae72-4b38-8832-b450ec420b6b)
+- Reload: task remained
+- Edited title to “…(edited)”: persisted
+- Mark done: persisted (status done, Reopen shown)
+- Logout / login: edited done task still on Follow-ups
+
+Isolation tests (Company B Isolation)
+- Global Tasks: No tasks yet (Company A task not listed)
+- Direct Company A project tasks URL: 404
+- Create form as B has no Company A project (no jobs)
+- App createTask rejects unauthorized project_id (“not available to your company”)
+- Direct update/delete as B not exposed in UI (no task row / 404)
+
+Dashboard
+- Overdue tasks live; after marking A’s task done, Home showed “No overdue tasks.”
+- AI briefing and field activity still demo
+
+Validation
+- npx tsc --noEmit passed
+- npx eslint . passed
+- npx next build passed
+
+Files
+- sql/week5_task_rls.sql
+- lib/tasks.ts, lib/task-types.ts, lib/task-actions.ts, lib/format-date.ts
+- components/task-list.tsx
+- app/(app)/tasks/page.tsx, app/(app)/projects/[id]/tasks/page.tsx
+- app/(app)/projects/[id]/page.tsx, app/(app)/page.tsx
+- lib/projects.ts (findAuthorizedProject)
+
+Remaining demo
+- Ask SITEPM, Documents, Field, AI briefing
+
+Next recommended task
+- Run sql/week5_task_rls.sql in the Supabase SQL editor, then re-test Delete and a forged insert against another company’s project_id at the database
+- Then Field logs (same pattern as tasks), not Documents/Ask yet
+
+Blocked
+- Week 5 SQL not applied in the hosted Supabase project from this session (no service-role / SQL runner)
+- Do not commit until that SQL is applied if DELETE + project-bound WITH CHECK should be in the same checkpoint

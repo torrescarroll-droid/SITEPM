@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ProjectTabs } from "@/components/project-tabs";
 import { Card, PageHeader, StatusPill } from "@/components/ui";
 import { formatProjectDate, getAuthorizedProject } from "@/lib/projects";
+import { listProjectTasks } from "@/lib/tasks";
 
 export default async function ProjectOverviewPage({
   params,
@@ -10,6 +11,8 @@ export default async function ProjectOverviewPage({
 }) {
   const { id } = await params;
   const project = await getAuthorizedProject(id);
+  const projectTasks = await listProjectTasks(id);
+  const openTaskCount = projectTasks.filter((task) => task.status !== "done").length;
 
   return (
     <div>
@@ -65,7 +68,9 @@ export default async function ProjectOverviewPage({
               Tasks
             </h2>
             <p className="mt-2 text-sm text-stone-600">
-              Task records are not connected to Supabase yet.
+              {openTaskCount === 0
+                ? "No open tasks on this job."
+                : `${openTaskCount} open task${openTaskCount === 1 ? "" : "s"} on this job.`}
             </p>
             <Link href={`/projects/${id}/tasks`} className="mt-2 inline-block text-sm font-medium">
               Open tasks

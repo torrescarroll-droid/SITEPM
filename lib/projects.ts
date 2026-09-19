@@ -38,16 +38,7 @@ function mapProject(row: {
   };
 }
 
-export function formatProjectDate(value: string | null) {
-  if (!value) return "—";
-  const date = new Date(`${value}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
+export { formatProjectDate } from "@/lib/format-date";
 
 export async function listCompanyProjects() {
   const { supabase, profile } = await requireCompanyContext();
@@ -69,10 +60,10 @@ export async function listCompanyProjects() {
   return (data ?? []).map(mapProject);
 }
 
-export async function getAuthorizedProject(id: string) {
+export async function findAuthorizedProject(id: string) {
   const { supabase, profile } = await requireCompanyContext();
   if (!profile?.company_id) {
-    notFound();
+    return null;
   }
   const { data, error } = await supabase
     .from("projects")
@@ -84,8 +75,16 @@ export async function getAuthorizedProject(id: string) {
     .maybeSingle();
 
   if (error || !data) {
-    notFound();
+    return null;
   }
 
   return mapProject(data);
+}
+
+export async function getAuthorizedProject(id: string) {
+  const project = await findAuthorizedProject(id);
+  if (!project) {
+    notFound();
+  }
+  return project;
 }
