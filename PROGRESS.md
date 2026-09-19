@@ -304,3 +304,29 @@ Next recommended task
 Blocked
 - Week 5 SQL not applied in the hosted Supabase project from this session (no service-role / SQL runner)
 - Do not commit until that SQL is applied if DELETE + project-bound WITH CHECK should be in the same checkpoint
+
+Security checkpoint — Saturday, Sep 19, 2026
+
+Status: Week 4 security gate PASSED
+
+Done
+- Supabase authentication implemented
+- Cookie-based authenticated sessions implemented
+- Each signup creates its own company and owner profile
+- RLS is enabled and company-scoped
+- Company A/B tenant isolation was tested directly against Supabase using a live Company A task
+- Company B was unable to SELECT, UPDATE, or DELETE the known Company A task even with its exact UUID
+- Company B could not create a task against Company A’s project
+- Company A retained access; the temporary isolation task was cleaned up afterward
+- Live-row task id used in the final check: 8066a269-6004-4a43-9108-50deee7d0a33
+- After cleanup, Company A has no remaining isolation/probe tasks
+- Week 4 SQL (`sql/week4_auth_rls.sql`) and Week 3 SQL (`sql/week3_core_tables.sql`) are in the repository
+- Week 5 task RLS SQL (`sql/week5_task_rls.sql`) is applied in Supabase and tracked
+- No service-role key in tracked files; `.env.local` and `.next/` are gitignored
+
+Next
+- Continue SITEPM_BUILD_SPEC.md Week 5 (Projects end-to-end): project edit, close, and reopen, then live field logs on the same company/project RLS pattern
+- Do not start Week 6 Documents until that Week 5 remainder is done
+
+Blocked
+- None for the Week 4 security gate
