@@ -21,3 +21,7 @@ After completing any meaningful SITEPM milestone or build session, update `PROGR
 Never delete or overwrite previous progress entries. Append new entries chronologically.
 
 Do not commit or push `PROGRESS.md` automatically. Stop and let the user review the update first.
+
+## Long-term architecture
+
+SITEPM is construction data and operating infrastructure. Models are replaceable. Do not implement future product lines from `docs/PRODUCT_ARCHITECTURE.md` unless the current milestone calls for them. Preserve authentication, company-scoped RLS, and tenant isolation. See `.cursor/rules/sitepm-long-term-architecture.mdc`.

@@ -330,3 +330,21 @@ Next
 
 Blocked
 - None for the Week 4 security gate
+
+Architecture documentation pass — Saturday, Sep 19, 2026
+
+Status: DOCUMENTATION ONLY — no MVP behavior change, no Field Logs, not committed
+
+Done
+- Documented SITEPM as construction data + operating infrastructure; AI models are not the moat
+- Recorded current wedge: Projects → Tasks → Field Logs → Documents → Ask SITEPM
+- Documented future product family, Construction Graph (conceptual Postgres), ingest pipeline, provenance, privacy classes A–D, agent/API, and flywheel
+- Created `docs/PRODUCT_ARCHITECTURE.md`, `docs/DATA_INGESTION_ARCHITECTURE.md`, `docs/DATA_SOURCE_REGISTRY.md`
+- Added `.cursor/rules/sitepm-long-term-architecture.mdc` and a short pointer in `AGENTS.md`
+
+Next
+- After review of these docs: implement Field Logs on the existing `field_logs` table and company/project RLS (SITEPM_BUILD_SPEC.md Week 5 remainder / next product milestone)
+- Do not ingest external datasets until registry entries are license-reviewed
+
+Blocked
+- None for this documentation pass. External source reuse remains RESEARCH REQUIRED.
