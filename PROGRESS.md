@@ -419,3 +419,97 @@ Next
 
 Blocked
 - None for the Field Logs checkpoint
+
+Week 6 Documents — Saturday, Sep 19, 2026
+
+Status: APP + SQL WRITTEN — not applied to hosted Supabase. Isolation not run. Not committed.
+
+Done
+- Added `sql/week6_documents.sql`: `documents` table, parent-project company alignment, staged `pending`/`ready`/`failed` status, private `project-documents` bucket, table RLS, Storage SELECT/INSERT only
+- No authenticated DELETE on documents or Storage; no Storage UPDATE
+- App: company and project Documents pages, PDF upload, list ready rows only, 60s signed open
+- Failed Storage upload marks the row `failed` (not listed/openable); success requires `ready`
+- Next.js `serverActions.bodySizeLimit` set to 21mb for 20 MiB PDFs
+
+Next
+- Apply `sql/week6_documents.sql` in the Supabase SQL editor
+- Then Company A/B isolation including Storage object and signed-URL denial
+- Do not start Ask SITEPM
+
+Blocked
+- Hosted table/bucket/RLS not live until the SQL is applied. Do not claim Storage isolation until that gate and A/B tests pass.
+
+Week 6 Documents isolation — Saturday, Sep 19, 2026
+
+Status: SQL APPLIED — table RLS isolation passed; Storage owner upload FAILED (403 policy). Isolation NOT fully accepted. Not committed.
+
+Done
+- Authenticated A/B tests used user JWTs + anon key. No service-role. DELETE/Storage UPDATE not granted.
+- `documents` table is live: A can SELECT/INSERT pending; INSERT `status=ready` is `42501`
+- Company B cannot SELECT A metadata by id, list A docs, SELECT A project, or INSERT onto A `project_id` (`42501`)
+- B DELETE row: `42501` permission denied; B Storage remove returned 0 objects
+- Anon SELECT documents: `42501`
+- Failed-state: pending/failed excluded from ready list; failed→ready blocked (`Failed documents cannot change status`)
+- Company A Storage upload to own path was **rejected** (`AccessDenied` / row-level security). No object was stored. Signed URL for A failed (`NoSuchKey`)
+- B Storage download/signed-URL failures were `NoSuchKey` because the object does not exist — not a complete Storage ACL proof
+- Typecheck, ESLint, `next build` re-run after tests
+
+Cleanup required in Supabase (no authenticated DELETE):
+- documents `68362d9e-1ec4-4d52-9d94-46a669417d7d` status ready, path `b3899021-1203-47b7-8475-4c525bf9d4af/3fb9aa08-44ae-49bb-80f3-2809b8cb5f4f/68362d9e-1ec4-4d52-9d94-46a669417d7d/SITEPM isolation contract.pdf` (no Storage object)
+- documents `4451f64d-ec5f-4fb0-b307-97ec87fa174b` status failed, path `b3899021-1203-47b7-8475-4c525bf9d4af/3fb9aa08-44ae-49bb-80f3-2809b8cb5f4f/4451f64d-ec5f-4fb0-b307-97ec87fa174b/SITEPM isolation contract.pdf` (no Storage object)
+
+Next
+- Diagnose why `storage.objects` INSERT WITH CHECK rejects the owner’s own `{company}/{project}/{document}/{file}.pdf` path
+- Do not loosen policies for B; fix owner-write if `current_company_id()` / `projects` visibility is broken inside Storage RLS
+- Re-run Storage upload, signed URL, and B object-denial tests after that
+- Do not start Ask SITEPM
+
+Blocked
+- Company A cannot store a PDF until Storage INSERT works for the owner
+
+Week 6 Documents Storage isolation (after RLS fix) — Saturday, Sep 19, 2026
+
+Status: A succeeds at database + Storage. B denied at database (`42501`) and Storage (403 write / 404 hidden read). Not committed.
+
+Done
+- Applied `sql/week6_storage_rls_fix.sql` (user). Re-ran user-JWT isolation; no service-role; no DELETE/UPDATE grants
+- A pending insert → Storage upload → ready; A listed ready row; A 60s signed URL retrieved the PDF (HTTP 200)
+- B cannot SELECT/list A metadata; cannot SELECT A project; forged INSERT `42501`; mix company B prefix + A project Storage `403`; mix metadata `42501`
+- B Storage upload into A namespace `403`; overwrite `403`; row DELETE `42501`; Storage remove 0 objects
+- B download/signed URL for A object: `NoSuchKey` 404 (object exists for A signed fetch)
+- Anon documents SELECT `42501`; anon Storage `NoSuchKey`
+- Failed/pending not listed as ready; failed→ready blocked `P0001`
+- Typecheck, ESLint, `next build` pass; Projects/Tasks/Field Logs SQL/app files untouched
+
+Cleanup (owner SQL/Storage UI):
+- ready document + object `a14f5611-01f0-43e3-9df0-f0f61dd4c82e` path `b3899021-1203-47b7-8475-4c525bf9d4af/3fb9aa08-44ae-49bb-80f3-2809b8cb5f4f/a14f5611-01f0-43e3-9df0-f0f61dd4c82e/SITEPM isolation contract.pdf`
+- failed metadata only `77efa0a9-68d9-45ec-9a7b-007088431a1a` path `…/77efa0a9-68d9-45ec-9a7b-007088431a1a/SITEPM isolation contract.pdf` (no object)
+
+Next
+- Review Documents milestone and commit if accepted
+- Do not start Ask SITEPM
+
+Blocked
+- None for Storage owner upload. Bucket list API is not exposed to authenticated users (GET `/storage/v1/bucket` empty); privacy is evidenced by signed-URL-only reads.
+
+Week 6 Documents — final checkpoint — Saturday, Sep 19, 2026
+
+Status: ACCEPTED — database + Storage tenant isolation passed. Canonical SQL is `sql/week6_documents.sql`.
+
+Done
+- Company A can insert pending metadata, upload into private `project-documents`, and move pending → ready
+- Company A can list ready documents and open them via a 60s signed URL (user JWT; no service-role)
+- Company B cannot read A metadata, access A project Documents, upload/read/sign A objects, mix B company prefix with A project id, or forge A metadata (`42501` / Storage `403` write / `404` hidden read)
+- Storage overwrite/update denied; authenticated document and Storage DELETE denied; anonymous metadata/Storage denied
+- Pending/failed are not listed or opened as ready; failed is terminal (`P0001`)
+- `project_document_object_allowed()` uses `auth.uid()` + `current_company_id()`; Storage SELECT/INSERT only; no UPDATE/DELETE policies
+- Test artifacts cleaned by the database/Storage owner
+- Removed temporary `sql/week6_storage_rls_fix.sql` and `sql/week6_storage_rls_diagnose.sql`; their accepted Storage helper/policies live in `sql/week6_documents.sql`
+- Projects, Tasks, and Field Logs were not changed; Ask SITEPM was not started
+
+Next
+- Do not start Ask SITEPM
+- Do not begin architecture expansion
+
+Blocked
+- None
