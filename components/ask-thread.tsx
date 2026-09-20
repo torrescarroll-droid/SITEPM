@@ -1,58 +1,63 @@
-import { askDemo, projectName } from "@/lib/demo-data";
-import { Card, DemoNote } from "@/components/ui";
+"use client";
 
-export function AskThread({ projectId }: { projectId?: string }) {
-  const scopedId = projectId ?? askDemo.projectId;
+import { useActionState } from "react";
+import { Card, DemoNote } from "@/components/ui";
+import { submitProjectAsk } from "@/lib/ask-actions";
+import type { AskStage1State } from "@/lib/ask-types";
+
+const initialState: AskStage1State = { error: null, notice: null };
+
+export function AskProjectForm({
+  projectId,
+  projectName,
+}: {
+  projectId: string;
+  projectName: string;
+}) {
+  const [state, action, pending] = useActionState(submitProjectAsk, initialState);
 
   return (
-    <div className="space-y-4">
-      <DemoNote>
-        Demo conversation only. Questions are scoped to {projectName(scopedId)}.
-        No AI service is connected.
-      </DemoNote>
-      <div className="space-y-3">
-        {askDemo.messages.map((message, index) => (
-          <Card
-            key={index}
-            className={message.role === "user" ? "bg-stone-50" : ""}
-          >
-            <p className="text-xs font-medium tracking-[0.12em] text-stone-500 uppercase">
-              {message.role === "user" ? "You" : "SITEPM"}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-stone-800 md:text-base">
-              {message.text}
-            </p>
-            {message.role === "sitepm" ? (
-              <p className="mt-3 text-sm text-stone-500">
-                {message.source
-                  ? `Source: ${message.source}`
-                  : "No source found in uploaded project documents."}
-              </p>
-            ) : null}
-          </Card>
-        ))}
+    <Card>
+      <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+        Ask this job
+      </h2>
+      <p className="mt-2 text-sm text-stone-600">
+        Questions stay on {projectName}. SITEPM Intelligence will use this
+        project&apos;s records only — not a generic chatbot and not other jobs.
+      </p>
+      <div className="mt-3">
+        <DemoNote>
+          Intelligence is not connected yet. Your question is not sent to a
+          model. No answer is invented.
+        </DemoNote>
       </div>
-      <form className="rounded-2xl border border-stone-200 bg-white p-3">
-        <label className="sr-only" htmlFor="ask-input">
-          Ask a project question
+      <form action={action} className="mt-4 space-y-3">
+        <input type="hidden" name="project_id" value={projectId} />
+        <label className="block text-sm font-medium" htmlFor="ask-question">
+          Question
+          <textarea
+            id="ask-question"
+            name="question"
+            required
+            rows={4}
+            placeholder="Ask about this project…"
+            className="mt-1 min-h-24 w-full resize-y rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm"
+          />
         </label>
-        <textarea
-          id="ask-input"
-          rows={3}
-          disabled
-          placeholder="Ask about this project…"
-          className="w-full resize-none bg-transparent text-sm text-stone-800 outline-none"
-        />
-        <div className="mt-2 flex justify-end">
-          <button
-            type="button"
-            disabled
-            className="min-h-11 rounded-xl bg-stone-900 px-4 text-sm font-medium text-white opacity-60"
-          >
-            Ask SITEPM
-          </button>
-        </div>
+        {state.error ? (
+          <p className="text-sm text-orange-800">{state.error}</p>
+        ) : null}
+        {state.notice ? (
+          <p className="text-sm text-stone-800">{state.notice}</p>
+        ) : null}
+        <button
+          type="submit"
+          disabled={pending}
+          className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60"
+        >
+          {pending ? "Checking…" : "Ask SITEPM"}
+        </button>
       </form>
-    </div>
+    </Card>
   );
 }

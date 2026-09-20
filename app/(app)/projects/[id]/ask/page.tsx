@@ -1,4 +1,4 @@
-import { AskThread } from "@/components/ask-thread";
+import { AskProjectForm } from "@/components/ask-thread";
 import { ProjectTabs } from "@/components/project-tabs";
 import { PageHeader } from "@/components/ui";
 import { getAuthorizedProject } from "@/lib/projects";
@@ -13,9 +13,13 @@ export default async function ProjectAskPage({
 
   return (
     <div>
-      <PageHeader kicker="Ask SITEPM" title={project.name} />
-      <ProjectTabs projectId={id} active="ask" />
-      <AskThread projectId={id} />
+      <PageHeader
+        kicker="Ask SITEPM"
+        title={project.name}
+        description="This Ask session is limited to this job's records. Other company projects are not included."
+      />
+      <ProjectTabs projectId={project.id} active="ask" />
+      <AskProjectForm projectId={project.id} projectName={project.name} />
     </div>
   );
 }

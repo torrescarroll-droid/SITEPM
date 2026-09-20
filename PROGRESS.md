@@ -548,3 +548,21 @@ Next
 Blocked
 - None
 
+Ask SITEPM V1 Stage 1 — Saturday, Sep 19, 2026
+
+Status: Stage 1 foundation implemented. Ask SITEPM V1 is NOT complete. No AI provider.
+
+Done
+- Replaced demo Ask with authenticated, project-authorized `/projects/[id]/ask` and a company project picker at `/ask`
+- Ask form authorizes the project server-side before any future retrieval/model step; Stage 1 returns a connection notice only (no simulated answers)
+- Project-scoped retrieval invariant helpers added for Stage 2 (on top of existing company RLS; RLS unchanged)
+
+Next
+- Stage 2: structured Project/Task/Field Log retrieval for the authorized project only
+- Stage 3: replaceable model + evidence/provenance
+- Stage 4: PDF intelligence
+- Do not mark Ask SITEPM V1 complete
+
+Blocked
+- None for Stage 1
+

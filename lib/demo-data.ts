@@ -216,35 +216,3 @@ export const documents = [
     createdAt: "Aug 2, 2026",
   },
 ];
-
-export const askDemo = {
-  projectId: "willow-ave",
-  messages: [
-    {
-      role: "user" as const,
-      text: "What does the contract say about change orders?",
-    },
-    {
-      role: "sitepm" as const,
-      text: "The contract requires written approval before additional work is treated as an approved change order.",
-      source: "Construction Contract.pdf — Section 8",
-    },
-    {
-      role: "user" as const,
-      text: "What allowance did we carry for landscape lighting?",
-    },
-    {
-      role: "sitepm" as const,
-      text: "I could not find that requirement in the uploaded project documents.",
-      source: null,
-    },
-  ],
-};
-
-export function getProject(id: string) {
-  return projects.find((project) => project.id === id);
-}
-
-export function projectName(id: string) {
-  return getProject(id)?.name ?? "Unknown project";
-}
