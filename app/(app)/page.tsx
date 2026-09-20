@@ -1,11 +1,8 @@
 import Link from "next/link";
-import {
-  briefingItems,
-  fieldLogs,
-  projectName,
-} from "@/lib/demo-data";
+import { briefingItems } from "@/lib/demo-data";
 import { Card, PageHeader, StatusPill } from "@/components/ui";
 import { requireCompanyContext } from "@/lib/auth-context";
+import { listRecentCompanyFieldLogs } from "@/lib/field-logs";
 import { formatProjectDate, listCompanyProjects } from "@/lib/projects";
 import { listCompanyTasks } from "@/lib/tasks";
 import { taskIsOverdue } from "@/lib/task-types";
@@ -14,6 +11,7 @@ export default async function DashboardPage() {
   const { profile } = await requireCompanyContext();
   const liveProjects = await listCompanyProjects();
   const liveTasks = await listCompanyTasks();
+  const recentField = await listRecentCompanyFieldLogs(3);
   const projectNames = Object.fromEntries(
     liveProjects.map((project) => [project.id, project.name]),
   );
@@ -21,7 +19,6 @@ export default async function DashboardPage() {
     (project) => project.status === "active",
   );
   const overdueTasks = liveTasks.filter(taskIsOverdue);
-  const recentField = fieldLogs.slice(0, 3);
   const firstName =
     profile?.full_name?.trim().split(/\s+/)[0] || "there";
 
@@ -86,20 +83,24 @@ export default async function DashboardPage() {
             <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
               Recent field activity
             </h2>
-            <p className="mt-2 text-sm text-stone-500">Demo items — not live.</p>
-            <ul className="mt-3 space-y-3">
-              {recentField.map((log) => (
-                <li key={log.id}>
-                  <p className="text-sm font-medium">
-                    {projectName(log.projectId)}
-                    {log.issueFlag ? " · Issue flagged" : ""}
-                  </p>
-                  <p className="text-sm text-stone-500">
-                    {log.logDate} · {log.createdBy}
-                  </p>
-                </li>
-              ))}
-            </ul>
+            {recentField.length === 0 ? (
+              <p className="mt-2 text-sm text-stone-500">No field logs yet.</p>
+            ) : (
+              <ul className="mt-3 space-y-3">
+                {recentField.map((log) => (
+                  <li key={log.id}>
+                    <p className="text-sm font-medium">
+                      {projectNames[log.project_id] ?? "Project"}
+                      {log.issue_flag ? " · Issue flagged" : ""}
+                    </p>
+                    <p className="text-sm text-stone-500">
+                      {formatProjectDate(log.log_date)}
+                      {log.created_by_name ? ` · ${log.created_by_name}` : ""}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
           </Card>
         </div>
       </div>

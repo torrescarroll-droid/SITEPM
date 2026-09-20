@@ -348,3 +348,74 @@ Next
 
 Blocked
 - None for this documentation pass. External source reuse remains RESEARCH REQUIRED.
+
+Field Logs implementation — Saturday, Sep 19, 2026
+
+Status: APP IMPLEMENTED — not committed. Company/project RLS SQL written but NOT applied. Tenant isolation acceptance is blocked until SQL is approved and run.
+
+Done
+- Live Field Logs on existing `field_logs` columns: `project_id`, `company_id` (server profile, not browser), `log_date`, `notes`, `issue_flag`, `created_by`
+- Company Field page and project Field tab: create form + newest-first list, empty states
+- Dashboard “Recent field activity” uses live company logs (AI briefing remains demo)
+- App create path authorizes the project server-side via `findAuthorizedProject`
+- Added `sql/week5_field_log_rls.sql`: align `company_id` from parent project; SELECT/INSERT/UPDATE require company match AND parent project in the same company
+- Edit/delete not implemented: spec Field workflow is create-focused; Week 4 grants UPDATE but not DELETE; no DELETE policy added
+- Photos/voice/AI not implemented (`photos` table is not in Week 3 schema)
+- Typecheck (`tsc --noEmit`), ESLint, and `next build` passed
+- No automated test suite in the repo
+- Isolation A–G not run (waiting on SQL apply)
+
+Next
+- Apply `sql/week5_field_log_rls.sql` in the Supabase SQL editor, then run Company A/B field-log isolation (create persist, B cannot SELECT by id or list, B cannot open A project Field route, forged B insert on A `project_id` returns 42501, cleanup)
+- Do not start Documents or Ask SITEPM until that gate passes
+
+Blocked
+- Field log parent-project RLS is not live until `sql/week5_field_log_rls.sql` is applied. Current hosted policies are still Week 4 company-id-only for `field_logs`.
+
+Field Logs RLS gate + isolation — Saturday, Sep 19, 2026
+
+Status: APP + RLS APPLIED — isolation A–E passed at the database. Not committed.
+
+Done
+- Confirmed `sql/week5_field_log_rls.sql` was applied in Supabase (restored the file in the repo after it had been missing from disk)
+- Direct authenticated Supabase-js tests (anon key + Company A/B user JWTs; no service-role; not app form validation)
+- A. Company A inserted a field log on `184 Maple Isolation Job` (`3fb9aa08-44ae-49bb-80f3-2809b8cb5f4f`) and it persisted as `26c75b7b-3929-4f01-89bc-9fbadc99b946`
+- B. Company B SELECT of that exact id returned no row and no error (RLS filter)
+- C. Company B field_logs list count 0; did not include the Company A log
+- D. Company B SELECT of Company A project id returned no row; `/projects/[id]/field` uses `getAuthorizedProject` → `notFound()`
+- E. Company B INSERT with Company B `company_id` + Company A `project_id` rejected by Postgres RLS: code `42501`, message `new row violates row-level security policy for table "field_logs"`
+- F. App has no edit/delete. Extra DB check: Company B UPDATE of the Company A log returned 0 rows; Company B DELETE returned `42501` permission denied for table `field_logs` (DELETE is not granted)
+- A still saw the unmodified probe notes after B’s probes
+- Typecheck (`tsc --noEmit`) pass; ESLint pass; `next build` pass
+- No test suite in the repo
+- No service-role in tracked files; `.env.local` gitignored; isolation script not tracked
+
+Cleanup
+- Authenticated DELETE of the probe log failed with `42501` permission denied (no DELETE grant, by design)
+- Temporary Company A field log still present: `26c75b7b-3929-4f01-89bc-9fbadc99b946`
+- Company B has 0 matching probe rows
+- Delete that row in the Supabase Table Editor / SQL editor as the table owner. Do not grant DELETE to `authenticated` just for cleanup unless a later reviewed change adds field-log delete
+
+Next
+- Review this Field Logs slice, then commit if accepted
+- Do not start Documents or Ask SITEPM until that review
+
+Blocked
+- Owner-side delete of probe log `26c75b7b-3929-4f01-89bc-9fbadc99b946` (no authenticated DELETE privilege)
+
+Field Logs checkpoint — Saturday, Sep 19, 2026
+
+Status: ACCEPTED for commit — A–E passed; probe log removed by table owner; DELETE privilege unchanged
+
+Done
+- Remaining Company A acceptance-test field log `26c75b7b-3929-4f01-89bc-9fbadc99b946` was deleted in the Supabase SQL Editor
+- Authenticated DELETE is still not granted; field-log delete is not part of this MVP
+- Isolation A–E stand: persist, B cannot SELECT by id, B cannot list, B cannot load A’s project Field route, forged B insert on A `project_id` is Postgres `42501`
+- Diff is Field Logs app + `sql/week5_field_log_rls.sql` + append-only PROGRESS.md; Documents and Ask SITEPM remain demo
+
+Next
+- Push this Field Logs commit when asked
+- Then Documents (not started)
+
+Blocked
+- None for the Field Logs checkpoint
