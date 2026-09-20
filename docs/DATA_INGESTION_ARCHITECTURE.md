@@ -106,6 +106,7 @@ Entity resolution links “184 Maple Isolation Job”, an address string, and a 
 Every structured fact should retain:
 
 ```
+SOURCE → FACT → DERIVATION → PRESENTATION
 FACT
   → derived_from → EVIDENCE
   → originated_from → SOURCE
@@ -125,18 +126,22 @@ Record at minimum:
 
 SITEPM Intelligence must not present inference as documented fact, or Construction Knowledge as Project Knowledge.
 
-## 8. Field ingestion model (future)
+## 8. Field-to-Office Pipeline (future)
+
+Canonical concept: **Field-to-Office**. Do not make the field report to the software. Let the field talk about the work.
 
 ```
-voice | text | photo | video | document | form | sensor
-  → evidence (original language retained)
-  → extraction / optional bilingual interpretation
-  → structured issue or field event
-  → project / task / location / material links
-  → historical memory
+voice | text | photo | video | measurement | email | document | form | sensor
+  → preserve source (original language / audio)
+  → interpret construction meaning
+  → candidate structured facts (distinct from inference)
+  → professionalize human-readable outputs
+  → identify consequences / propose authorized actions
+  → update canonical project state
+  → historical / company knowledge (Class B)
 ```
 
-The live Field Logs feature stays small. This pipeline is the target shape, not the next Field PR.
+Capture once; reuse across Field Logs, Tasks, schedule, procurement, and later Property. Two-way: Field → Project and Project + Construction Knowledge → Field. The live Field Logs feature stays small. This pipeline is the target shape, not the next Field PR and not Ask Stage 3.
 
 ## 9. Ingest API (future)
 
@@ -162,4 +167,4 @@ Sensitive writes (costs, contracts, external messages) keep human approval from 
 - No pooling of Class B data
 - No assuming public web pages are licensed for training or product reuse
 - No collapsing California and other jurisdictions into one code blob
-- No Ask SITEPM implementation from this file
+- No Ask SITEPM Stage 3 (or later) from this file

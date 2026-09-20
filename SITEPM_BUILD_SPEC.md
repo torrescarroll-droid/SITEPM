@@ -6,7 +6,7 @@
 **Immediate Objective:** Build a secure, usable contractor MVP that can be used by Contractor #1 on a real project.  
 **Primary Milestone:** A contractor can log in from phone or computer, open a project, upload documents, add field information, ask project-specific questions, receive grounded answers, see tasks/follow-ups, and receive a useful AI briefing.
 
-**Accepted implementation (documentation pointer, not a scope change):** Projects, Tasks, Field Logs, and Documents are complete through their current milestones (`feat: add secure project documents`). Next implementation is Ask SITEPM / Intelligence V1 over that project information. Long-term Property, Construction, Regulatory, and bilingual architecture lives in `docs/PRODUCT_ARCHITECTURE.md` and is **not** V1 scope.
+**Accepted implementation (documentation pointer, not a scope change):** Projects, Tasks, Field Logs, Documents, and Ask SITEPM V1 **Stages 1–2** are complete (`021c690` evidence retrieval). **Ask Stage 3 has not started.** Long-term builder-first Digital Toolbag + Construction OS lives in `docs/PRODUCT_ARCHITECTURE.md` and is **not** V1 scope. Do not expand V1 from that file.
 
 ---
 
@@ -26,19 +26,25 @@ AI may prepare, analyze, summarize, flag, draft, and recommend. Humans must appr
 
 # 2. TARGET USER
 
-Initial customers:
+MVP Contractor #1 remains a residential contractor using SITEPM on a real project (often a small/midsize GC, design-build, or specialty firm with multiple jobs).
+
+**Architecture correction (does not expand V1):** solo builders and individual tradespeople are first-class potential **paying** customers, even if they never need traditional PM software. The ~$2M–$30M / small office-PM segment remains important; it is not exclusive. Contractor maturity levels (field worker → solo → crew → growing → established → organization) are product **depth**, not pricing and not separate products. See `docs/PRODUCT_ARCHITECTURE.md` §9. Architecture breadth is not MVP breadth. Pricing tiers are not determined here.
+
+Initial customers (MVP focus, not exclusive TAM):
 - Small and midsize residential general contractors
 - Design-build firms
 - Specialty contractors
-- Approximately $2M-$30M annual revenue
-- Multiple active projects
-- Small administrative/project-management teams
+- Solo builders and tradespeople (first-class buyers architecturally; V1 still ships the secure project foundation)
+- Approximately $2M-$30M annual revenue **or** a one-person construction business
+- Multiple active projects **or** a single-job tradesperson workflow
+- Small administrative/project-management teams **when they exist**
 
 Initial roles:
-- Contractor/owner
+- Contractor/owner (including one-person businesses)
 - Project manager
 - Superintendent
 - Foreman
+- Field / tradesperson
 
 ---
 
@@ -618,42 +624,53 @@ Do not add these simply because they appear elsewhere in SITEPM strategy materia
 
 # 18. LONG-TERM CONTEXT — FOR UNDERSTANDING ONLY
 
-Long-term vision:
+Canonical true north: `docs/PRODUCT_ARCHITECTURE.md` (Digital Toolbag over Construction OS).
 
-SITEPM Construction Intelligence Platform
-→ Contractor / Project Intelligence
+Long-term vision (not V1 permission):
+
+Builder-first Digital Toolbag
+→ AI Project Manager (job/coordination capability of the same system)
+→ Construction Operating System (structured state, evidence, permissions, workflows)
+→ Operations / Office / People / Business / Growth-Acquire / Property / Intelligence / Estimate
+→ Business + Property + Historical Intelligence
 → Living Property Record
 → Construction + Regulatory Knowledge (California-first, nationally expandable)
-→ English/Spanish construction field bridge
-→ SITEPM Field / Tool Belt
-→ SITEPM Acquire
-→ Construction Skill Graph
-→ Pocket Handyman
-→ Physical AI
+→ Language-independent construction intelligence (English-complete and Spanish-complete; translation beyond human language)
+→ Conversational estimating and estimate-vs-actual
+→ Voice/vehicle-first field interaction
+→ Field-to-Office Pipeline and two-way field intelligence
+→ Jobsite Copilot / field assistance (inform/calculate/retrieve — not authorize or replace licensed judgment)
+→ Contractor maturity / Construction Spectrum (one system; SITEPM scales with the builder)
+→ Communications/action layer (authorized)
+→ Controlled agent/API infrastructure
+→ SITEPM Acquire / Skill Graph / Pocket Handyman-class toolbag capabilities / Physical AI
 
-Canonical long-term architecture (knowledge classes, evidence/provenance, document intelligence, ingest, privacy classes): `docs/PRODUCT_ARCHITECTURE.md`, `docs/DATA_INGESTION_ARCHITECTURE.md`, `docs/DATA_SOURCE_REGISTRY.md`.
-
-This context exists so architecture decisions do not unnecessarily block future expansion. It is NOT permission to build these products during V1, create property tables, ingest external datasets, or start Ask SITEPM from an architecture pass.
+Pocket Handyman and SITEPM Field/Tool Belt are **not dropped**; they map into Digital Toolbag. This is NOT permission to build them in V1, create property tables, ingest external datasets, or start Ask Stage 3 from an architecture pass.
 
 ---
 
 # 19. DESIGN PHILOSOPHY
 
 SITEPM should feel:
-- Professional
+- Like a tool in the builder’s toolbag
+- Professional when the context requires it
 - Modern
 - Calm
-- Field-friendly
+- Field-friendly / vehicle-friendly
 - Construction-specific
 - Intelligent without feeling complicated
+- Approachable to a builder who dislikes computers
 
 Avoid:
 - Consumer gimmicks
 - Excessive animation
-- Dense enterprise UI
+- Dense enterprise UI as the only interface
 - AI novelty for its own sake
 - Too many dashboards
 - Unnecessary clicks
+- Forcing field users through office-PM navigation
+
+Design tests (long-term, not V1 gate): Field Test; Word Test; Truck Test; Solo Contractor Test; PM Test; Project-Management Test; Client Test; Translation Test; Growth Test; Scale Test; System Test; Truth Test; Moat Test — see `docs/PRODUCT_ARCHITECTURE.md` §37.
 
 The user should quickly understand:
 

@@ -1,24 +1,24 @@
 ---
-description: Durable SITEPM architecture — data/infrastructure moat, tenant isolation, no speculative implementation
+description: Durable SITEPM architecture — builder-first Digital Toolbag over Construction OS; tenant isolation; no speculative implementation
 alwaysApply: true
 ---
 
 # SITEPM long-term architecture
 
-SITEPM’s durable value is trusted construction data, history, permissions, provenance, APIs, and operational memory. AI models are replaceable. Future agents should operate SITEPM through identity, tenant/project scopes, audit, and human approval for sensitive actions.
+SITEPM is a **builder-first digital toolbag** backed by a **construction operating system**. Complexity belongs inside SITEPM, not on the builder’s desk. The builder provides construction intelligence; SITEPM provides digital leverage. Digital literacy is not a prerequisite for value. Language is one part of the Builder–Technology Gap, not the whole problem. Builder-first does **not** mean field-worker-only: SITEPM remains an AI project manager / construction OS for contractors; Toolbag and Field Intelligence extend it to where work originates. SITEPM scales with the builder, not away from the builder.
 
-Answers should distinguish documented fact, derived inference, general construction knowledge, regulatory citations, and uncertainty, and should cite evidence when practical.
+Models are replaceable. Durable value is trusted construction/business/property state, history, permissions, provenance, workflows, APIs, and operational memory produced from real work — not transcription or report generation. Future agents operate SITEPM through identity, tenant/project scopes, audit, and human approval for sensitive actions. AI interpretation is never authorization. SITEPM must not substitute for licensed professionals, qualified supervision, inspectors, or safety procedures.
 
-Knowledge classes are separate: Project, Property, Company, Construction, Regulatory. Language (including a future English/Spanish field bridge) is an overlay, not a source of truth. Regulatory knowledge stays edition- and jurisdiction-specific (California-first, nationally expandable).
+Answers should distinguish documented fact, derived inference, general construction knowledge, regulatory citations, and uncertainty, and should cite evidence when practical. Role-appropriate interfaces are presentations over the same authorized state (SOURCE → FACT → DERIVATION → PRESENTATION).
 
-The live MVP is the wedge. Current accepted sequence: Projects → Tasks → Field Logs → Documents → Ask SITEPM/Intelligence. Ask SITEPM V1 uses existing project records only. Do not expand scope to match future product surfaces (Property schema, document intelligence, construction/regulatory corpora, bilingual engines, Estimate, Service, robotics, ingest APIs) unless the current milestone in `SITEPM_BUILD_SPEC.md` and `PROGRESS.md` says so.
+Knowledge classes are separate: Project, Property, Company, Construction, Regulatory. Language is an overlay (work in your language; common construction meaning underneath) — not a source of truth. Translation may later include field ↔ PM, craft ↔ structured data, and client intent ↔ scope — not only Spanish ↔ English. Regulatory knowledge stays edition- and jurisdiction-specific (California-first, nationally expandable).
+
+Solo builders/tradespeople are first-class potential buyers. The 3–25 person / office-PM contractor remains an important MVP segment. Contractor maturity levels and Construction Spectrum are product-depth models, not pricing and not MVP. Voice/vehicle-first, Field-to-Office, two-way field intelligence, Jobsite Copilot, and Digital Toolbag capabilities are long-term UX, not current implementation.
+
+The live MVP is the wedge. Sequence: Projects → Tasks → Field Logs → Documents → Ask SITEPM/Intelligence. **Ask Stage 2 is complete. Ask Stage 3 has not started.** Architecture breadth is not MVP breadth. Do not expand scope to match future surfaces (Property schema, document intelligence, construction/regulatory corpora, bilingual engines, voice OS, Field-to-Office Pipeline, Jobsite Copilot, Estimate, communications, Service, robotics, ingest APIs) unless `SITEPM_BUILD_SPEC.md` and `PROGRESS.md` say so.
 
 Keep Postgres + company-scoped RLS. Do not introduce a graph database, weaken RLS, add service-role to the client, scrape external datasets, or pool tenant-private data. BIM/IFC may inform relationship design; do not turn SITEPM into BIM software or copy external schemas blindly.
 
-Architecture docs (not runtime):
-
-- `docs/PRODUCT_ARCHITECTURE.md`
-- `docs/DATA_INGESTION_ARCHITECTURE.md`
-- `docs/DATA_SOURCE_REGISTRY.md`
+Canonical product true north: `docs/PRODUCT_ARCHITECTURE.md`. Also: `docs/DATA_INGESTION_ARCHITECTURE.md`, `docs/DATA_SOURCE_REGISTRY.md`.
 
 External sources are not reusable until licensing is verified. Publicly viewable does not mean reusable.

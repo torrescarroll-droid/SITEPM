@@ -585,3 +585,37 @@ Next
 Blocked
 - None for Stage 2
 
+Builder-first / Digital Toolbag architecture refinement — Sunday, Sep 20, 2026
+
+Status: DOCUMENTATION ONLY. MVP scope not expanded. Ask Stage 2 remains complete. Ask Stage 3 has NOT started. Not committed.
+
+Done
+- Locked canonical product true north in `docs/PRODUCT_ARCHITECTURE.md`: builder-first Digital Toolbag over Construction Operating System; complexity inside SITEPM
+- Complementary true north: more capability for the person who builds, more leverage for the person who runs the job, more control for the person who runs the company — increasing depth of one system
+- SITEPM scales with the builder, not away from the builder; builder-first does not mean field-worker-only
+- Solo builders/tradespeople recorded as first-class potential paying buyers (distinct from users); 3–25 / office-PM GC remains an important MVP segment
+- Voice/vehicle-first interaction and Truck Test recorded as strategic UX, not implementation
+- Language-independent construction intelligence: work in your language; common authorized meaning underneath; English-complete and Spanish-complete
+- Translation beyond human language (field ↔ PM, craft ↔ structured data, client intent ↔ scope, etc.)
+- Conversational estimating/takeoff/pricing and estimate-vs-actual learning loop recorded as long-term Estimate domain
+- Digital Toolbag vs Construction OS two-layer model; canonical stack Toolbag → AI Project Manager → OS → Business/Property/Historical Intelligence → Agent/API
+- Original opportunity map preserved (not in MVP ≠ dropped)
+- Builder–Technology Gap: digital literacy is not a prerequisite; native-English low-computer-literacy builders are in the same class as Spanish-only builders; language is one part of a larger gap
+- Natural construction input pipeline; Field-to-Office Pipeline: field talks about the work; SITEPM builds the report and structured state (report is not the end product)
+- Two-way field intelligence (Field → Project and Project + Construction Knowledge → Field); Jobsite Copilot / field assistance with safety/escalation boundaries
+- Field knowledge extraction as moat: permissioned provenance-aware history, not transcription or report generation
+- SITEPM as workforce capability multiplier (does not replace builder knowledge)
+- Contractor maturity / product depth (levels 1–6, not pricing, not separate products); solo contractor as Toolbag ↔ AI PM bridge
+- Construction Spectrum; bidirectional knowledge bridge; same truth / different representations (SOURCE → FACT → DERIVATION → PRESENTATION)
+- Client / non-construction participant as future surface, not MVP
+- Internal “As Above, So Below” system-fractality principle (not customer-facing)
+- Full worker → project → company → property → agent/API span; architecture breadth ≠ MVP breadth
+- Current implementation sequence unchanged; no application/SQL/RLS/package changes
+
+Next
+- Ask SITEPM V1 Stage 3 only when separately authorized (model + provenance over Stage 2 evidence)
+- Do not implement Digital Toolbag runtime, voice OS, Field-to-Office Pipeline, Jobsite Copilot, estimating, or communications from this architecture pass
+
+Blocked
+- None for documentation. Pricing tiers, commercial name, and voice-provider choice remain unresolved.
+

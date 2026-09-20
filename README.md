@@ -15,6 +15,6 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Current phase
 
-Projects, Tasks, Field Logs, and Documents are accepted through their current milestones. Next product work is Ask SITEPM / Intelligence V1 over that project information — do not start it from an architecture pass.
+Projects, Tasks, Field Logs, Documents, and Ask SITEPM V1 Stages 1–2 (project-scoped evidence retrieval, no model) are accepted. **Ask Stage 3 has not started.**
 
-Long-term architecture (Property record, knowledge classes, provenance): `docs/PRODUCT_ARCHITECTURE.md`. MVP sequence and contractor scope: `SITEPM_BUILD_SPEC.md`.
+Canonical product architecture (Digital Toolbag + AI Project Manager + Construction OS; architecture breadth ≠ MVP): `docs/PRODUCT_ARCHITECTURE.md`. MVP sequence: `SITEPM_BUILD_SPEC.md`.
