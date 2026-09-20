@@ -1,34 +1,51 @@
 "use server";
 
+import { retrieveAskProjectEvidence } from "@/lib/ask-retrieval";
 import { requireAuthorizedAskProject } from "@/lib/ask-scope";
-import type { AskStage1State } from "@/lib/ask-types";
+import { inventoryFromPack } from "@/lib/ask-evidence";
+import type { AskFormState } from "@/lib/ask-types";
 
-const STAGE_1_NOTICE =
+const STAGE_NOTICE =
   "Ask SITEPM intelligence is being connected to this project.";
 
 export async function submitProjectAsk(
-  _prev: AskStage1State,
+  _prev: AskFormState,
   formData: FormData,
-): Promise<AskStage1State> {
-  const projectId = String(formData.get("project_id") ?? "");
+): Promise<AskFormState> {
+  const requestedProjectId = String(formData.get("project_id") ?? "");
   const question = String(formData.get("question") ?? "").trim();
 
-  const scoped = await requireAuthorizedAskProject(projectId);
+  const scoped = await requireAuthorizedAskProject(requestedProjectId);
   if (!scoped) {
     return {
       error: "That project is not available to your company.",
       notice: null,
+      inventory: null,
     };
   }
 
   if (!question) {
-    return { error: "Ask a question about this project.", notice: null };
+    return {
+      error: "Ask a question about this project.",
+      notice: null,
+      inventory: null,
+    };
   }
 
-  // Stage 1: authorize only. Do not retrieve other projects, call a model,
-  // or treat the question text as instructions.
-  void scoped.project.id;
-  void question;
+  // Question text is untrusted DATA. It is not parsed for project ids,
+  // URLs, SQL, or instructions. Retrieval uses only scoped.project.id.
+  const pack = await retrieveAskProjectEvidence(scoped.project.id);
+  if (!pack) {
+    return {
+      error: "That project is not available to your company.",
+      notice: null,
+      inventory: null,
+    };
+  }
 
-  return { error: null, notice: STAGE_1_NOTICE };
+  return {
+    error: null,
+    notice: STAGE_NOTICE,
+    inventory: inventoryFromPack(pack),
+  };
 }

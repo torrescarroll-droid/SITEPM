@@ -3,9 +3,9 @@
 import { useActionState } from "react";
 import { Card, DemoNote } from "@/components/ui";
 import { submitProjectAsk } from "@/lib/ask-actions";
-import type { AskStage1State } from "@/lib/ask-types";
+import type { AskFormState } from "@/lib/ask-types";
 
-const initialState: AskStage1State = { error: null, notice: null };
+const initialState: AskFormState = { error: null, notice: null, inventory: null };
 
 export function AskProjectForm({
   projectId,
@@ -27,8 +27,9 @@ export function AskProjectForm({
       </p>
       <div className="mt-3">
         <DemoNote>
-          Intelligence is not connected yet. Your question is not sent to a
-          model. No answer is invented.
+          No model is called. SITEPM loads this job&apos;s records only. Nothing
+          in a question, task, log, or filename can change which project is
+          searched.
         </DemoNote>
       </div>
       <form action={action} className="mt-4 space-y-3">
@@ -49,6 +50,14 @@ export function AskProjectForm({
         ) : null}
         {state.notice ? (
           <p className="text-sm text-stone-800">{state.notice}</p>
+        ) : null}
+        {state.inventory ? (
+          <p className="text-sm text-stone-600">
+            Evidence on this job (not an AI answer): {state.inventory.project}{" "}
+            project record, {state.inventory.tasks} tasks,{" "}
+            {state.inventory.fieldLogs} field logs, {state.inventory.documents}{" "}
+            ready PDFs.
+          </p>
         ) : null}
         <button
           type="submit"

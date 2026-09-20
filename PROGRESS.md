@@ -566,3 +566,22 @@ Next
 Blocked
 - None for Stage 1
 
+Ask SITEPM V1 Stage 2 — Saturday, Sep 19, 2026
+
+Status: Stage 2 deterministic project-scoped retrieval implemented. Ask SITEPM V1 is NOT complete. No AI provider.
+
+Done
+- Ask retrieves Project Knowledge for the authorized project only: project record, tasks, field logs, ready document metadata (no PDF bytes, no signed URLs, no `storage_path` in evidence)
+- Retrieval sequence: session → company → re-authorize project → user-scoped list helpers → assert project (and company) scope → normalize evidence → citation allowlist (`type:id`)
+- Same-company isolation is enforced in application logic on top of existing RLS (unchanged)
+- Stage 1 connection notice remains; UI shows evidence counts only, not generated answers
+- Stage 2 acceptance-test fixtures were removed by the database/Storage owner
+
+Next
+- Stage 3: replaceable model + epistemic answers + allowlist-validated citations
+- Stage 4: PDF intelligence
+- Do not mark Ask SITEPM V1 complete
+
+Blocked
+- None for Stage 2
+

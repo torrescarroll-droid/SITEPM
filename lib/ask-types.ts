@@ -34,7 +34,13 @@ export type AskCitation = {
   page?: number;
 };
 
-export type AskStage1State = {
+export type AskFormState = {
   error: string | null;
   notice: string | null;
+  inventory: {
+    project: number;
+    tasks: number;
+    fieldLogs: number;
+    documents: number;
+  } | null;
 };

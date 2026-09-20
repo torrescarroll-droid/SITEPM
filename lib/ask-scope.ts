@@ -55,6 +55,4 @@ export function assertAskRetrievalProjectScope(
   }
 }
 
-export function citationAllowlistIds(records: { id: string }[]) {
-  return new Set(records.map((record) => record.id));
-}
+export { citationKey, allowlistHas, validateProposedCitations } from "@/lib/ask-evidence";
