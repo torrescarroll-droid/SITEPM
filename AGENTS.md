@@ -24,4 +24,4 @@ Do not commit or push `PROGRESS.md` automatically. Stop and let the user review 
 
 ## Long-term architecture
 
-SITEPM is construction data and operating infrastructure. Models are replaceable. Do not implement future product lines from `docs/PRODUCT_ARCHITECTURE.md` unless the current milestone calls for them. Preserve authentication, company-scoped RLS, and tenant isolation. See `.cursor/rules/sitepm-long-term-architecture.mdc`.
+SITEPM is construction data and operating infrastructure. Models are replaceable. Do not implement future product lines from `docs/PRODUCT_ARCHITECTURE.md` (Property schema, document intelligence, construction/regulatory corpora, bilingual engines) unless the current milestone calls for them. Preserve authentication, company-scoped RLS, and tenant isolation. See `.cursor/rules/sitepm-long-term-architecture.mdc`.

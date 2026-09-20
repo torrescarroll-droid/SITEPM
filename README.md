@@ -15,6 +15,6 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Current phase
 
-Week 1: local app + GitHub backup. Do not connect Supabase or OpenAI yet.
+Projects, Tasks, Field Logs, and Documents are accepted through their current milestones. Next product work is Ask SITEPM / Intelligence V1 over that project information — do not start it from an architecture pass.
 
-See `SITEPM_BUILD_SPEC.md` for product scope and the 12-week sequence.
+Long-term architecture (Property record, knowledge classes, provenance): `docs/PRODUCT_ARCHITECTURE.md`. MVP sequence and contractor scope: `SITEPM_BUILD_SPEC.md`.

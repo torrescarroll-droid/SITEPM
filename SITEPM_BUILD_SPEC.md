@@ -6,6 +6,8 @@
 **Immediate Objective:** Build a secure, usable contractor MVP that can be used by Contractor #1 on a real project.  
 **Primary Milestone:** A contractor can log in from phone or computer, open a project, upload documents, add field information, ask project-specific questions, receive grounded answers, see tasks/follow-ups, and receive a useful AI briefing.
 
+**Accepted implementation (documentation pointer, not a scope change):** Projects, Tasks, Field Logs, and Documents are complete through their current milestones (`feat: add secure project documents`). Next implementation is Ask SITEPM / Intelligence V1 over that project information. Long-term Property, Construction, Regulatory, and bilingual architecture lives in `docs/PRODUCT_ARCHITECTURE.md` and is **not** V1 scope.
+
 ---
 
 # 1. PRODUCT PRINCIPLE
@@ -334,6 +336,8 @@ Tabs/sections:
 
 The AI layer must be project-grounded. Do not build a generic chatbot.
 
+Ask SITEPM V1 uses **Project Knowledge** already stored (projects, tasks, field logs, documents). It does not require a property graph, a general construction corpus, a jurisdiction/code corpus, or bilingual interpretation. Prefer citing project evidence; if information is missing, say so. Do not invent project facts from generic construction knowledge. Future knowledge classes are defined in `docs/PRODUCT_ARCHITECTURE.md`.
+
 Basic pipeline:
 
 Project documents / field logs / tasks / project data
@@ -439,6 +443,8 @@ Desktop can use sidebar navigation.
 ---
 
 # 15. 12-WEEK BUILD SEQUENCE
+
+Calendar below is the original V1 plan. **Status as of accepted Documents:** Weeks 1–6 product work for auth, Projects, Tasks, Field Logs (without photos), and Documents is done. **Do not rebuild those.** Next implementation is Week 7–8 (AI foundation + Ask SITEPM) over existing Project Knowledge. Week 9 remains field **photos**. Long-term Property / knowledge corpora are not on this calendar.
 
 ## WEEK 1 — DEVELOPMENT SETUP
 
@@ -616,13 +622,18 @@ Long-term vision:
 
 SITEPM Construction Intelligence Platform
 → Contractor / Project Intelligence
+→ Living Property Record
+→ Construction + Regulatory Knowledge (California-first, nationally expandable)
+→ English/Spanish construction field bridge
 → SITEPM Field / Tool Belt
 → SITEPM Acquire
 → Construction Skill Graph
 → Pocket Handyman
 → Physical AI
 
-This context exists so architecture decisions do not unnecessarily block future expansion. It is NOT permission to build these products during V1.
+Canonical long-term architecture (knowledge classes, evidence/provenance, document intelligence, ingest, privacy classes): `docs/PRODUCT_ARCHITECTURE.md`, `docs/DATA_INGESTION_ARCHITECTURE.md`, `docs/DATA_SOURCE_REGISTRY.md`.
+
+This context exists so architecture decisions do not unnecessarily block future expansion. It is NOT permission to build these products during V1, create property tables, ingest external datasets, or start Ask SITEPM from an architecture pass.
 
 ---
 

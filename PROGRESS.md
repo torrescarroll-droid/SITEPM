@@ -513,3 +513,38 @@ Next
 
 Blocked
 - None
+
+Post-Week-6 architecture expansion — Saturday, Sep 19, 2026
+
+Status: DOCUMENTATION ONLY — long-term architecture updated. No application, SQL, RLS, or package changes. Not committed.
+
+Done
+- Recorded living Property Record, document intelligence, Construction vs Regulatory knowledge, English/Spanish field bridge, evidence/provenance-first intelligence, Ask knowledge classes, and replaceable-model strategy in architecture docs
+- Distinguished current implemented state (Projects, Tasks, Field Logs, Documents), next MVP (Ask SITEPM V1 over Project Knowledge), long-term architecture, and future research/data acquisition
+- Did not acquire external datasets or claim code/standards licenses
+- Did not implement property schema, Ask SITEPM, or RLS changes
+
+Next
+- Recommended implementation milestone: Ask SITEPM / Intelligence V1 over existing secure project records (`SITEPM_BUILD_SPEC.md` Weeks 7–8)
+- Do not start Ask SITEPM until explicitly authorized
+- Do not begin Property schema or knowledge-corpus ingest
+
+Blocked
+- None for documentation. External source licensing remains RESEARCH REQUIRED.
+
+Architecture checkpoint — Saturday, Sep 19, 2026
+
+Status: ACCEPTED documentation checkpoint. Local commit only.
+
+Done
+- Reviewed documentation-only diff against `f3f612c` (`feat: add secure project documents`)
+- No application, SQL, RLS, dependency, or Ask SITEPM implementation changes
+- Long-term Property/knowledge architecture recorded; Ask SITEPM V1 remains project-grounded
+
+Next
+- Dedicated Ask SITEPM / Intelligence V1 design review before coding
+- Do not implement Ask SITEPM until that review authorizes it
+
+Blocked
+- None
+

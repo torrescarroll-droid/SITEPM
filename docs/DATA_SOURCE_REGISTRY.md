@@ -1,8 +1,10 @@
 # SITEPM Data Source Registry
 
-Status: registry of **candidate** sources. Validation status is `unverified` unless noted.
+Status: registry of **candidate** sources. Validation status is `unverified` unless noted. **No external dataset has been acquired in this pass. No code or standards reproduction rights have been established.**
 
-Publicly viewable does **not** mean reusable. Unknown licensing or access is marked **RESEARCH REQUIRED**. This pass did not scrape, bulk-download, or ingest any source.
+Publicly viewable does **not** mean reusable or authorized for training/ingestion. Unknown licensing or access is marked **RESEARCH REQUIRED**. This pass did not scrape, bulk-download, or ingest any source.
+
+Keep **Construction Knowledge** (trade/practice) and **Regulatory Knowledge** (jurisdiction + edition) as separate source classes even when a website publishes both.
 
 Related: `docs/PRODUCT_ARCHITECTURE.md`, `docs/DATA_INGESTION_ARCHITECTURE.md`.
 
@@ -21,7 +23,7 @@ Related: `docs/PRODUCT_ARCHITECTURE.md`, `docs/DATA_INGESTION_ARCHITECTURE.md`.
 - validation status
 - notes/restrictions
 
-Priority: `P0` near-term product, `P1` after Documents/Ask, `P2` later surfaces, `P3` research only.
+Priority: `P0` live first-party, `P1` after Ask SITEPM V1, `P2` later surfaces, `P3` research only.
 
 ## First-party (already in SITEPM)
 
@@ -29,16 +31,16 @@ Priority: `P0` near-term product, `P1` after Documents/Ask, `P2` later surfaces,
 | --- | --- |
 | source/provider | SITEPM application (this repository) |
 | source category | First-party operational data |
-| information available | Companies, profiles, projects, tasks; field_logs table reserved |
-| API/access mechanism | Next.js server + `@supabase/ssr`; authenticated PostgREST under RLS |
+| information available | Companies, profiles, projects, tasks, field logs, document metadata + private PDF objects |
+| API/access mechanism | Next.js server + `@supabase/ssr`; authenticated PostgREST and Storage under RLS |
 | licensing/reuse status | Class B tenant-private. Not reusable across tenants. |
 | geographic coverage | Tenant-defined |
 | update frequency/version | Live |
-| applicable Construction Graph entities | Company, People, Projects, Tasks, (Field Events when live) |
-| provenance requirements | Auth user, timestamps, company_id, project_id |
+| applicable Construction Graph entities | Company, People, Projects, Tasks, Field Events, Documents (opaque PDFs until intelligence) |
+| provenance requirements | Auth user, timestamps, company_id, project_id, document status/path for files |
 | priority | P0 |
-| validation status | Accepted through Week 5 isolation tests |
-| notes/restrictions | Do not export tenant data into Class A or Class D without authorization |
+| validation status | Accepted through Week 6 Documents database + Storage isolation tests |
+| notes/restrictions | Do not export tenant data into Class A or Class D without authorization. Pending/failed documents are not ready evidence. |
 
 ## External reference knowledge (Class A)
 
@@ -57,7 +59,7 @@ Priority: `P0` near-term product, `P1` after Documents/Ask, `P2` later surfaces,
 | provenance requirements | Cite standard version |
 | priority | P2 |
 | validation status | Unverified for SITEPM reuse; license text not independently counsel-reviewed |
-| notes/restrictions | bSDD dictionaries have **per-dictionary** licenses; do not assume IFC terms cover bSDD content |
+| notes/restrictions | bSDD dictionaries have **per-dictionary** licenses; do not assume IFC terms cover bSDD content. SITEPM may study IFC as a relationship reference. Do not become BIM software or load IFC as the system of record. |
 
 ### CSI OmniClass / MasterFormat / UniFormat
 
@@ -127,22 +129,54 @@ Priority: `P0` near-term product, `P1` after Documents/Ask, `P2` later surfaces,
 | validation status | Unverified |
 | notes/restrictions | Do not scrape manufacturer sites |
 
-### Building codes and regulations
+### Building codes and regulations (Regulatory Knowledge — not Construction Knowledge)
 
 | Field | Value |
 | --- | --- |
-| source/provider | ICC, state/local amendments, AHJs |
-| source category | Code/regulatory information |
-| information available | Model codes and local amendments |
+| source/provider | ICC, California and other state amendments, local AHJs |
+| source category | Regulatory / jurisdiction information |
+| information available | Model codes, state amendments, local editions, effective dates where published |
 | API/access mechanism | Licensed code platforms; some jurisdictions publish locally |
-| licensing/reuse status | **RESEARCH REQUIRED.** ICC content is typically copyrighted. Local amendments may differ. |
-| geographic coverage | Jurisdiction-specific |
-| update frequency/version | Code cycle |
-| applicable Construction Graph entities | Inspections, Decisions, Specs |
-| provenance requirements | Code edition, jurisdiction |
+| licensing/reuse status | **RESEARCH REQUIRED.** ICC content is typically copyrighted. California and local amendments may differ in license and text. No reproduction right is claimed. |
+| geographic coverage | United States; **California is the initial deep-jurisdiction research target**, then national expansion. Never merge editions into one generic “code.” |
+| update frequency/version | Code cycle + local amendment dates |
+| applicable Construction Graph entities | Regulatory citations, Inspections, Decisions, Specs (applicability: US → state → local → edition → project) |
+| provenance requirements | Source, jurisdiction, edition/version, effective dates where known, applicability |
+| priority | P2 (research now; not Ask SITEPM V1) |
+| validation status | Unverified; no license obtained |
+| notes/restrictions | Do not reproduce copyrighted code text in SITEPM without a license. Do not treat a trade blog or IRC summary as the adopted code. |
+
+### U.S. construction knowledge source classes (none acquired)
+
+Candidate **classes** only. Each future source must be registered with its own license row before ingest.
+
+| Source class | Intended knowledge class | Licensing/reuse status |
+| --- | --- | --- |
+| Legitimately usable/open construction datasets | Construction Knowledge | **RESEARCH REQUIRED** per dataset |
+| Government publications and federal/state/local **guidance** | Construction and/or Regulatory depending on the document | **RESEARCH REQUIRED**; guidance ≠ permission to copy model codes |
+| Manufacturer documentation, installation manuals, safety guidance | Construction Knowledge; tenant uploads are Class B evidence | **RESEARCH REQUIRED** for scraping/API copy; prefer tenant-uploaded files |
+| Licensed/open architectural plans and construction documents | Construction Knowledge / format research | **RESEARCH REQUIRED**; public viewing ≠ reuse |
+| Educational construction material | Construction Knowledge | **RESEARCH REQUIRED** per publisher |
+| Voluntary/licensed contractor and trade-expert content | Construction Knowledge | Contract-defined; **RESEARCH REQUIRED** |
+| Anonymized SITEPM historical project knowledge | Class D | **Not authorized.** Requires contractual, privacy, security, and legal review. |
+| English/Spanish trade terminology and educational bilingual material | Language overlay | **RESEARCH REQUIRED**. Do not assume one Spanish dialect or glossary covers U.S. field use. |
+
+### U.S. architectural plan / construction-document formats
+
+| Field | Value |
+| --- | --- |
+| source/provider | Varied (architects, engineers, GCs, AHJs) |
+| source category | Format research, not a dataset |
+| information available | Many sheet, CAD, PDF, and (sometimes) model-based deliverable conventions |
+| API/access mechanism | Tenant-uploaded documents in SITEPM first |
+| licensing/reuse status | Tenant PDFs are Class B. External sample sets **RESEARCH REQUIRED**. |
+| geographic coverage | United States (diverse office standards) |
+| update frequency/version | Per project revision |
+| applicable Construction Graph entities | Plans, schedules, specifications, future Property components |
+| provenance requirements | File, revision, sheet/page/detail when extracted |
 | priority | P2 |
-| validation status | Unverified |
-| notes/restrictions | Do not reproduce copyrighted code text in SITEPM without a license |
+| validation status | Unverified; no format corpus acquired |
+| notes/restrictions | Do not standardize SITEPM on a single BIM file type |
 
 ### Approved commercial construction APIs
 
@@ -169,4 +203,6 @@ Priority: `P0` near-term product, `P1` after Documents/Ask, `P2` later surfaces,
 
 ## Next registry checkpoint
 
-Before any ingest implementation: pick one city permit API **or** one manufacturer document path, obtain written license/terms, record `validation status = reviewed`, then design a Class A vs Class B storage split.
+Before any ingest implementation: pick one city permit API **or** one manufacturer document path **or** one California regulatory source with written license/terms, record `validation status = reviewed`, then design a Class A vs Class B (and Regulatory vs Construction) storage split.
+
+Ask SITEPM V1 does not wait on this checkpoint; it uses first-party Project Knowledge only.
