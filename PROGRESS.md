@@ -619,3 +619,60 @@ Next
 Blocked
 - None for documentation. Pricing tiers, commercial name, and voice-provider choice remain unresolved.
 
+Ask SITEPM V1 Stage 3 — Sunday, Sep 20, 2026
+
+Status: IMPLEMENTED — ready for review. Not committed. **Not marked complete.** Live provider auth now works (`gpt-4o-mini`). Grounded task/log/document/insufficient/inference/citation/injection live checks passed. Company A/B isolation and signed-in browser Ask remain BLOCKED (`SITEPM_ISO_*` unavailable). Ask Stage 4 not started.
+
+Done
+- Replaceable server-only OpenAI Chat Completions boundary (`lib/ai/provider.ts`) over existing Stage 2 evidence retrieval; no SDK, LangChain, vectors, web search, or tools
+- Authorization still runs before any provider call (`requireAuthorizedAskProject` → `retrieveAskProjectEvidence` → model)
+- Evidence is delimited as untrusted DATA; system prompt is static and does not interpolate task/log/filename bodies
+- Application-controlled citation allowlist: unknown, malformed, fabricated, and other-project citations are dropped and never rendered as trusted sources
+- Insufficient-evidence / epistemicKind fields; document metadata only (no PDF bytes, signed URLs, or extraction)
+- Read-only: Ask does not create/update tasks, logs, projects, or send messages
+- Unit checks (`npm run test:ask`): citation gate, injection-as-data, form project id ignores question text, missing API key fails closed
+- Live `gpt-4o-mini` grounded checks passed for task, field-log, document metadata (no PDF contents), insufficient evidence, inference labeling, cross-project non-retrieval, and injection-as-data
+- Action path remains read-only; model did not claim to create/send; live harness wording regex was overly strict
+- TypeScript, lint, and production build passed
+
+Next
+- Provide `SITEPM_ISO_*` to the test process (without displaying secrets) and re-run Company A/B plus signed-in Ask browser smoke
+- Ask Stage 4 (PDF intelligence) only when separately authorized
+- Do not implement Digital Toolbag runtime, voice OS, Field-to-Office, Jobsite Copilot, estimating, or communications
+
+Blocked
+- Live Company A/B JWT isolation: `SITEPM_ISO_*` not available to the test process
+- Signed-in browser Ask smoke: redirected to `/login`; isolation logins not used because those credentials were not in the test process
+
+Ask SITEPM V1 Stage 3 acceptance — Monday, Sep 21, 2026
+
+Status: Stage 3 implementation accepted for review. **Not marked complete as a product (Ask SITEPM V1 still needs Stage 4).** Not committed. Ask Stage 4 not started. No SQL/RLS/Auth/Storage/authorization changes in this pass.
+
+Done
+- Re-ran `scripts/ask-stage3-isolation.mjs` after Company A gained a second project: Company A can read Project A; Company B cannot read Project A or its tasks; same-company Project A filter executed (did not SKIP) and passed
+- Signed-in Company A Ask on Project A: distinctive Project A evidence answered in-scope; Project B–only question returned insufficient evidence with Project A counts only; unsupported question returned insufficient evidence (no invented facts)
+- Signed-in Company B via `/login` received HTTP 404 on Company A’s Project A Ask URL; page did not show Project A name or records
+- `npm run test:ask` passed; `npx tsc --noEmit` passed; `npm run lint` passed; `npm run build` passed
+
+Next
+- Ask Stage 4 (PDF intelligence) only when separately authorized
+- Optional: store `SITEPM_ISO_PROJECT_A` as the project UUID (the saved value is still not a UUID, so the isolation script without a UUID override fails the two `projects.id` reads)
+- Optional: action-boundary live harness regex is overly strict (model restated facts without claiming a write); do not change the regex merely to obtain a pass
+
+Blocked
+- None for Stage 3 application/security behavior. Remaining items are test-config (`SITEPM_ISO_PROJECT_A` not a UUID in saved env) and the previously identified action-boundary harness wording check
+
+Ask SITEPM V1 Stage 3 closure — Monday, Sep 21, 2026
+
+Status: **Stage 3 accepted.** Checkpoint authorized. **Ask SITEPM V1 is still not complete** because Stage 4 (PDF intelligence) has not started. No SQL/RLS/Auth/Storage/authorization/application/test-expectation changes in this pass.
+
+Done
+- Unmodified `node scripts/ask-stage3-isolation.mjs` against saved env (no Project A override): Company A → Project A PASS; Company B → Project A isolation PASS; same-company Project A vs Project B PASS (did not SKIP)
+- Prior signed-in Ask, 404 cross-company Ask, unit, TypeScript, lint, and production-build acceptance remains in force
+
+Next
+- Ask Stage 4 (PDF intelligence) only when separately authorized
+
+Blocked
+- None for Stage 3 application/security. Non-blocking test-harness debt: live action-boundary regex is overly strict (model restated facts; no mutation or false write claim). Do not change the regex merely to obtain a pass.
+

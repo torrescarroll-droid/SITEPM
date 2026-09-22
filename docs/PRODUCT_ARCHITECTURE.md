@@ -4,18 +4,18 @@ Status: documentation only. This file is the **canonical product true north**. I
 
 Related: `SITEPM_BUILD_SPEC.md`, `docs/DATA_INGESTION_ARCHITECTURE.md`, `docs/DATA_SOURCE_REGISTRY.md`.
 
-Accepted implementation baseline: Ask SITEPM V1 **Stage 2** (`021c690e670dde22d1aa3659bf377397f3082dc9`, `feat: add secure project-scoped Ask evidence retrieval`). Documents foundation remains `f3f612c`.
+Accepted implementation baseline: Ask SITEPM V1 **Stage 3** (replaceable server-only model over Stage 2 evidence). Stage 2 retrieval remains `021c690`. Documents foundation remains `f3f612c`.
 
 ## Time layers (read this first)
 
 | Layer | Meaning | Authorization |
 | --- | --- | --- |
-| Current implemented state | Auth, company RLS, Projects, Tasks, Field Logs, Documents, Ask Stages 1–2 (project-scoped evidence retrieval, **no model**) | Live |
-| Next MVP work | Ask SITEPM V1 **Stage 3** (replaceable model + epistemic answers + allowlist-validated citations) | Next implementation milestone only; **not started** |
+| Current implemented state | Auth, company RLS, Projects, Tasks, Field Logs, Documents, Ask Stages 1–3 (project-scoped evidence + grounded model answers, **no PDF contents**) | Live |
+| Next MVP work | Ask SITEPM V1 **Stage 4** (PDF / document intelligence) | Next implementation milestone only; **not started** |
 | Long-term architecture | Digital Toolbag over Construction OS; Builder–Technology Gap; Field-to-Office; two-way field intelligence; contractor maturity / product depth; Construction Spectrum; Property; knowledge classes; voice; bilingual; estimating | Design only until a later milestone |
 | Future research / data acquisition | Licensing, jurisdiction corpora, naming/brand, plan-format study, optional Class D governance | Research; no ingest until terms are verified |
 
-Do not implement Property, Construction Knowledge, Regulatory Knowledge, bilingual engines, voice OS, Field-to-Office Pipeline, Jobsite Copilot, estimating, or communications because this document exists. **Do not start Ask Stage 3 from this file.**
+Do not implement Property, Construction Knowledge, Regulatory Knowledge, bilingual engines, voice OS, Field-to-Office Pipeline, Jobsite Copilot, estimating, or communications because this document exists. **Do not start Ask Stage 4 from this file.**
 
 ## 1. Core thesis — builder-first digital toolbag + construction operating system
 
@@ -95,11 +95,10 @@ Accepted now (user-scoped JWTs, company RLS, no service-role for normal operatio
 - company-scoped RLS (`current_company_id()`)
 - live Projects, Tasks, Field Logs
 - live Documents: private `project-documents` bucket, PDF-only, 20 MiB, pending → ready | failed, 60s signed URLs after authorized ready lookup
-- Ask SITEPM Stages 1–2: project-scoped Ask; `/ask` is a job picker; deterministic retrieval of project + tasks + field logs + **ready** document metadata; citation allowlist; **no model call**
+- Ask SITEPM Stages 1–3: project-scoped Ask; `/ask` is a job picker; Stage 2 retrieval of project + tasks + field logs + **ready** document metadata; citation allowlist; Stage 3 replaceable server-only model over that pack (**no PDF bytes**)
 
 Still not started / later:
 
-- Ask Stage 3 (model + epistemic answers + validated citations)
 - Ask Stage 4 (PDF intelligence)
 - AI briefing
 - Field photos as a first-class evidence type
@@ -119,11 +118,11 @@ Authorization today: `auth.users` → `profiles.company_id` → `current_company
 
 A project `address` string is **not** a Property record. Do not create property tables until a later milestone authorizes them.
 
-## 3. Next MVP work (unchanged sequence; Stage 3 not started)
+## 3. Next MVP work (unchanged sequence after Stage 3)
 
 **Projects → Tasks → Field Logs → Documents → Ask SITEPM / Intelligence**
 
-Ask V1 Stage 3 (when authorized) remains **project-grounded** over existing Project Knowledge. It should **not** require a property graph, extracted schedules, a general construction corpus, a jurisdiction/code corpus, bilingual engines, voice OS, or estimating.
+Ask V1 Stage 3 is **project-grounded** over existing Project Knowledge. It should **not** require a property graph, extracted schedules, a general construction corpus, a jurisdiction/code corpus, bilingual engines, voice OS, or estimating.
 
 Do not expand the immediate MVP solely to match this architecture. **Architecture breadth is not MVP breadth.** Future capabilities are earned through customer validation, usage, ROI, strategic data value, differentiation, technical dependency, and system-of-record contribution.
 
@@ -733,8 +732,8 @@ Research tracks (see `docs/DATA_SOURCE_REGISTRY.md`):
 
 ## 37. Immediate next product work
 
-**Ask SITEPM V1 Stage 3** (when separately authorized): replaceable model + epistemic answers + allowlist-validated citations over Stage 2 project-scoped evidence. Stage 4 remains PDF intelligence.
+**Ask SITEPM V1 Stage 4** (when separately authorized): PDF / document intelligence. Do not fetch PDF contents from this architecture file.
 
-**Do not start Ask Stage 3 from this document.** Do not implement the property schema, Digital Toolbag runtime, voice OS, Field-to-Office Pipeline, Jobsite Copilot, estimating, communications, contractor-maturity product lines, or client/homeowner surfaces. Architecture breadth is not MVP breadth. Do not change existing RLS from this document.
+**Do not start Ask Stage 4 from this document.** Do not implement the property schema, Digital Toolbag runtime, voice OS, Field-to-Office Pipeline, Jobsite Copilot, estimating, communications, contractor-maturity product lines, or client/homeowner surfaces. Architecture breadth is not MVP breadth. Do not change existing RLS from this document.
 
 Long-term design tests (not V1 gates): Field Test (low digital literacy, useful immediately); Word Test; Solo Contractor Test (multiple roles, no software silos); PM Test (management expertise without pretending field craft); Project-Management Test (less manual collect/structure/chase); Client Test (intent without pretending construction expertise); Translation Test (meaning across expertise); Growth Test (more useful as the contractor grows); Scale Test (one worker/task through many projects/organization); System Test (same authorized state, not disconnected products); Truth Test (views/derivations of one evidence-backed state); Moat Test (permissioned history improving future outcomes); Truck Test (§4).

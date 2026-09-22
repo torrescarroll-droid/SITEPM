@@ -6,7 +6,7 @@
 **Immediate Objective:** Build a secure, usable contractor MVP that can be used by Contractor #1 on a real project.  
 **Primary Milestone:** A contractor can log in from phone or computer, open a project, upload documents, add field information, ask project-specific questions, receive grounded answers, see tasks/follow-ups, and receive a useful AI briefing.
 
-**Accepted implementation (documentation pointer, not a scope change):** Projects, Tasks, Field Logs, Documents, and Ask SITEPM V1 **Stages 1–2** are complete (`021c690` evidence retrieval). **Ask Stage 3 has not started.** Long-term builder-first Digital Toolbag + Construction OS lives in `docs/PRODUCT_ARCHITECTURE.md` and is **not** V1 scope. Do not expand V1 from that file.
+**Accepted implementation (documentation pointer, not a scope change):** Projects, Tasks, Field Logs, Documents, and Ask SITEPM V1 **Stages 1–3** (Stage 3 = replaceable server-only model over Stage 2 evidence; no PDF contents). **Ask Stage 4 has not started.** Long-term builder-first Digital Toolbag + Construction OS lives in `docs/PRODUCT_ARCHITECTURE.md` and is **not** V1 scope. Do not expand V1 from that file.
 
 ---
 

@@ -54,7 +54,7 @@ export function allowlistHas(
   return allowlist.includes(citationKey(type, id));
 }
 
-/** Stage 3 will filter model-proposed citations through this. */
+/** Application-controlled citation gate. The model cannot expand this set. */
 export function validateProposedCitations(
   proposed: AskCitation[],
   allowlist: AskCitationKey[],

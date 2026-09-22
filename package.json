@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:ask": "node scripts/run-ask-stage3-unit.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

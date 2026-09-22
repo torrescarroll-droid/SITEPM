@@ -43,4 +43,8 @@ export type AskFormState = {
     fieldLogs: number;
     documents: number;
   } | null;
+  answer: string | null;
+  citations: AskCitation[] | null;
+  insufficientEvidence: boolean;
+  epistemicKind: AskEpistemicKind | null;
 };

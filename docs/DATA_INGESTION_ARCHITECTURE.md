@@ -141,7 +141,7 @@ voice | text | photo | video | measurement | email | document | form | sensor
   → historical / company knowledge (Class B)
 ```
 
-Capture once; reuse across Field Logs, Tasks, schedule, procurement, and later Property. Two-way: Field → Project and Project + Construction Knowledge → Field. The live Field Logs feature stays small. This pipeline is the target shape, not the next Field PR and not Ask Stage 3.
+Capture once; reuse across Field Logs, Tasks, schedule, procurement, and later Property. Two-way: Field → Project and Project + Construction Knowledge → Field. The live Field Logs feature stays small. This pipeline is the target shape, not the next Field PR and not Ask Stage 4.
 
 ## 9. Ingest API (future)
 
