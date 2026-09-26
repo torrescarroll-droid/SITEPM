@@ -22,3 +22,5 @@ Keep Postgres + company-scoped RLS. Do not introduce a graph database, weaken RL
 Canonical product true north: `docs/PRODUCT_ARCHITECTURE.md`. Also: `docs/DATA_INGESTION_ARCHITECTURE.md`, `docs/DATA_SOURCE_REGISTRY.md`.
 
 External sources are not reusable until licensing is verified. Publicly viewable does not mean reusable.
+
+Living Property Record lifecycle/handoff requirements are canonical in `docs/PRODUCT_ARCHITECTURE.md` §20. Capture during construction; preserve source → inference → answer, claim-level chronology/authority, service/replacement history and permissioned handoff. `docs/reference-projects/001/` is an offline fictional benchmark, not runtime seed data. Keep its evaluator ground truth outside retrieval. Do not infer implementation authorization from these documents; accepted Stage 3 and existing auth/RLS/Storage boundaries remain unchanged.

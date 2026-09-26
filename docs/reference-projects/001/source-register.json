@@ -1,0 +1,211 @@
+{
+  "dataset": "SITEPM Reference Project 001",
+  "version": "1.0",
+  "fictional": true,
+  "project_id": "RP001-JOB-01",
+  "property_id": "RP001-PROP-01",
+  "documents": [
+    {
+      "id": "RP001-D01",
+      "path": "sources/01-project-brief.md",
+      "title": "Project brief and participant register",
+      "issued_on": "2027-01-08",
+      "issuer": "Aven Quill, PM, Vellune Houseworks",
+      "status": "R0 / baseline",
+      "locators": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "sha256": "b1dd1ade2c4e16fc7e363062925c47d95192da4d712a3fa4a6aceca2891f242a"
+    },
+    {
+      "id": "RP001-D02",
+      "path": "sources/02-design-m32-r0.md",
+      "title": "Mechanical drawing M3.2 revision 0 \u2014 textual drawing schedule",
+      "issued_on": "2027-01-12",
+      "issuer": "Jessa Oryn, Miravel Systems",
+      "status": "R0 / issued design, later partially superseded",
+      "locators": [
+        "S1",
+        "S2"
+      ],
+      "sha256": "bacdf9c4804be8a4654e4494b3d89de6490977f2293abc480715ff7b78d4a0c4"
+    },
+    {
+      "id": "RP001-D03",
+      "path": "sources/03-specifications.md",
+      "title": "Interior and hydronic specification extracts",
+      "issued_on": "2027-01-14",
+      "issuer": "Selvi Nacre / Jessa Oryn",
+      "status": "R0 / approved design requirements",
+      "locators": [
+        "S1",
+        "S2"
+      ],
+      "sha256": "f81f51ea67875fb8cf384ea4b0e1b48683446ad8abe50ce8d36a958ccf1e060a"
+    },
+    {
+      "id": "RP001-D04",
+      "path": "sources/04-contract-scope.md",
+      "title": "Executed construction agreement and hydronic scope excerpt",
+      "issued_on": "2027-01-18",
+      "issuer": "Ilyra Pellune / Aven Quill / Tovan Mire",
+      "status": "R0 / fictional executed record",
+      "locators": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "sha256": "2d8fd65b2f2b88e72bab1b5a2fc0a05548641d470dd35a750f3599235014e191"
+    },
+    {
+      "id": "RP001-D05",
+      "path": "sources/05-submittal.md",
+      "title": "Hydronic submittal SUB-H014-02",
+      "issued_on": "2027-02-12",
+      "issuer": "Tovan Mire, Nacreloop Thermal",
+      "status": "R1 / approved with notes by Jessa Oryn",
+      "locators": [
+        "S1",
+        "S2"
+      ],
+      "sha256": "4c1d2cfbcb8c0cf1e35aaa5284be8dbcccac32fe8512657af6d44aaa099537cd"
+    },
+    {
+      "id": "RP001-D06",
+      "path": "sources/06-rfi-007.md",
+      "title": "RFI-007 \u2014 manifold access conflict and response",
+      "issued_on": "2027-03-05",
+      "issuer": "Aven Quill / Jessa Oryn",
+      "status": "R1 / technical response approved",
+      "locators": [
+        "S1",
+        "S2"
+      ],
+      "sha256": "9e35a95cbee8a335078df7f590c383e488306e7f575faea137e10a37ede20f7b"
+    },
+    {
+      "id": "RP001-D07",
+      "path": "sources/07-change-order.md",
+      "title": "Change order CO-003 \u2014 manifold relocation",
+      "issued_on": "2027-03-08",
+      "issuer": "Ilyra Pellune / Aven Quill",
+      "status": "R0 / approved",
+      "locators": [
+        "S1",
+        "S2"
+      ],
+      "sha256": "a44cf7d9b9affc508cfadb5638013b5a94d209411abd167e63bf8524a1a9e634"
+    },
+    {
+      "id": "RP001-D08",
+      "path": "sources/08-schedule-budget.md",
+      "title": "Schedule and budget update 03",
+      "issued_on": "2027-03-10",
+      "issuer": "Aven Quill, Vellune Houseworks",
+      "status": "R1 / approved baseline update",
+      "locators": [
+        "S1",
+        "S2"
+      ],
+      "sha256": "5b8b75cf7929a0203aea9b97c008dfec5e165569996c06db80b7b45c2a90b25a"
+    },
+    {
+      "id": "RP001-D09",
+      "path": "sources/09-field-log.md",
+      "title": "Field log FL-042 \u2014 living-room radiant installation",
+      "issued_on": "2027-04-20",
+      "issuer": "Evrin Sola, superintendent, Vellune Houseworks",
+      "status": "R0 / contemporaneous field observation",
+      "locators": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "sha256": "2bf0bba78acf018428dfe121e66ce1fe662aa52421956edd749b4ce1bff289c9"
+    },
+    {
+      "id": "RP001-D10",
+      "path": "sources/10-photo-manifest.md",
+      "title": "Pre-cover photo manifest PM-042",
+      "issued_on": "2027-04-22",
+      "issuer": "Evrin Sola, Vellune Houseworks",
+      "status": "R0 / captions only, image binaries unavailable",
+      "locators": [
+        "P01",
+        "P02",
+        "P03"
+      ],
+      "sha256": "eddfb7c7b070f9b0e3a071b6bfe2b0cf0a99c0bbd32ac6a0e9d1fb528d927024"
+    },
+    {
+      "id": "RP001-D11",
+      "path": "sources/11-inspection-commissioning.md",
+      "title": "Pre-cover inspection and commissioning dossier",
+      "issued_on": "2027-09-24",
+      "issuer": "Jessa Oryn / Nacreloop Thermal",
+      "status": "R1 / compilation of dated records",
+      "locators": [
+        "S1",
+        "S2"
+      ],
+      "sha256": "613cf1a7118e947a4b2b123d5b39e62c6ef929c7dd98b00a63b751e53ee60d30"
+    },
+    {
+      "id": "RP001-D12",
+      "path": "sources/12-closeout-warranty.md",
+      "title": "Closeout, warranty and handoff record",
+      "issued_on": "2027-10-03",
+      "issuer": "Aven Quill / Ilyra Pellune",
+      "status": "R0 / handoff accepted with listed gaps",
+      "locators": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "sha256": "7993acbe7ed366e9e1e4b34787f0a7b6469f590d339d317a56949f8effbd3f22"
+    },
+    {
+      "id": "RP001-D13",
+      "path": "sources/13-as-built-m32-ab1.md",
+      "title": "M3.2 AB1 \u2014 installed-condition textual record",
+      "issued_on": "2027-09-27",
+      "issuer": "Tovan Mire; reviewed Jessa Oryn",
+      "status": "AB1 / recorded as installed",
+      "locators": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "sha256": "e08bdd009ee679bc89aee0464e3522b421897c84699fd25fa49f8869514ba7e9"
+    },
+    {
+      "id": "RP001-D14",
+      "path": "sources/14-contacts-service-request.md",
+      "title": "Contact history and service request SR-009",
+      "issued_on": "2029-11-08",
+      "issuer": "Ilyra Pellune / Aven Quill",
+      "status": "R0 / reported symptom, diagnosis pending",
+      "locators": [
+        "S1",
+        "S2"
+      ],
+      "sha256": "215bda6fcaca8e94ea87d14d354de0afb4ff665989a9e27a60fa9f55f669069c"
+    },
+    {
+      "id": "RP001-D15",
+      "path": "sources/15-service-event.md",
+      "title": "Service ticket SV-009 and unresolved follow-up note",
+      "issued_on": "2030-01-15",
+      "issuer": "Seli Venn, Nacreloop Thermal",
+      "status": "R1 / compiled service record with unresolved follow-up",
+      "locators": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "sha256": "5a60a81829487c63b058246b144c5b1e90a23c82f9b80681f348180f70c5218f"
+    }
+  ]
+}

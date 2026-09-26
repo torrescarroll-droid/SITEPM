@@ -676,3 +676,27 @@ Next
 Blocked
 - None for Stage 3 application/security. Non-blocking test-harness debt: live action-boundary regex is overly strict (model restated facts; no mutation or false write claim). Do not change the regex merely to obtain a pass.
 
+
+Living Property Record requirements + Reference Project 001 — Friday, Sep 25, 2026
+
+Status: DOCUMENTATION / OFFLINE FIXTURE ONLY — ready for review; not committed or pushed. Accepted Stage 3 checkpoint `97940b3` preserved. Ask Stage 4 has not started.
+
+Done
+- Inspected clean `main`/`origin/main` state, recent history, AGENTS.md, build spec, canonical architecture/progress documents and Cursor architecture rule; reviewed Ask authorization/retrieval/citation/provider boundaries, ready-document queries and existing SQL policy definitions.
+- Extended Product Architecture §20 with lifecycle capture/handoff, dated property/area/system/component relationships, contractor/contracts/contact history, evidence authority, source → inference → answer, service/replacement history and Class B/Class C boundaries.
+- Extended Data Ingestion Architecture and Cursor rule with lifecycle provenance requirements and offline fixture/ground-truth separation.
+- Created `docs/reference-projects/001/`: 15 fictional Markdown source documents, README, source-register.json, ground-truth.json (18 questions), and offline validate.py. Covers high-end residential remodel/addition, revised radiant manifold/ports, installation/test/closeout evidence, subsequent actuator replacement and unresolved recollection conflict.
+- No app/lib/SQL/auth/RLS/Storage/dependency changes, hosted queries, uploads, live seed records, privileged shortcuts or Stage 4 implementation. No real people/company/contact records used.
+
+Checks
+- `npm run test:ask`: all 16 existing Stage 3 unit checks passed (no live provider calls).
+- Offline fixture validator passed: 15 source digests/locators/cross-references, fictional contacts, 18 question references/as-of dates, budget/schedule arithmetic and intentional conflict/gap assertions.
+- No browser, live tenant-isolation, PDF/OCR or image-understanding tests performed. Markdown sources and captions are not PDF/image fixtures; no runtime change warrants re-running a production build for this pass.
+
+Next
+- User review of architecture and initial source package/answer key; commit/push only with explicit authorization.
+- Separately authorize Stage 4 implementation and define text/PDF/drawing/image coverage; retain ground truth outside retrieval.
+- Resolve Class C permission/transfer/revocation, entity resolution, conflict review and retention design before implementing those capabilities.
+
+Blocked
+- None for this documentation/text benchmark. No actual photo binaries, scaled plan sheets or PDF renditions supplied; exact concealed routing, missing closeout records and replacement warranty remain intentional unknowns.

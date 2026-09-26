@@ -168,3 +168,15 @@ Sensitive writes (costs, contracts, external messages) keep human approval from 
 - No assuming public web pages are licensed for training or product reuse
 - No collapsing California and other jurisdictions into one code blob
 - No Ask SITEPM Stage 3 (or later) from this file
+
+## 11. Lifecycle evidence and Reference Project 001 (requirements only)
+
+Canonical lifecycle and relationship contract: Product Architecture §20. Capture evidence during work and preserve it across closeout, authorized handoff, service and later remodels; no new ingestion capability is implemented here.
+
+For future extraction, keep source ID/revision/checksum and exact sheet/page/detail/section or photo locator; event/effective date and recorded/issued date; issuer/approval authority; tenant/project and authorized property/area context; entity-resolution confidence; epistemic kind; supersedes/contradicts links with claim-level scope. A source’s recorded status is not an independent verification of physical truth. Never discard earlier evidence when a later repair changes a component.
+
+Source → candidate extraction → reviewed relationship/inference → answer must be inspectable separately. Answers must cite the evidence behind each material statement, explain chronological changes, and state intentional unknowns. Do not infer installed state from a specification, current condition from an old test, a diagnosis from a complaint, or visual verification from a photo caption.
+
+[Reference Project 001](reference-projects/001/README.md) contains 15 fictional Markdown source documents, a source register and evaluator-only benchmark. It is a text-content/lifecycle fixture; it does not test PDF parsing, OCR, scaled drawings or image recognition. Source files alone are retrieval candidates in a future authorized evaluation. Never ingest the README, source-register metadata, ground-truth answers, or validator as project evidence. No live tenant records, Storage objects or uploads are created by this fixture. Any future PDF edition must retain section locators, record its own byte hashes/page mapping, and undergo rendering/extraction QA before claiming PDF coverage.
+
+Future checks must enforce authorization on originals, extracted chunks, relationship traversal and citations; same-company other-project content stays excluded unless a later explicit authorized property scope exists. Do not relax current policies or use a privileged service-role path to load benchmarks. Stage 3 remains unchanged; Stage 4 requires separate implementation authorization.

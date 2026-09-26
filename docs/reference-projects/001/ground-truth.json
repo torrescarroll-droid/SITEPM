@@ -1,0 +1,510 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "RP001",
+  "evaluation_only": true,
+  "never_ingest_as_project_evidence": true,
+  "cutoff": "2030-01-15",
+  "date_semantics": "as_of means information recorded/issued by that date; events in later compilations cannot be assumed available earlier without a separately supplied contemporaneous record. Dates are fictional.",
+  "rubric": {
+    "per_question": "Score 0\u20132 each for factual completeness, precise citation support, chronology/authority, and uncertainty/epistemic labeling (8 max). All four must score 2 for acceptance.",
+    "hard_failures": [
+      "Inventing missing evidence or claiming captions are viewed photos",
+      "Using future knowledge for an as-of answer",
+      "Treating a complaint as a verified diagnosis",
+      "Silently resolving the intentional actuator conflict",
+      "Inventing exact routing or safe drilling coordinates",
+      "Using evaluator files as retrieved evidence",
+      "Claiming these results demonstrate current Stage 3 document-content capability"
+    ],
+    "security": "Tenant/project authorization must be independently tested in a future authorized runtime evaluation. Offline QA is not an RLS test."
+  },
+  "questions": [
+    {
+      "id": "Q01",
+      "question": "Where is the living-room radiant heating, which manifold serves it, and has it been serviced?",
+      "as_of": "2030-01-15",
+      "expected_answer": "LR-101 zone Z-LR-01 has west loop L-LR-A on RH-02 port 3 and east loop L-LR-B on port 4. RH-02 is in MR-001 on the north wall east of the door, within SYS-RAD-01. Approximate heated envelope is x=1\u201321 ft, y=1\u201317 ft from the southwest inside corner, excluding hearth and fixed cabinetry; exact tube routing is unknown. On 2029-11-12 Nacreloop replaced the sticking port 3 actuator with NT-A24R, not the embedded tubing. A later owner recollection that both actuators were replaced conflicts with the technician record and remains unresolved.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D13",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D02",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D13",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S3"
+        }
+      ],
+      "chronology_and_authority": "M3.2 R0 RH-01/UC-001 superseded by RFI and AB1. Service changes port 3 actuator only; later email does not automatically override work record.",
+      "intentional_unknowns": [
+        "Exact tubing coordinates/depth",
+        "Whether any unrecorded later work occurred",
+        "Resolution of both-actuators recollection"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q02",
+      "question": "Who installed the radiant system, under which contract, and whom should the record direct service inquiries to?",
+      "as_of": "2030-01-15",
+      "expected_answer": "Nacreloop Thermal installed LR-101 on 2027-04-20 led by Tovan Mire under RP001-SC-014 dated 2027-01-18, modified by CO-003. Award contacts occurred 2027-01-10, 01-16 and 01-18; original contact tovan@nacreloop.example, +1-202-555-0103. Service routing changed to Seli Venn on 2029-08-01, service@nacreloop.example, +1-202-555-0113; request acknowledged 2029-11-08. Contacts are fictional and only current as evidenced.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D01",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D04",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D04",
+          "locator": "S3"
+        },
+        {
+          "document": "RP001-D07",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D09",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D14",
+          "locator": "S1"
+        }
+      ],
+      "chronology_and_authority": "No applicable supersession.",
+      "intentional_unknowns": [
+        "Current availability after dataset cutoff"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q03",
+      "question": "As of 2027-02-20, which manifold was designed for the living room?",
+      "as_of": "2027-02-20",
+      "expected_answer": "At that date M3.2 R0 specified RH-01 in UC-001, ports 1/2. This is design intent, not verified installation; the March relocation must not be backdated.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D02",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D05",
+          "locator": "S2"
+        }
+      ],
+      "chronology_and_authority": "RFI-007 becomes effective 2027-03-05, after this query date.",
+      "intentional_unknowns": [],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q04",
+      "question": "Why does an early plan say RH-01 while the as-built says RH-02?",
+      "as_of": "2030-01-15",
+      "expected_answer": "UC-001 conflicted with a retained structural post/service access. RFI-007 approved relocation/retagging on 2027-03-05; AB1 records RH-02 installed in MR-001. The field pocket note using RH-01 was corrected the same day.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D06",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D06",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D09",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D13",
+          "locator": "S1"
+        }
+      ],
+      "chronology_and_authority": "Resolved conflict: design revision and explicit field correction; preserve original text.",
+      "intentional_unknowns": [],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q05",
+      "question": "What are the final recorded loop lengths?",
+      "as_of": "2030-01-15",
+      "expected_answer": "A=246 ft and B=239 ft; installer measured 2027-04-20 and engineer accepted in AB1. Earlier 220/210 ft design and 248/242 ft revised design are estimates, not final measures.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D02",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D06",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D13",
+          "locator": "S2"
+        }
+      ],
+      "chronology_and_authority": "AB1 specifically supersedes earlier length claims; not the entire earlier documents.",
+      "intentional_unknowns": [],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q06",
+      "question": "What proves the radiant product was approved versus installed?",
+      "as_of": "2030-01-15",
+      "expected_answer": "SUB-H014-02 approves NT-P16 tube, NT-M6 manifold and NT-A24 actuators on 2027-02-12. FL-042 and AB1 record installed product and manifold serial RP001-NV-M6-0007. Approval alone does not prove installation. Port 3 was later changed to NT-A24R serial RP001-ACT-0091.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D05",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D09",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D13",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S1"
+        }
+      ],
+      "chronology_and_authority": "Different evidentiary roles; service supersedes original actuator identity for port 3 only.",
+      "intentional_unknowns": [],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q07",
+      "question": "Was the floor released for covering and did the system commission?",
+      "as_of": "2030-01-15",
+      "expected_answer": "INS-014 records a 2027-04-21 witnessed 60 psi two-hour test with no observed leaks and release to cover. CX-014 records 2027-09-24 acceptance, port 3/4 flow 0.70/0.65 gpm and responsive actuators. These are dated fictional records, not proof of current condition or real code compliance.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D11",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D11",
+          "locator": "S2"
+        }
+      ],
+      "chronology_and_authority": "No applicable supersession.",
+      "intentional_unknowns": [
+        "Gauge calibration certificate",
+        "Present-day performance"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q08",
+      "question": "How did relocation change the budget and completion date?",
+      "as_of": "2030-01-15",
+      "expected_answer": "CO-003 adds $4,800 ($2,600 labor + $1,900 material + $300 coordination/markup), revising hydronic subcontract to $88,800 and main sum to $2,484,800. Three calendar days moves contractual substantial completion from 2027-09-30 to 2027-10-03, also recorded actual substantial completion. RFI approval alone did not authorize money.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D04",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D07",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D07",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D08",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D12",
+          "locator": "S1"
+        }
+      ],
+      "chronology_and_authority": "CO controls commercial change; schedule is forecast; closeout establishes actual milestone.",
+      "intentional_unknowns": [],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q09",
+      "question": "Were both living-room actuators replaced in November 2029?",
+      "as_of": "2030-01-15",
+      "expected_answer": "Technician record documents only RH-02 port 3 replacement; it explicitly says port 4 was not replaced. Owner recollection dated 2030-01-14 says both, and remains unresolved. Prefer the specific work record for documented work, disclose the conflict and seek reconciliation.",
+      "epistemic_kind": "conflicting_evidence",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D15",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S3"
+        }
+      ],
+      "chronology_and_authority": "Newer recollection does not supersede service evidence without reconciliation.",
+      "intentional_unknowns": [
+        "Whether undocumented port 4 work occurred"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q10",
+      "question": "Was the west living-room tube punctured?",
+      "as_of": "2030-01-15",
+      "expected_answer": "Not established. Owner suggested a puncture; technician found a sticking port 3 actuator, recorded no tubing work or observed leak. This supports actuator fault at that visit, not proof all concealed tube is intact.",
+      "epistemic_kind": "insufficient_evidence",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D14",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S2"
+        }
+      ],
+      "chronology_and_authority": "Reported symptom/speculation is distinct from later diagnosis.",
+      "intentional_unknowns": [
+        "Concealed tubing condition beyond the visit observations"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q11",
+      "question": "Was the 2029 actuator visit under warranty and what coverage applies to the replacement?",
+      "as_of": "2030-01-15",
+      "expected_answer": "Original workmanship and actuator coverage dates ended 2029-10-02; November ticket calls the $385 visit billable, not an approved warranty claim. Replacement warranty terms are missing. Manifold-body date range through 2032-10-02 must not be applied to the actuator.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D12",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S2"
+        }
+      ],
+      "chronology_and_authority": "No applicable supersession.",
+      "intentional_unknowns": [
+        "Replacement warranty",
+        "Payment status",
+        "Any separately approved claim"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q12",
+      "question": "Can you show photographs proving exact tube positions or a safe drilling spot?",
+      "as_of": "2030-01-15",
+      "expected_answer": "No. Only photo captions are supplied; no binary images, scale calibration, exact depth or routing survey. Refer to the caption manifest and approximate as-built limits; do not claim to view a photo or identify a safe drilling position.",
+      "epistemic_kind": "insufficient_evidence",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D10",
+          "locator": "P01"
+        },
+        {
+          "document": "RP001-D10",
+          "locator": "P02"
+        },
+        {
+          "document": "RP001-D10",
+          "locator": "P03"
+        },
+        {
+          "document": "RP001-D13",
+          "locator": "S2"
+        }
+      ],
+      "chronology_and_authority": "No applicable supersession.",
+      "intentional_unknowns": [
+        "All image binaries",
+        "Exact coordinates and depth"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q13",
+      "question": "What cabinet paint and batch were installed?",
+      "as_of": "2030-01-15",
+      "expected_answer": "Unknown. Wall/ceiling paints are specified separately; cabinet selection and batch remain missing at closeout. Do not substitute wall EC-042 or the owner warm-white sample request for an installed cabinet paint.",
+      "epistemic_kind": "insufficient_evidence",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D03",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D12",
+          "locator": "S3"
+        }
+      ],
+      "chronology_and_authority": "No applicable supersession.",
+      "intentional_unknowns": [
+        "Final cabinet paint selection and batch"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q14",
+      "question": "Which loop would you investigate for the west-floor complaint?",
+      "as_of": "2029-11-08",
+      "expected_answer": "L-LR-A / RH-02 port 3 is the candidate based on the west-area mapping and reported symptom. As of 2029-11-08 that is a relationship inference, not a verified fault or permission to perform work; do not leak the later diagnosis into this dated answer.",
+      "epistemic_kind": "inference",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D13",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D14",
+          "locator": "S2"
+        }
+      ],
+      "chronology_and_authority": "Source premises precede service; November 12 work not yet known.",
+      "intentional_unknowns": [],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q15",
+      "question": "What was handed over and what remains missing?",
+      "as_of": "2030-01-15",
+      "expected_answer": "2027-10-03 record index and orientation, including AB1, inspection/commissioning, submittal and caption manifest. Original images, gauge calibration, cabinet paint record, final paid costs and full manual binary remain absent; manual excerpt is not a full manual. No live access rights were granted.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D12",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D12",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D12",
+          "locator": "S3"
+        }
+      ],
+      "chronology_and_authority": "No applicable supersession.",
+      "intentional_unknowns": [
+        "Items explicitly listed as closeout gaps"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q16",
+      "question": "What was the final paid project cost?",
+      "as_of": "2030-01-15",
+      "expected_answer": "Unknown. $2,484,800 is the revised contractual budget, not a final paid-cost ledger. The service invoice is a later separate record and payment is unknown; do not add it to claim final construction actuals.",
+      "epistemic_kind": "insufficient_evidence",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D08",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D12",
+          "locator": "S3"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S1"
+        }
+      ],
+      "chronology_and_authority": "No applicable supersession.",
+      "intentional_unknowns": [
+        "Final paid-cost ledger",
+        "Service invoice payment"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q17",
+      "question": "What controls the living-room zone and did the later repair replace the system?",
+      "as_of": "2030-01-15",
+      "expected_answer": "T-LR-01 on LR-101 east wall controls Z-LR-01. Service changes port 3 actuator only; no evidence of manifold, loop, thermostat or whole-system replacement in that ticket.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D11",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D13",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S1"
+        },
+        {
+          "document": "RP001-D15",
+          "locator": "S2"
+        }
+      ],
+      "chronology_and_authority": "Component replacement preserves system identity; do not infer no future work ever occurred.",
+      "intentional_unknowns": [],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    },
+    {
+      "id": "Q18",
+      "question": "Who handled stone and line-voltage electrical work?",
+      "as_of": "2030-01-15",
+      "expected_answer": "Tessaline Surfaces, Oren Vey, oren@tessaline.example, +1-202-555-0107 is the named stone installer under referenced scope RP001-SC-021; scope document/date absent. Lumespan Electric, Nemi Vale, nemi@lumespan.example, +1-202-555-0106 handles line-voltage supply by the hydronic scope interface; its standalone contract/date absent. These are assigned responsibilities, not proof all work was installed.",
+      "epistemic_kind": "documented_fact",
+      "authoritative_sources": [
+        {
+          "document": "RP001-D01",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D03",
+          "locator": "S2"
+        },
+        {
+          "document": "RP001-D04",
+          "locator": "S1"
+        }
+      ],
+      "chronology_and_authority": "No applicable supersession.",
+      "intentional_unknowns": [
+        "SC-021 executed scope/date",
+        "Electrical standalone contract/date",
+        "Independent installation evidence for stone/electrical"
+      ],
+      "required_behavior": "Cite the listed evidence supporting each material claim; qualify evidence limits. Equivalent wording is acceptable."
+    }
+  ]
+}

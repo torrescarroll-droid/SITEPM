@@ -462,6 +462,38 @@ Example future questions (Property Knowledge + evidence, not V1 Ask):
 
 Authorization remains company-scoped unless a later reviewed design defines Class C owner/contract contracts. Do not weaken RLS to share properties across tenants.
 
+### Lifecycle handoff requirement (design requirement; no runtime expansion)
+
+The Living Property Record is accumulated during work, not reconstructed only at closeout. Preserve the lifecycle **Design → Preconstruction → Construction → Closeout → Handoff → Living Property Record → Service/Maintenance → Future Remodel**. Handoff is a dated, permissioned transition over retained evidence and history; a PDF/manual export is a view of that record, not the record itself. Capture concealed conditions before closure and record missing evidence explicitly.
+
+The job and the property remain distinct identities. A future remodel is a new project linked to the authorized property history, not an overwrite of the original job. Rooms may be renamed or split; preserve stable identities, dated aliases and spatial relationships. Systems span rooms and projects. A component can be replaced without replacing the whole system. Track both the removed component and its replacement with effective dates and evidence.
+
+Required conceptual relationships (relational/Postgres design vocabulary, **not new tables**):
+
+| Relationship | Required history/evidence |
+| --- | --- |
+| Property → building/floor → area/location | Stable identity, dated names, location precision and uncertainty |
+| Area ↔ zone ↔ loop/circuit ↔ manifold ↔ system | Many-to-many physical service relationships; ports, labels, valid dates; design versus installed state |
+| Component → product/model/serial → vendor/manufacturer | Specified, approved, delivered, observed installed, removed/replaced states kept separate |
+| Installer/subcontractor → contract/scope → installation | Responsible organization/person, dated scope, exclusions, approval/change references |
+| Person/organization → contact channel → contact event | Channel validity and contact-event dates distinct from contract, install and service dates |
+| Claim/relationship → drawing/detail, document revision, photo, inspection/test | Exact source locator, author, event date, issue/record date, verification and evidentiary limits |
+| Product/system → warranty/manual → closeout | Terms, dates, missing manuals, receipt/orientation evidence; eligibility is not a promised claim outcome |
+| RFI/change/substitution → affected design, scope, cost, schedule, component | Approval authority and precise supersession scope; technical approval is not commercial approval |
+| Service event → affected area/system/component → subsequent modification | Reported symptom versus diagnosis, work performed, replacing/replaced identities, test results, responsible contractor and follow-up |
+
+**Source → inference → answer are separate layers.** Retained sources support claims about what a document says; extraction and entity matching produce candidate interpretations, not automatic physical truth. Each inference records its premises and uncertainty. Each answer carries claim-level references and labels deductions, unresolved conflicts and missing evidence. This refines §19’s SOURCE → FACT → DERIVATION → PRESENTATION chain; it does not treat an extracted fact as independently verified installation.
+
+Authority depends on the question. Drawings establish design intent; reviewed submittals establish approved products; installation observations and accepted as-builts support installed configuration; tests describe observed performance at a date; service records establish recorded later work. A newer timestamp alone does not override an authoritative source. Preserve event/effective date separately from issued/recorded date. Supersede specific claims/relationships, not entire document histories. Retain both sides of unresolved conflicts. Absence of a service entry means no service is recorded in available evidence, not that no service occurred.
+
+For “Where is the living-room radiant heating and which manifold serves it?”, the future answer must identify the area/zone, loops and manifold location with source references; distinguish initial design from recorded installation; include relevant later service/modifications and their limits; list the responsible subcontractor, original contract/scope/date, dated contacts and latest evidenced service contact. Approximate plans or photo captions do not establish safe drilling coordinates. A caption-only manifest cannot be presented as a viewed photograph.
+
+Handoff must not grant access automatically. Class B remains private; Class C requires a separately reviewed owner/contract authorization model covering recipients, permitted evidence, internal commercial/contact records, retention, revocation, ownership changes and later-project access. Links, derived claims and answer citations must remain within the reader’s authorization, including same-company project scope. Do not connect properties across tenants by address alone. Preserve current auth, company RLS, private Storage, ready-only evidence and authorization-before-retrieval/model calls; add no service-role shortcuts.
+
+Reference fixture: [SITEPM Reference Project 001](reference-projects/001/README.md), a fictional lifecycle package with evaluator-only ground truth. This is preparation for separately authorized Stage 4 evaluation, not Stage 4 implementation or proof of capability. Stage 3 remains accepted and metadata-only for documents. No property schema, graph service, owner portal, upload job or runtime fixture integration is authorized here.
+
+Open design questions for a later milestone: Class C consent/access/revocation contract; entity resolution and area changes; claim-level conflict review; retention of originals versus deletion obligations; extent of Stage 4 text versus drawing/image support. Resolve them before implementing the corresponding features.
+
 ## 21. Construction document intelligence (long-term)
 
 Documents must eventually become more than opaque PDFs. Current Documents MVP stores private PDFs with metadata and status; that is correct for now.
