@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:ask": "node scripts/run-ask-stage3-unit.mjs"
+    "test:ask": "node scripts/run-ask-stage3-unit.mjs",
+    "test:stage4a": "node scripts/ask-stage4a-schema.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

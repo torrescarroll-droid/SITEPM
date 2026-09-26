@@ -700,3 +700,20 @@ Next
 
 Blocked
 - None for this documentation/text benchmark. No actual photo binaries, scaled plan sheets or PDF renditions supplied; exact concealed routing, missing closeout records and replacement warranty remain intentional unknowns.
+
+Ask SITEPM Stage 4A — Friday, Sep 25, 2026
+
+Status: ACCEPTED — derived evidence foundations only. Hosted `sql/week7_document_intelligence.sql` applied. Stage 3 Ask unchanged. Stages 4B–4F not started. Document contents are not searchable. No PDF intelligence. No Living Property Record implementation.
+
+Done
+- Additive `sql/week7_document_intelligence.sql`: `document_extractions` and `document_chunks` bound to a ready `documents` parent; company/project aligned from the parent; `source_sha256` must match the parent hash; provenance columns locked on update; FTS `search_vector` + GIN index as a foundation only
+- Authenticated grants are SELECT only. No INSERT/UPDATE/DELETE for anon/authenticated. `replace_document_extraction()` exists as a refused 4B write hook with EXECUTE revoked from API roles
+- Types in `lib/document-intelligence-types.ts` (not wired into Ask)
+- Static schema contract test `npm run test:stage4a`; live JWT RLS: A/B SELECT isolation, Project A filter, authenticated INSERT/UPDATE/DELETE denied, write RPC not executable
+- Hosted SQL Editor apply succeeded; live `ask-stage4a-rls.mjs` passed (no derived fixture rows yet)
+
+Next
+- Stage 4B extraction/chunking only when separately authorized
+
+Blocked
+- None for Stage 4A. App Ask paths do not read these tables yet.
