@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test:ask": "node scripts/run-ask-stage3-unit.mjs",
-    "test:stage4a": "node scripts/ask-stage4a-schema.mjs"
+    "test:stage4a": "node scripts/ask-stage4a-schema.mjs",
+    "test:stage4b": "node scripts/ask-stage4b-schema.mjs && node scripts/run-ask-stage4b-unit.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

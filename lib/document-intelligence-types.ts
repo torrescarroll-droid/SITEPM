@@ -49,6 +49,7 @@ export type DocumentChunkRecord = {
   body: string;
   source_issued_on: string | null;
   source_effective_on: string | null;
+  content_kind: DocumentContentKind;
   created_at: string;
 };
 

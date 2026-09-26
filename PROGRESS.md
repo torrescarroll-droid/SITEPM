@@ -717,3 +717,37 @@ Next
 
 Blocked
 - None for Stage 4A. App Ask paths do not read these tables yet.
+
+Ask SITEPM Stage 4B — Friday, Sep 25, 2026
+
+Status: MARKDOWN EXTRACTION + SECTION CHUNKING ONLY — ready for review; not committed. Ask/search unchanged. 4C–4F not started. Not PDF/OCR/photo/Living Property Record.
+
+Done
+- `lib/document-extract.ts`: SHA-256 of exact source bytes, ready-parent + hash binding, heading-based chunks (`## locator —`), caption vs section locator types, oversized split with part_index, no summarization/supersession
+- `lib/rp001-corpus.ts`: loads only `docs/reference-projects/001/sources/*.md` (exactly 15); evaluator README/ground-truth/register/validate rejected
+- Additive `sql/week8_document_extraction_write.sql`: `replace_ready_document_extraction(...)` binds tenant/hash from the parent `documents` row; EXECUTE revoked from anon/authenticated; Stage 4A no-arg refused hook unchanged
+- Tests: `npm run test:stage4b`
+
+Next
+- Apply Week 8 SQL in the hosted SITEPM SQL Editor when authorized (do not guess CLI linkage)
+- Stage 4C retrieval only when separately authorized
+
+Blocked
+- Hosted writer function is not live until Week 8 SQL is applied. Authenticated clients still cannot INSERT derived rows.
+
+Ask SITEPM Stage 4B hosted acceptance — Friday, Sep 25, 2026
+
+Status: WEEK 8 APPLIED — schema/security verified with JWT + anon key only. Canonical owner-only writer not exercised (no table-owner session used). Ask/search unchanged. 4C–4F not started.
+
+Done
+- Hosted `sql/week8_document_extraction_write.sql` applied in SQL Editor; `document_chunks.content_kind` is selectable
+- Authenticated clients still cannot INSERT/UPDATE/DELETE derived rows
+- Authenticated clients cannot execute `replace_document_extraction()` or `replace_ready_document_extraction(...)`; writer body did not run; extraction row count unchanged
+- Live `scripts/ask-stage4b-rls.mjs` plus `test:stage4b`, `test:stage4a`, `test:ask`, Stage 4A RLS, `tsc`, lint, `git diff --check` all passed
+
+Next
+- Stage 4C retrieval only when separately authorized
+- Commit/push Stage 4B only with explicit authorization
+
+Blocked
+- Owner-only `replace_ready_document_extraction` success path was not run: this environment has no safe table-owner/postgres session, and EXECUTE was not granted to authenticated to force a test
