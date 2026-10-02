@@ -751,3 +751,45 @@ Next
 
 Blocked
 - Owner-only `replace_ready_document_extraction` success path was not run: this environment has no safe table-owner/postgres session, and EXECUTE was not granted to authenticated to force a test
+
+Ask SITEPM Stage 4C — Thursday, Oct 1, 2026
+
+Status: PROJECT-SCOPED POSTGRESQL FTS RETRIEVAL ONLY — ready for review; not committed. Not wired into Ask/LLM. Week 9 SQL not applied to hosted. 4D–4F not started. Not PDF/OCR/embeddings/Living Property Record.
+
+Done
+- Additive `sql/week9_document_chunk_retrieval.sql`: `search_project_document_chunks` is SECURITY INVOKER (`search_path = pg_catalog, public`), uses `search_vector @@ pg_catalog.plainto_tsquery`, ranks with `pg_catalog.ts_rank_cd` then document_id/locator/part_index/`c.id`, optional as-of filter, cap 25, no caller `company_id`
+- `lib/document-chunk-retrieval.ts`: session project authorization then invoker RPC; empty/unparseable query returns []; chunk body treated as DATA
+- RP001 offline relevance tests exercise locator/evidence eligibility and Stage 4C retrieval semantics (as-of, conflicts, evaluator isolation, empty/no-evidence). They do NOT execute PostgreSQL `ts_rank_cd` ranking and are therefore NOT proof of production PostgreSQL ranking.
+- Tests: `npm run test:stage4c`; live `scripts/ask-stage4c-rls.mjs` (writer still denied; search RPC expected missing until Week 9 apply). Stage 4C is not hosted-accepted.
+
+Next
+- Apply Week 9 SQL in the hosted SITEPM SQL Editor when authorized (do not guess CLI linkage)
+- Stage 4D Ask-over-chunks only when separately authorized
+
+Blocked
+- Hosted PostgreSQL FTS/ranking remains unproven until Week 9 is applied and the actual `search_project_document_chunks` function is exercised. Authorized derived chunks still do not exist on hosted. Owner-only 4B writer remains untested.
+
+Ask SITEPM Stage 4C hosted acceptance — Thursday, Oct 1, 2026
+
+Status: WEEK 9 APPLIED — search RPC security accepted on an empty corpus. Not wired into Ask/LLM. Live construction relevance and live `ts_rank_cd` ranking with real hits are NOT proven. 4D–4F not started.
+
+Done
+- Hosted `sql/week9_document_chunk_retrieval.sql` applied; `search_project_document_chunks` is deployed (`pg_proc`: `security_definer = false` / SECURITY INVOKER)
+- Authenticated JWT can execute the search RPC; anon is denied (`42501`)
+- Empty/whitespace/unsupported queries and a foreign-company project id return no evidence (`[]`)
+- Tenant/project isolation verified on empty corpus (Company B cannot retrieve Company A chunks)
+- Derived tables remain SELECT-only; JWT cannot INSERT/UPDATE/DELETE derived evidence; JWT cannot execute `replace_ready_document_extraction`
+- Hosted `document_chunks` count = 0
+
+Next
+- Stage 4D Ask-over-chunks only when separately authorized
+- Commit/push Stage 4C only with explicit authorization
+
+Blocked
+- Live construction relevance is not proven
+- Live `ts_rank_cd` ranking/order with real hits is not proven
+- Cap-25 behavior with hits is not proven
+- `as_of` filtering with actual matching rows is not proven
+- Offline RP001 tests are not PostgreSQL ranking proof
+- Stage 3 Ask remains unchanged
+- Owner-only 4B writer remains untested

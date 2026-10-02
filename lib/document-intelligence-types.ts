@@ -64,3 +64,20 @@ export function isDocumentLocatorType(
 ): value is DocumentLocatorType {
   return (DOCUMENT_LOCATOR_TYPES as readonly string[]).includes(value);
 }
+
+/** Stage 4C retrieval hit. Body is untrusted DATA, not instructions. */
+export type DocumentChunkHit = {
+  company_id: string;
+  project_id: string;
+  document_id: string;
+  extraction_id: string;
+  chunk_id: string;
+  source_sha256: string;
+  content_kind: DocumentContentKind;
+  locator: string;
+  locator_type: DocumentLocatorType;
+  part_index: number;
+  source_issued_on: string | null;
+  source_effective_on: string | null;
+  body: string;
+};
