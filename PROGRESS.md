@@ -814,3 +814,25 @@ Blocked
 - Owner-only 4B writer remains untested
 - Structured as_of is not in 4D
 - Epistemic integrity (inherited from Stage 3; not changed in 4D): an answer can currently survive if all model-proposed citations are stripped while `insufficientEvidence` remains false. Future explicit product/architecture decision — do not treat this checkpoint as settling it.
+
+Ask SITEPM Stage 4E-A — Friday, Oct 2, 2026
+
+Status: DETERMINISTIC OFFLINE RP001 BENCHMARK HARNESS — ready for review; not committed. Measurement only. Not 4E-B (PostgreSQL `ts_rank_cd`). Not 4E-C (model-answer evaluation). Not 4F. No production Ask change. No hosted seed. Hosted `document_chunks` remains 0.
+
+Done
+- Evaluator plane (`lib/ask-stage4e-score.ts`, `scripts/ask-stage4e-unit.ts`) reads `ground-truth.json` / register; system under test uses only `docs/reference-projects/001/sources/` via existing `extractRp001Corpus`, `searchExtractedChunksOffline`, and `budgetDocumentChunkHits` (`ASK_CHUNK_MODEL_CAP` still 8)
+- Infrastructure gates (fail the test): 15 sources, hashes/locators, 18 questions, evaluator-file deny list, GT markers/`expected_answer` must not appear in extracted bodies or a sample evidence pack
+- Diagnostic scorecard (does **not** fail on low quality): Recall@1/3/5/8/25, gold missing @25/@8, 25→8 budget survival, Q01/Q09 D15 S1+S3 conflict-pair, Q03/Q14 eval `as_of` vs product-like `asOf: null`
+- Baseline (offline fixture retrieval, **NOT** PostgreSQL `ts_rank_cd` proof): mean Recall@1/3/5/8/25 = **0 / 0 / 0 / 0 / 0** for both eval `as_of` and product-like `asOf: null`. All 18 questions return **zero hits** because the existing offline matcher requires every question token (length ≥ 2) to appear in a chunk. Budget 25→8 was not exercised (no gold@25). Q01/Q09 conflict pairs classified RETRIEVAL (S1 and S3 absent @25). Q14: D14 S2 still contains a forward pointer to D15; D15 chunks do not appear under eval as_of **or** product-like null in this matcher (empty retrieval). Q01 fixture concern (RH-01/RH-02 mix + `documented_fact` vs required conflict disclosure) remains. Fixtures and retrieval were **not** rewritten to raise scores
+- Tests: `npm run test:stage4e`
+
+Next
+- User review; commit/push only with authorization
+- 4E-B populated PostgreSQL FTS only when separately authorized
+- 4E-C model-answer evaluation only when separately authorized
+
+Blocked
+- Hosted `document_chunks` = 0; no production seed
+- Offline locator-eligibility matcher is not production ranking proof
+- Natural-language full-question queries currently retrieve no RP001 chunks offline; this is a reported benchmark/matcher limitation, not a tuned-away result
+- Owner-only 4B writer remains untested
