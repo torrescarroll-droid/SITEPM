@@ -4,6 +4,7 @@
  */
 
 import type { AskCitation, AskSourceType } from "@/lib/ask-types";
+import type { DocumentChunkHit } from "@/lib/document-intelligence-types";
 import type { DocumentRecord } from "@/lib/document-types";
 import type { FieldLogRecord } from "@/lib/field-log-types";
 import type { ProjectRecord } from "@/lib/projects";
@@ -30,6 +31,7 @@ export type AskEvidenceInventory = {
   tasks: number;
   fieldLogs: number;
   documents: number;
+  documentChunks: number;
 };
 
 export const ASK_RETRIEVAL_CAPS = {
@@ -37,6 +39,11 @@ export const ASK_RETRIEVAL_CAPS = {
   fieldLogs: 100,
   documents: 50,
 } as const;
+
+/** Initial Ask operating policy. Tunable; not a completeness guarantee. */
+export const ASK_CHUNK_MODEL_CAP = 8;
+export const ASK_CHUNK_BODY_CHARS = 2500;
+export const ASK_CHUNK_TRUNCATION_MARKER = "…[truncated]";
 
 export function citationKey(type: AskSourceType, id: string): AskCitationKey {
   return `${type}:${id}`;
@@ -73,6 +80,9 @@ export function inventoryFromPack(pack: AskEvidencePack): AskEvidenceInventory {
       .length,
     documents: pack.evidence.filter((item) => item.sourceType === "document")
       .length,
+    documentChunks: pack.evidence.filter(
+      (item) => item.sourceType === "document_chunk",
+    ).length,
   };
 }
 
@@ -158,11 +168,66 @@ export function documentEvidenceItem(
   };
 }
 
+export function truncateAskChunkBody(
+  body: string,
+  cap = ASK_CHUNK_BODY_CHARS,
+): string {
+  if (body.length <= cap) {
+    return body;
+  }
+  const marker = ASK_CHUNK_TRUNCATION_MARKER;
+  if (cap <= marker.length) {
+    return marker.slice(0, cap);
+  }
+  return `${body.slice(0, cap - marker.length)}${marker}`;
+}
+
+export function budgetDocumentChunkHits<T>(
+  hits: T[],
+  cap = ASK_CHUNK_MODEL_CAP,
+): T[] {
+  return hits.slice(0, cap);
+}
+
+export function documentChunkCitationLabel(
+  filename: string,
+  locator: string,
+  partIndex: number,
+): string {
+  const base = `${filename} · ${locator}`;
+  return partIndex > 0 ? `${base} · part ${partIndex}` : base;
+}
+
+export function documentChunkEvidenceItem(
+  projectId: string,
+  hit: DocumentChunkHit,
+  filename: string,
+): AskEvidenceItem {
+  return {
+    sourceType: "document_chunk",
+    sourceId: hit.chunk_id,
+    projectId,
+    label: documentChunkCitationLabel(filename, hit.locator, hit.part_index),
+    data: {
+      filename,
+      locator: hit.locator,
+      locator_type: hit.locator_type,
+      part_index: hit.part_index,
+      content_kind: hit.content_kind,
+      source_issued_on: hit.source_issued_on,
+      source_effective_on: hit.source_effective_on,
+      source_sha256: hit.source_sha256,
+      body: truncateAskChunkBody(hit.body),
+    },
+  };
+}
+
 export function assembleAskEvidencePack(input: {
   project: ProjectRecord;
   tasks: TaskRecord[];
   fieldLogs: FieldLogRecord[];
   documents: DocumentRecord[];
+  documentChunks?: AskEvidenceItem[];
 }): AskEvidencePack {
   const projectId = input.project.id;
   const evidence: AskEvidenceItem[] = [
@@ -172,6 +237,7 @@ export function assembleAskEvidencePack(input: {
     ...input.documents.map((document) =>
       documentEvidenceItem(projectId, document),
     ),
+    ...(input.documentChunks ?? []),
   ];
 
   for (const item of evidence) {
@@ -180,6 +246,9 @@ export function assembleAskEvidencePack(input: {
     }
     if ("storage_path" in item.data) {
       throw new Error("Ask evidence must not include Storage paths.");
+    }
+    if ("company_id" in item.data) {
+      throw new Error("Ask evidence must not include company_id.");
     }
   }
 

@@ -181,9 +181,10 @@ assert(
     messages.system === ASK_SYSTEM_PROMPT,
 );
 assert(
-  "system forbids actions and PDF reading",
+  "system forbids actions and treating chunks as PDF bytes",
   ASK_SYSTEM_PROMPT.includes("Do not perform actions") &&
-    ASK_SYSTEM_PROMPT.includes("You have not read PDF contents"),
+    ASK_SYSTEM_PROMPT.includes("not original PDF bytes") &&
+    ASK_SYSTEM_PROMPT.includes("document_chunk"),
 );
 assert(
   "document metadata present without claiming contents",

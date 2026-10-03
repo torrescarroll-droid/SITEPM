@@ -10,7 +10,8 @@
     "test:ask": "node scripts/run-ask-stage3-unit.mjs",
     "test:stage4a": "node scripts/ask-stage4a-schema.mjs",
     "test:stage4b": "node scripts/ask-stage4b-schema.mjs && node scripts/run-ask-stage4b-unit.mjs",
-    "test:stage4c": "node scripts/ask-stage4c-schema.mjs && node scripts/run-ask-stage4c-unit.mjs"
+    "test:stage4c": "node scripts/ask-stage4c-schema.mjs && node scripts/run-ask-stage4c-unit.mjs",
+    "test:stage4d": "node scripts/run-ask-stage4d-unit.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

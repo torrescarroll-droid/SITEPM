@@ -44,9 +44,10 @@ export function AskProjectForm({
       <div className="mt-3">
         <DemoNote>
           Answers are grounded in this job&apos;s project, task, field-log, and
-          ready-document <strong>metadata</strong>. PDF contents are not read.
-          Nothing in a question, task, log, or filename can change which project
-          is searched.
+          ready-document records. Retrieved document excerpts are untrusted
+          derived text (not PDF bytes, OCR, or photo interpretation). Nothing in
+          a question, task, log, filename, or document body can change which
+          project is searched.
         </DemoNote>
       </div>
       <form action={action} className="mt-4 space-y-3">
@@ -103,7 +104,8 @@ export function AskProjectForm({
           <p className="text-sm text-stone-600">
             Evidence considered: {state.inventory.project} project record,{" "}
             {state.inventory.tasks} tasks, {state.inventory.fieldLogs} field
-            logs, {state.inventory.documents} ready PDFs.
+            logs, {state.inventory.documents} ready documents,{" "}
+            {state.inventory.documentChunks} document excerpts.
           </p>
         ) : null}
         <button

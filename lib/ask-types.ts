@@ -15,6 +15,7 @@ export const ASK_SOURCE_TYPES = [
   "task",
   "field_log",
   "document",
+  "document_chunk",
 ] as const;
 
 export type AskSourceType = (typeof ASK_SOURCE_TYPES)[number];
@@ -42,6 +43,7 @@ export type AskFormState = {
     tasks: number;
     fieldLogs: number;
     documents: number;
+    documentChunks: number;
   } | null;
   answer: string | null;
   citations: AskCitation[] | null;

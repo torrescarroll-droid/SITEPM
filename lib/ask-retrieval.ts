@@ -1,10 +1,14 @@
 import {
   ASK_RETRIEVAL_CAPS,
   assembleAskEvidencePack,
+  budgetDocumentChunkHits,
+  documentChunkEvidenceItem,
   type AskEvidencePack,
 } from "@/lib/ask-evidence";
 import { requireAuthorizedAskProject } from "@/lib/ask-scope";
 import { assertAskRetrievalProjectScope } from "@/lib/ask-scope";
+import { searchAuthorizedProjectDocumentChunks } from "@/lib/document-chunk-retrieval";
+import type { DocumentChunkHit } from "@/lib/document-intelligence-types";
 import { listProjectDocuments } from "@/lib/documents";
 import { listProjectFieldLogs } from "@/lib/field-logs";
 import { listProjectTasks } from "@/lib/tasks";
@@ -21,12 +25,33 @@ function assertSameCompany(
 }
 
 /**
+ * Independent Stage 4D check on raw 4C hits. Call after retrieval succeeds
+ * and before budgeting or evidence-item construction. Fail closed; do not
+ * rewrite hit scope to the authorized ids.
+ */
+export function assertAuthorizedDocumentChunkHits(
+  projectId: string,
+  companyId: string,
+  hits: DocumentChunkHit[],
+) {
+  for (const hit of hits) {
+    if (hit.project_id !== projectId) {
+      throw new Error("Ask retrieval escaped the authorized project.");
+    }
+    if (hit.company_id !== companyId) {
+      throw new Error("Ask retrieval escaped the authorized company.");
+    }
+  }
+}
+
+/**
  * Deterministic Project Knowledge retrieval for SITEPM Intelligence.
  * Call only after (or inside) project authorization. Never pass a project id
  * from model output, retrieved text, or an unauthenticated client as authority.
  */
 export async function retrieveAskProjectEvidence(
   projectId: string,
+  options?: { question?: string },
 ): Promise<AskEvidencePack | null> {
   const scoped = await requireAuthorizedAskProject(projectId);
   if (!scoped) {
@@ -36,19 +61,44 @@ export async function retrieveAskProjectEvidence(
   const authorizedId = scoped.project.id;
   const companyId = scoped.project.company_id;
 
-  const [tasks, fieldLogs, documents] = await Promise.all([
+  const [tasks, fieldLogs, documents, chunkHits] = await Promise.all([
     listProjectTasks(authorizedId),
     listProjectFieldLogs(authorizedId),
     listProjectDocuments(authorizedId),
+    searchAuthorizedProjectDocumentChunks({
+      projectId: authorizedId,
+      query: options?.question ?? "",
+      asOf: null,
+    }),
   ]);
+
+  if (!chunkHits) {
+    return null;
+  }
+
+  assertAuthorizedDocumentChunkHits(authorizedId, companyId, chunkHits);
 
   const boundedTasks = tasks.slice(0, ASK_RETRIEVAL_CAPS.tasks);
   const boundedLogs = fieldLogs.slice(0, ASK_RETRIEVAL_CAPS.fieldLogs);
   const boundedDocs = documents.slice(0, ASK_RETRIEVAL_CAPS.documents);
+  const filenameById = new Map(
+    documents.map((document) => [document.id, document.filename]),
+  );
+  const boundedChunks = budgetDocumentChunkHits(chunkHits).map((hit) =>
+    documentChunkEvidenceItem(
+      authorizedId,
+      hit,
+      filenameById.get(hit.document_id) ?? "document",
+    ),
+  );
 
   assertAskRetrievalProjectScope(authorizedId, boundedTasks);
   assertAskRetrievalProjectScope(authorizedId, boundedLogs);
   assertAskRetrievalProjectScope(authorizedId, boundedDocs);
+  assertAskRetrievalProjectScope(
+    authorizedId,
+    boundedChunks.map((item) => ({ project_id: item.projectId })),
+  );
   assertSameCompany(companyId, boundedTasks);
   assertSameCompany(companyId, boundedLogs);
   assertSameCompany(companyId, boundedDocs);
@@ -64,5 +114,6 @@ export async function retrieveAskProjectEvidence(
     tasks: boundedTasks,
     fieldLogs: boundedLogs,
     documents: boundedDocs,
+    documentChunks: boundedChunks,
   });
 }

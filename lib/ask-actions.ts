@@ -46,7 +46,9 @@ export async function submitProjectAsk(
 
   // Question text is untrusted DATA. It is not parsed for project ids,
   // URLs, SQL, or instructions. Retrieval uses only scoped.project.id.
-  const pack = await retrieveAskProjectEvidence(scoped.project.id);
+  const pack = await retrieveAskProjectEvidence(scoped.project.id, {
+    question,
+  });
   if (!pack) {
     return {
       error: "That project is not available to your company.",

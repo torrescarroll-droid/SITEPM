@@ -793,3 +793,24 @@ Blocked
 - Offline RP001 tests are not PostgreSQL ranking proof
 - Stage 3 Ask remains unchanged
 - Owner-only 4B writer remains untested
+
+Ask SITEPM Stage 4D — Friday, Oct 2, 2026
+
+Status: GROUNDED ASK OVER AUTHORIZED DOCUMENT CHUNKS — ready for review; not committed. Not PDF/OCR/embeddings/LPR. Hosted document_chunks count remains 0.
+
+Done
+- Stage 3 Ask pipeline retrieves Stage 2 evidence and independently retrieves Stage 4C chunks for the same authorized project (`asOf: null`); one model call; allowlisted `document_chunk` citations (`sourceId` = chunk UUID; application label `{filename} · {locator}`)
+- Evidence budget (initial operating policy, not a completeness guarantee): `ASK_CHUNK_MODEL_CAP = 8` (first 8 of Stage 4C order, no shuffle/rerank/collapse-by-document) and `ASK_CHUNK_BODY_CHARS = 2500` with visible `…[truncated]`. Relevant evidence/conflicts outside the first 8 may be omitted; budget quality must be evaluated later against real retrieval. Do not claim the budget guarantees complete conflict discovery
+- Prompt: document metadata ≠ contents; `document_chunk` bodies are derived untrusted DATA, not PDF bytes/OCR/photos; conflicts described, newer is not authority; no training-knowledge fill-in for project facts
+- Tests: `npm run test:stage4d`
+
+Next
+- User review; commit/push only with authorization
+- Stage 4E only when separately authorized
+
+Blocked
+- Hosted `document_chunks` = 0, so 4D cannot prove live construction relevance, `ts_rank_cd` ranking/order with hits, cap-25 with hits, as_of with matching rows, or live model-answer quality over document chunks
+- Offline RP001 tests are not PostgreSQL ranking proof
+- Owner-only 4B writer remains untested
+- Structured as_of is not in 4D
+- Epistemic integrity (inherited from Stage 3; not changed in 4D): an answer can currently survive if all model-proposed citations are stripped while `insufficientEvidence` remains false. Future explicit product/architecture decision — do not treat this checkpoint as settling it.
