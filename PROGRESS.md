@@ -915,3 +915,19 @@ Next
 Blocked
 - 4E-C and 4F not started
 - Production FTS remains untuned; most RP001 NL questions retrieve 0 gold
+
+Ask SITEPM Stage 4E-B frozen baseline machine-readable artifact — Saturday, Oct 3, 2026
+
+Status: RECORDKEEPING ONLY — versioned immutable JSON of the first hosted FTS baseline. No retrieval change. Not 4E-C. Not 4F.
+
+Done
+- Added `docs/reference-projects/001/evaluations/stage4e-b-fts-baseline-v1.json` (do not overwrite; later experiments use v2+)
+- Records fixture SHA `b8cd1d33…`, measurement code `969d8863…`, baseline-record commit `4bcf7fe…`, Mode A/B Recall 0.046, 15 zero-hit questions, 16/18 no gold @25, 0 budget misses, Q05/Q13/Q18/Q01/Q09/Q03/Q14 facts from the hosted runner JSON
+- Deterministic unit checks of that artifact; hosted benchmark not rerun
+
+Next
+- User review; commit/push only with authorization
+- Do not tune FTS or start 4E-C unless separately authorized
+
+Blocked
+- 4E-C and 4F not started

@@ -1,0 +1,965 @@
+{
+  "schema": "sitepm.ask.stage4e_b.fts_baseline.v1",
+  "version": "v1",
+  "immutable_by_convention": true,
+  "overwrite_policy": "DO NOT OVERWRITE. Later retrieval experiments MUST write a separate versioned file (v2+). This file is the first hosted PostgreSQL FTS baseline.",
+  "benchmark_name": "RP001 Stage 4E-B hosted PostgreSQL FTS",
+  "label": "FIRST HOSTED POSTGRESQL FTS BASELINE \u2014 BEFORE RETRIEVAL TUNING",
+  "measurement_timestamp": null,
+  "measurement_timestamp_note": "The hosted runner output did not include a timestamp. Not invented.",
+  "measurement_code_sha": "969d8863ffcad11fd06d87bb21b3a6c0926ab264",
+  "baseline_record_sha": "4bcf7fed0a3e1ae03f337a999a183b2b93e3cbe1",
+  "fixture": {
+    "path": "artifacts/ask-stage4e-fts/fixture.sql",
+    "sha256": "b8cd1d336508a7266b83023469741b576fa656ec777055a03ec73c7a27fe3978",
+    "byte_size": 91067,
+    "document_count": 15,
+    "extraction_count": 15,
+    "chunk_count": 37,
+    "expected_locator_pairs": 37,
+    "locator_coverage": "37/37"
+  },
+  "question_count": 18,
+  "retrieval": {
+    "implementation": "public.search_project_document_chunks",
+    "sql_source": "sql/week9_document_chunk_retrieval.sql",
+    "security": "SECURITY INVOKER; RLS on document_chunks; company_id = current_company_id()",
+    "query_semantics": "plainto_tsquery('english')",
+    "query_preprocess": "left(trim(p_query), 500)",
+    "match_operator": "search_vector @@ tsquery",
+    "ranking": "ts_rank_cd(search_vector, q) DESC, document_id, locator, part_index, id ASC",
+    "p_limit": 25,
+    "evidence_budget": 8,
+    "rank_note": "RPC does not return ts_rank_cd. Positions are 1-based RPC ORDER POSITION."
+  },
+  "mode_a": {
+    "name": "evaluator_as_of",
+    "mean_recall": {
+      "@1": 0.046296296296296294,
+      "@3": 0.046296296296296294,
+      "@5": 0.046296296296296294,
+      "@8": 0.046296296296296294,
+      "@25": 0.046296296296296294
+    },
+    "displayed_recall_1_3_5_8_25": "0.046 / 0.046 / 0.046 / 0.046 / 0.046"
+  },
+  "mode_b": {
+    "name": "product_like_asOf_null",
+    "mean_recall": {
+      "@1": 0.046296296296296294,
+      "@3": 0.046296296296296294,
+      "@5": 0.046296296296296294,
+      "@8": 0.046296296296296294,
+      "@25": 0.046296296296296294
+    },
+    "displayed_recall_1_3_5_8_25": "0.046 / 0.046 / 0.046 / 0.046 / 0.046"
+  },
+  "mode_a_equals_mode_b": true,
+  "zero_hit_question_count": 15,
+  "no_gold_at_25_question_count": 16,
+  "budget_miss_count": 0,
+  "questions_with_budget_loss": [],
+  "mean_survival_25_to_8": 1,
+  "highlights": {
+    "q05_non_gold": {
+      "id": "Q05",
+      "hit_count": 1,
+      "gold_in_25": 0,
+      "retrieved_rpc_order": [
+        "RP001-D09#S3"
+      ],
+      "note": "one NON-GOLD hit; no gold @25"
+    },
+    "q13_partial_gold": {
+      "id": "Q13",
+      "hit_count": 1,
+      "gold_in_25": 1,
+      "recall_at_25": 0.5,
+      "retrieved_rpc_order": [
+        "RP001-D03#S2"
+      ],
+      "missing_gold_at_25": [
+        "RP001-D12#S3"
+      ]
+    },
+    "q18_partial_gold": {
+      "id": "Q18",
+      "hit_count": 1,
+      "gold_in_25": 1,
+      "recall_at_25": 0.3333333333333333,
+      "retrieved_rpc_order": [
+        "RP001-D04#S1"
+      ],
+      "missing_gold_at_25": [
+        "RP001-D01#S2",
+        "RP001-D03#S2"
+      ]
+    },
+    "q01_q09_conflict_pair": {
+      "document": "RP001-D15",
+      "locators": [
+        "S1",
+        "S3"
+      ],
+      "q01_classification": "RETRIEVAL",
+      "q09_classification": "RETRIEVAL",
+      "both_in_25": false,
+      "both_in_8": false
+    },
+    "q03_q14_temporal_masking": {
+      "q03": {
+        "as_of": "2027-02-20",
+        "eval_hit_count": 0,
+        "eval_later_issued": [],
+        "product_like_later_issued": [],
+        "eval_empty_masked": true
+      },
+      "q14": {
+        "as_of": "2029-11-08",
+        "eval_empty_masked": true,
+        "d15_under_eval_as_of": false,
+        "d14_s2_under_eval_as_of": false,
+        "d15_under_product_like": false,
+        "flags": [
+          "FIXTURE_CONCERN_Q14_FORWARD_POINTER",
+          "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+        ]
+      },
+      "note": "Mode A == Mode B; empty retrieval masked demonstration of as_of filtering"
+    }
+  },
+  "security_path": "benchmark JWT \u2192 RLS / current_company_id() \u2192 existing production search_project_document_chunks RPC. No service role. No owner SQL for scoring. No hosted-row mutation.",
+  "no_tuning": true,
+  "before_retrieval_tuning": true,
+  "not_4e_c": true,
+  "not_4f": true,
+  "per_question_source": "Exact values copied from hosted runner STAGE4E_FTS_BASELINE_JSON. Mode A and Mode B per-question retrieval were identical; fields below are that shared result.",
+  "questions": [
+    {
+      "id": "Q01",
+      "hit_count": 0,
+      "gold_count": 5,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D13#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D02#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D13#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S3",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D13#S1",
+        "RP001-D02#S1",
+        "RP001-D13#S2",
+        "RP001-D15#S1",
+        "RP001-D15#S3"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "FIXTURE_CONCERN_Q01",
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": {
+        "document": "RP001-D15",
+        "locators": [
+          "S1",
+          "S3"
+        ],
+        "in_25": {
+          "S1": false,
+          "S3": false
+        },
+        "in_8": {
+          "S1": false,
+          "S3": false
+        },
+        "both_in_25": false,
+        "both_in_8": false,
+        "classification": "RETRIEVAL"
+      }
+    },
+    {
+      "id": "Q02",
+      "hit_count": 0,
+      "gold_count": 6,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D01#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D04#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D04#S3",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D07#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D09#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D14#S1",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D01#S2",
+        "RP001-D04#S1",
+        "RP001-D04#S3",
+        "RP001-D07#S1",
+        "RP001-D09#S1",
+        "RP001-D14#S1"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q03",
+      "hit_count": 0,
+      "gold_count": 2,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D02#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D05#S2",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D02#S1",
+        "RP001-D05#S2"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q04",
+      "hit_count": 0,
+      "gold_count": 4,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D06#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D06#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D09#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D13#S1",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D06#S1",
+        "RP001-D06#S2",
+        "RP001-D09#S2",
+        "RP001-D13#S1"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q05",
+      "hit_count": 1,
+      "gold_count": 3,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D02#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D06#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D13#S2",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D02#S2",
+        "RP001-D06#S2",
+        "RP001-D13#S2"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [
+        "RP001-D09#S3"
+      ],
+      "non_gold_locators": [
+        "RP001-D09#S3"
+      ],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q06",
+      "hit_count": 0,
+      "gold_count": 4,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D05#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D09#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D13#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S1",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D05#S1",
+        "RP001-D09#S2",
+        "RP001-D13#S2",
+        "RP001-D15#S1"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q07",
+      "hit_count": 0,
+      "gold_count": 2,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D11#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D11#S2",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D11#S1",
+        "RP001-D11#S2"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q08",
+      "hit_count": 0,
+      "gold_count": 5,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D04#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D07#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D07#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D08#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D12#S1",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D04#S2",
+        "RP001-D07#S1",
+        "RP001-D07#S2",
+        "RP001-D08#S1",
+        "RP001-D12#S1"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q09",
+      "hit_count": 0,
+      "gold_count": 2,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D15#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S3",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D15#S1",
+        "RP001-D15#S3"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": {
+        "document": "RP001-D15",
+        "locators": [
+          "S1",
+          "S3"
+        ],
+        "in_25": {
+          "S1": false,
+          "S3": false
+        },
+        "in_8": {
+          "S1": false,
+          "S3": false
+        },
+        "both_in_25": false,
+        "both_in_8": false,
+        "classification": "RETRIEVAL"
+      }
+    },
+    {
+      "id": "Q10",
+      "hit_count": 0,
+      "gold_count": 3,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D14#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S2",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D14#S2",
+        "RP001-D15#S1",
+        "RP001-D15#S2"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q11",
+      "hit_count": 0,
+      "gold_count": 3,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D12#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S2",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D12#S2",
+        "RP001-D15#S1",
+        "RP001-D15#S2"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q12",
+      "hit_count": 0,
+      "gold_count": 4,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D10#P01",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D10#P02",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D10#P03",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D13#S2",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D10#P01",
+        "RP001-D10#P02",
+        "RP001-D10#P03",
+        "RP001-D13#S2"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q13",
+      "hit_count": 1,
+      "gold_count": 2,
+      "gold_retrieved_at_25": [
+        "RP001-D03#S2"
+      ],
+      "gold_positions": [
+        {
+          "locator": "RP001-D03#S2",
+          "rpc_order_position": 1
+        },
+        {
+          "locator": "RP001-D12#S3",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D12#S3"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [
+        "RP001-D03#S2"
+      ],
+      "non_gold_locators": [],
+      "gold_in_25": 1,
+      "gold_in_8": 1,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0.5,
+        "@3": 0.5,
+        "@5": 0.5,
+        "@8": 0.5,
+        "@25": 0.5
+      },
+      "secondary_flags": [],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q14",
+      "hit_count": 0,
+      "gold_count": 2,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D13#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D14#S2",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D13#S1",
+        "RP001-D14#S2"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "FIXTURE_CONCERN_Q14_FORWARD_POINTER",
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q15",
+      "hit_count": 0,
+      "gold_count": 3,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D12#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D12#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D12#S3",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D12#S1",
+        "RP001-D12#S2",
+        "RP001-D12#S3"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q16",
+      "hit_count": 0,
+      "gold_count": 3,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D08#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D12#S3",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S1",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D08#S1",
+        "RP001-D12#S3",
+        "RP001-D15#S1"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q17",
+      "hit_count": 0,
+      "gold_count": 4,
+      "gold_retrieved_at_25": [],
+      "gold_positions": [
+        {
+          "locator": "RP001-D11#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D13#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S1",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D15#S2",
+          "rpc_order_position": null
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D11#S2",
+        "RP001-D13#S1",
+        "RP001-D15#S1",
+        "RP001-D15#S2"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [],
+      "non_gold_locators": [],
+      "gold_in_25": 0,
+      "gold_in_8": 0,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0,
+        "@3": 0,
+        "@5": 0,
+        "@8": 0,
+        "@25": 0
+      },
+      "secondary_flags": [
+        "EMPTY_RETRIEVAL_TEMPORAL_MASKED"
+      ],
+      "conflict_pair": null
+    },
+    {
+      "id": "Q18",
+      "hit_count": 1,
+      "gold_count": 3,
+      "gold_retrieved_at_25": [
+        "RP001-D04#S1"
+      ],
+      "gold_positions": [
+        {
+          "locator": "RP001-D01#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D03#S2",
+          "rpc_order_position": null
+        },
+        {
+          "locator": "RP001-D04#S1",
+          "rpc_order_position": 1
+        }
+      ],
+      "missing_gold_at_25": [
+        "RP001-D01#S2",
+        "RP001-D03#S2"
+      ],
+      "primary_failure": "RETRIEVAL",
+      "retrieved_rpc_order": [
+        "RP001-D04#S1"
+      ],
+      "non_gold_locators": [],
+      "gold_in_25": 1,
+      "gold_in_8": 1,
+      "lost_in_budget": [],
+      "recall": {
+        "@1": 0.3333333333333333,
+        "@3": 0.3333333333333333,
+        "@5": 0.3333333333333333,
+        "@8": 0.3333333333333333,
+        "@25": 0.3333333333333333
+      },
+      "secondary_flags": [],
+      "conflict_pair": null
+    }
+  ]
+}
