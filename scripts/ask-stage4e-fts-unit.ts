@@ -1,9 +1,11 @@
 /**
  * Deterministic Stage 4E-B infrastructure tests.
- * Does not authenticate, generate SQL, or seed hosted data.
+ * Does not authenticate or seed hosted data. Generator spawn writes local
+ * artifacts/ask-stage4e-fts only (no hosted mutation).
  */
 
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { mapHitsToEvaluatorRefs } from "@/lib/ask-stage4e-score";
 import {
   RP001_4EB_SENTINEL_CHUNK_ID,
@@ -196,12 +198,13 @@ assert(
 
 function spawnHosted(envOverrides: Record<string, string | undefined>) {
   const env = { ...process.env };
+  // Present whitespace so the hosted runner cannot fall through to .env.local.
   for (const name of STAGE4E_FTS_REQUIRED_ENV) {
-    delete env[name];
+    env[name] = "   ";
   }
   for (const [key, value] of Object.entries(envOverrides)) {
     if (value === undefined) {
-      delete env[key];
+      env[key] = "   ";
     } else {
       env[key] = value;
     }
@@ -259,6 +262,101 @@ assert(
   "hosted runner does not print passwords",
   !malUrlOut.includes(completeDummy.SITEPM_BENCH_PASSWORD) &&
     !malUrlOut.includes(completeDummy.SITEPM_BENCH_FOREIGN_PASSWORD),
+);
+
+const generateCompany = "00000000-0000-4000-8000-000000000001";
+const generateProject = "00000000-0000-4000-8000-000000000002";
+const generateEnv = { ...process.env };
+delete generateEnv.SITEPM_BENCH_PASSWORD;
+delete generateEnv.SITEPM_BENCH_FOREIGN_PASSWORD;
+generateEnv.SITEPM_BENCH_FIXTURE = "RP001_4EB";
+generateEnv.SITEPM_BENCH_COMPANY_ID = generateCompany;
+generateEnv.SITEPM_BENCH_PROJECT_ID = generateProject;
+const generated = spawnSync(
+  process.execPath,
+  ["scripts/run-generate-ask-stage4e-fts-sql.mjs"],
+  { encoding: "utf8", env: generateEnv, timeout: 20000 },
+);
+assert("generator exits 0 for confirmed dummy tenant IDs", generated.status === 0);
+if (generated.status !== 0) {
+  console.error(generated.stdout + generated.stderr);
+}
+const generatedSql = readFileSync("artifacts/ask-stage4e-fts/fixture.sql", "utf8");
+const generatedCleanup = readFileSync("artifacts/ask-stage4e-fts/cleanup.sql", "utf8");
+const verifyAt = generatedSql.indexOf("do $verify$");
+const commitAt = generatedSql.lastIndexOf("commit;");
+const lastWriterAt = generatedSql.lastIndexOf(
+  "select public.replace_ready_document_extraction(",
+);
+assert("generated SQL contains fail-closed $verify$ block", verifyAt > 0);
+assert(
+  "verification runs after writer calls and before COMMIT",
+  lastWriterAt > 0 && verifyAt > lastWriterAt && commitAt > verifyAt,
+);
+assert(
+  "verify raises if parent count is not 15",
+  generatedSql.includes(
+    "raise exception '4E-B verify: expected 15 bound ready adapter documents, found %'",
+  ),
+);
+assert(
+  "verify binds parents to configured company/project",
+  generatedSql.includes(`d.company_id = '${generateCompany}'::uuid`) &&
+    generatedSql.includes(`d.project_id = '${generateProject}'::uuid`),
+);
+assert(
+  "verify checks parent SHA against expected source hashes",
+  generatedSql.includes("d.sha256 is not distinct from expected.source_sha256"),
+);
+assert(
+  "verify raises if extraction mappings are not 15",
+  generatedSql.includes(
+    "raise exception '4E-B verify: expected 15 bound extractions, found %'",
+  ),
+);
+assert(
+  "verify checks extraction metadata",
+  generatedSql.includes("$ven$sitepm.md.section$ven$") &&
+    generatedSql.includes("$vev$4b.1$vev$") &&
+    generatedSql.includes("x.content_kind = 'markdown'"),
+);
+assert(
+  "verify raises if unexpected extraction mappings exist",
+  generatedSql.includes(
+    "raise exception '4E-B verify: unexpected extraction mapping count %'",
+  ),
+);
+assert(
+  "verify raises if expected locators are missing",
+  generatedSql.includes(
+    "raise exception '4E-B verify: missing % expected document+locator chunks'",
+  ),
+);
+assert(
+  "verify raises if fixture chunks are unbound",
+  generatedSql.includes(
+    "raise exception '4E-B verify: % fixture chunks are unbound or identity-mismatched'",
+  ),
+);
+assert(
+  "verify includes RP001 document+locator coverage",
+  generatedSql.includes("$loc_RP001_D01_S1$S1$loc_RP001_D01_S1$") &&
+    generatedSql.includes("$loc_RP001_D10_P03$P03$loc_RP001_D10_P03$") &&
+    generatedSql.includes("$loc_RP001_D15_S3$S3$loc_RP001_D15_S3$"),
+);
+assert(
+  "generated SQL still has 15 parent inserts and 15 writer calls",
+  (generatedSql.match(/insert into public\.documents/g) ?? []).length === 15 &&
+    (generatedSql.match(/replace_ready_document_extraction\(/g) ?? []).length ===
+      15,
+);
+assert(
+  "cleanup remains exact-ID scoped",
+  generatedCleanup.includes("delete from public.documents") &&
+    !/like/i.test(generatedCleanup) &&
+    !/truncate/i.test(generatedCleanup) &&
+    generatedCleanup.includes(rp001BenchmarkDocumentUuid("RP001-D01")) &&
+    generatedCleanup.includes("-- delete from public.projects"),
 );
 
 if (failed > 0) {

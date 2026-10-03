@@ -878,3 +878,21 @@ Blocked
 - Hosted 4E-B baseline not run; no hosted fixture
 - 4E-A offline Recall@k remains 0 / not PostgreSQL proof
 - 4E-C and 4F not started
+
+Ask SITEPM Stage 4E-B fixture post-install verification hardening — Friday, Oct 2, 2026
+
+Status: GENERATOR-ONLY — fail-closed parent/extraction/chunk verification now emitted in fixture SQL before COMMIT. SQL NOT executed. Hosted DB NOT mutated. Not 4E-C. Not 4F.
+
+Done
+- Generated fixture SQL now RAISE/rolls back unless: 15 deterministic ready adapter parents (company/project, text/markdown, other, SHA); 15 expected extraction mappings (company/project, parent SHA, sitepm.md.section / 4b.1 / markdown) with 0 unexpected fixture mappings; every register document+locator chunk bound to company/project/document/extraction/SHA
+- Verification scoped to the 15 document IDs and configured company/project; no hard-coded total chunk count; cleanup remains exact-ID DELETE
+- Regenerated `artifacts/ask-stage4e-fts/fixture.sql` (not executed): 91067 bytes, SHA-256 `b8cd1d336508a7266b83023469741b576fa656ec777055a03ec73c7a27fe3978` (was `79cd2e472d2ddc2982a2a717be68a0a65b24c8bbf2e19fb60a2ab42f97f8a984`)
+- Tests: generator output inspected for RAISE-before-COMMIT; `test:stage4e-fts` unit ok; hosted runner SKIP (no live FTS run); `test:stage4e`–`test:ask`, `tsc --noEmit`, lint, `git diff --check` passed
+
+Next
+- Final execution-authorization review of generated fixture SQL before any SQL Editor apply
+- Do not start 4E-C or 4F; do not tune FTS
+
+Blocked
+- Hosted fixture still not applied; hosted FTS baseline not run
+- 4E-C and 4F not started

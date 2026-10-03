@@ -197,15 +197,175 @@ select public.replace_ready_document_extraction(
 );`);
 }
 
+const expectedParentValues = RP001_SOURCE_IDS.map((sourceId) => {
+  const docMeta = register.documents.find((item) => item.id === sourceId);
+  const documentId = bySource.get(sourceId);
+  if (!docMeta || !documentId) {
+    throw new Error(`Missing parent identity for ${sourceId}`);
+  }
+  return `(${sqlUuid(documentId)}, ${dollarQuote(`psha_${sourceId.replace(/-/g, "_")}`, docMeta.sha256)})`;
+}).join(",\n    ");
+
+const expectedLocatorValues = RP001_SOURCE_IDS.flatMap((sourceId) => {
+  const docMeta = register.documents.find((item) => item.id === sourceId);
+  const documentId = bySource.get(sourceId);
+  if (!docMeta || !documentId) {
+    throw new Error(`Missing locator identity for ${sourceId}`);
+  }
+  return docMeta.locators.map(
+    (locator) =>
+      `(${sqlUuid(documentId)}, ${dollarQuote(`loc_${sourceId.replace(/-/g, "_")}_${locator}`, locator)}, ${dollarQuote(`lsha_${sourceId.replace(/-/g, "_")}_${locator}`, docMeta.sha256)})`,
+  );
+}).join(",\n    ");
+
+const fixtureDocumentIdList = documentIds
+  .map((id) => sqlUuid(id))
+  .join(",\n      ");
+
 const fixtureSql = [
   header,
   ...documentInserts,
   ...writerCalls,
   `
--- Verify adapter rows (operator).
+-- Fail-closed fixture verification. Runs before COMMIT.
+do $verify$
+declare
+  parent_ok integer;
+  extraction_ok integer;
+  unexpected_extractions integer;
+  missing_locators integer;
+  unbound_chunks integer;
+begin
+  select count(*)
+    into parent_ok
+  from (
+    values
+    ${expectedParentValues}
+  ) as expected(id, source_sha256)
+  join public.documents as d
+    on d.id = expected.id
+  where d.company_id = ${sqlUuid(companyId)}
+    and d.project_id = ${sqlUuid(projectId)}
+    and d.status = 'ready'
+    and d.content_type = 'text/markdown'
+    and d.document_type = 'other'
+    and d.sha256 is not distinct from expected.source_sha256;
+
+  if parent_ok is distinct from 15 then
+    raise exception '4E-B verify: expected 15 bound ready adapter documents, found %', parent_ok;
+  end if;
+
+  select count(*)
+    into extraction_ok
+  from (
+    values
+    ${expectedParentValues}
+  ) as expected(id, source_sha256)
+  join public.document_extractions as x
+    on x.document_id = expected.id
+  where x.company_id = ${sqlUuid(companyId)}
+    and x.project_id = ${sqlUuid(projectId)}
+    and x.source_sha256 is not distinct from expected.source_sha256
+    and x.extractor_name = ${dollarQuote("ven", SITEPM_MARKDOWN_EXTRACTOR_NAME)}
+    and x.extractor_version = ${dollarQuote("vev", SITEPM_MARKDOWN_EXTRACTOR_VERSION)}
+    and x.content_kind = 'markdown';
+
+  if extraction_ok is distinct from 15 then
+    raise exception '4E-B verify: expected 15 bound extractions, found %', extraction_ok;
+  end if;
+
+  select count(*)
+    into unexpected_extractions
+  from public.document_extractions as x
+  where x.document_id in (
+      ${fixtureDocumentIdList}
+    )
+    and not exists (
+      select 1
+      from (
+        values
+        ${expectedParentValues}
+      ) as expected(id, source_sha256)
+      where expected.id = x.document_id
+        and x.company_id = ${sqlUuid(companyId)}
+        and x.project_id = ${sqlUuid(projectId)}
+        and x.source_sha256 is not distinct from expected.source_sha256
+        and x.extractor_name = ${dollarQuote("uen", SITEPM_MARKDOWN_EXTRACTOR_NAME)}
+        and x.extractor_version = ${dollarQuote("uev", SITEPM_MARKDOWN_EXTRACTOR_VERSION)}
+        and x.content_kind = 'markdown'
+    );
+
+  if unexpected_extractions is distinct from 0 then
+    raise exception '4E-B verify: unexpected extraction mapping count %', unexpected_extractions;
+  end if;
+
+  select count(*)
+    into missing_locators
+  from (
+    values
+    ${expectedLocatorValues}
+  ) as expected(document_id, locator, source_sha256)
+  where not exists (
+    select 1
+    from public.document_chunks as c
+    join public.document_extractions as x
+      on x.id = c.extraction_id
+     and x.document_id = c.document_id
+    where c.document_id = expected.document_id
+      and c.locator = expected.locator
+      and c.company_id = ${sqlUuid(companyId)}
+      and c.project_id = ${sqlUuid(projectId)}
+      and c.source_sha256 is not distinct from expected.source_sha256
+      and x.company_id = ${sqlUuid(companyId)}
+      and x.project_id = ${sqlUuid(projectId)}
+  );
+
+  if missing_locators is distinct from 0 then
+    raise exception '4E-B verify: missing % expected document+locator chunks', missing_locators;
+  end if;
+
+  select count(*)
+    into unbound_chunks
+  from public.document_chunks as c
+  where c.document_id in (
+      ${fixtureDocumentIdList}
+    )
+    and (
+      c.company_id is distinct from ${sqlUuid(companyId)}
+      or c.project_id is distinct from ${sqlUuid(projectId)}
+      or not exists (
+        select 1
+        from public.document_extractions as x
+        where x.id = c.extraction_id
+          and x.document_id = c.document_id
+          and x.company_id = ${sqlUuid(companyId)}
+          and x.project_id = ${sqlUuid(projectId)}
+      )
+      or not exists (
+        select 1
+        from (
+          values
+          ${expectedParentValues}
+        ) as expected(id, source_sha256)
+        where expected.id = c.document_id
+          and c.source_sha256 is not distinct from expected.source_sha256
+      )
+    );
+
+  if unbound_chunks is distinct from 0 then
+    raise exception '4E-B verify: % fixture chunks are unbound or identity-mismatched', unbound_chunks;
+  end if;
+end;
+$verify$;
+
+-- Informational listing after fail-closed checks.
 select id, filename, content_type, status, sha256
 from public.documents
-where project_id = ${sqlUuid(projectId)}
+where id in (
+    ${fixtureDocumentIdList}
+  )
+  and company_id = ${sqlUuid(companyId)}
+  and project_id = ${sqlUuid(projectId)}
 order by filename;
 
 commit;
