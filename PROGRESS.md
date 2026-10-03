@@ -896,3 +896,22 @@ Next
 Blocked
 - Hosted fixture still not applied; hosted FTS baseline not run
 - 4E-C and 4F not started
+
+Ask SITEPM Stage 4E-B first hosted PostgreSQL FTS baseline — Saturday, Oct 3, 2026
+
+Status: MEASUREMENT ONLY — first untouched hosted `search_project_document_chunks` baseline over installed RP001 adapter. Not 4E-C. Not 4F. No FTS/query/budget/GT tuning.
+
+Done
+- Hosted fixture independently verified earlier: fixtureIntegrity ok; 15/15/37 parents/extractions/chunks; 37/37 locators; bench JWT 15/15/37; foreign 0; anon 42501
+- Ran existing 4E-B runner (benchmark JWT → RLS → production Stage 4C RPC). Infrastructure PASS. Mode A (eval as_of) and Mode B (asOf null) identical
+- Macro Recall@1/3/5/8/25 = **0.046 / 0.046 / 0.046 / 0.046 / 0.046** both modes. 16/18 questions had no gold @25. Q13 R=0.50 (D03#S2@1); Q18 R=0.33 (D04#S1@1); Q05 hit non-gold D09#S3 only. First-8 budget misses = 0. Q01/Q09 D15 S1+S3 RETRIEVAL. Q03/Q14 empty in both temporal modes (not demonstrated as_of masking)
+- Honest poor baseline: production `plainto_tsquery('english')` ANDs lexemes; long builder questions mostly empty. Not claimed as a 4E-A improvement (different matcher). GT not rewritten because retrieval missed
+- Checkpoint still `969d8863ffcad11fd06d87bb21b3a6c0926ab264`; measurement did not change source or hosted rows (JWT writes denied)
+
+Next
+- User review of the honest baseline before any FTS/query/budget change or 4E-C
+- Do not tune to raise scores unless separately authorized
+
+Blocked
+- 4E-C and 4F not started
+- Production FTS remains untuned; most RP001 NL questions retrieve 0 gold
