@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# local generated 4E-B SQL (may contain tenant UUIDs; never execute from CI)
+/artifacts/
+
 # vercel
 .vercel
 

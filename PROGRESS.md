@@ -836,3 +836,45 @@ Blocked
 - Offline locator-eligibility matcher is not production ranking proof
 - Natural-language full-question queries currently retrieve no RP001 chunks offline; this is a reported benchmark/matcher limitation, not a tuned-away result
 - Owner-only 4B writer remains untested
+
+Ask SITEPM Stage 4E-B — Friday, Oct 2, 2026
+
+Status: INFRASTRUCTURE + SQL GENERATOR ONLY — hosted fixture NOT created; hosted FTS baseline NOT RUN. Not 4E-C. Not 4F. No production retrieval/Ask/SQL/grant changes. No hosted mutation from this slice.
+
+Done
+- Opt-in runner `npm run test:stage4e-fts`: SKIP when `SITEPM_BENCH_*` retrieval env is absent; when configured, authenticates JWT and calls `search_project_document_chunks` (no service role). 4E-A `test:stage4e` remains default/deterministic
+- Local generator `npm run generate:stage4e-fts-sql` writes table-owner fixture/cleanup SQL only when `SITEPM_BENCH_FIXTURE=RP001_4EB` and company/project UUIDs are supplied; generator does not execute SQL
+- RP001 4E-B database representation is a BENCHMARK FTS ADAPTER: Markdown source bytes/hash/size, `content_type=text/markdown`, adapter filenames `RP001-Dxx-BENCHMARK-MARKDOWN.pdf` (Week 6 `.pdf` CHECK only). No PDF wrappers, no Storage objects, no `application/pdf`
+- Explicit caveat: RP001 4E-B database fixture bypasses the production PDF upload/Storage preservation path. Its ready document rows exist only to satisfy the existing derived-evidence/FTS schema and must not be interpreted as proof of upload or preservation behavior
+- Operator read-only snippet `scripts/ask-stage4e-fts-plainto-tsquery.sql` (not executed)
+
+Next
+- User review of generator/runner before authorizing hosted signup, SQL Editor apply, or a live 4E-B run
+- Do not tune `plainto_tsquery`, budget 8, ground truth, or fixtures to raise scores
+
+Blocked
+- Hosted 4E-B baseline not run; no hosted fixture; hosted `document_chunks` remains 0 unless independently verified otherwise
+- 4E-A offline Recall@k remains 0 / not PostgreSQL proof
+- 4E-C and 4F not started
+
+Ask SITEPM Stage 4E-B pre-hosted fixes — Friday, Oct 2, 2026
+
+Status: PRE-HOSTED SAFETY FIXES — still no hosted users/companies/projects/fixture/seed. Not 4E-C. Not 4F. Measurement infrastructure only; no retrieval tuning.
+
+Done
+- JWT write negatives use sentinel UUIDs only (not D01 / not locator-only S1). Unexpected persisted mutation fails immediately after exact-id cleanup
+- Writer EXECUTE test targets a nonexistent sentinel document UUID so a mistaken grant cannot replace RP001
+- Env: all `SITEPM_BENCH_*` absent/blank → SKIP 0; partial → FAIL 1 (names only). Does not substitute `SUPABASE_URL`
+- Auth: verify `signInWithPassword` `user.id` and `user.email` against `SITEPM_BENCH_EMAIL` / `SITEPM_BENCH_FOREIGN_EMAIL`; bench ≠ foreign. Independent clients. Fail closed if email is missing from the auth user object
+- Fixture integrity: 15 documents + 15 extractions + expected locators must be JWT-visible before Recall@k. Missing derived rows are infra FAIL, not Recall 0
+- Evaluator-side RPC row validation (UUIDs, locator, body, dates, content_kind, locator_type, sha256). Unknown document UUID still fail-closed
+- Documented operational constraint: one RP001 4E-B fixture per database (global document PKs; collision guard; second company cannot host a second copy with this ID scheme)
+- Tests: `scripts/ask-stage4e-fts-unit.ts` plus hosted runner spawn for SKIP/partial/malformed env
+
+Next
+- Adversarial re-review before authorizing hosted signup, SQL generation/apply, or a live 4E-B run
+
+Blocked
+- Hosted 4E-B baseline not run; no hosted fixture
+- 4E-A offline Recall@k remains 0 / not PostgreSQL proof
+- 4E-C and 4F not started

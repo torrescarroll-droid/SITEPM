@@ -12,7 +12,9 @@
     "test:stage4b": "node scripts/ask-stage4b-schema.mjs && node scripts/run-ask-stage4b-unit.mjs",
     "test:stage4c": "node scripts/ask-stage4c-schema.mjs && node scripts/run-ask-stage4c-unit.mjs",
     "test:stage4d": "node scripts/run-ask-stage4d-unit.mjs",
-    "test:stage4e": "node scripts/run-ask-stage4e-unit.mjs"
+    "test:stage4e": "node scripts/run-ask-stage4e-unit.mjs",
+    "test:stage4e-fts": "node scripts/run-ask-stage4e-fts-unit.mjs && node scripts/run-ask-stage4e-fts.mjs",
+    "generate:stage4e-fts-sql": "node scripts/run-generate-ask-stage4e-fts-sql.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
