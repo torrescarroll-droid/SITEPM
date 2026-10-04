@@ -969,3 +969,43 @@ Next
 Blocked
 - Experiment 4 not started
 - 4E-C and 4F not started
+
+Ask SITEPM Stage 4E retrieval Experiment 4 checkpoint — Saturday, Oct 3, 2026
+
+Status: SHADOW/EVALUATOR INFRASTRUCTURE ONLY — frozen historical record of Retrieval Experiment 4. Production Stage 4C RPC unchanged. Not production-ready retrieval. Not 4E-C. Not 4F.
+
+Done
+- Experiment 4 (shadow only): role-lite explicit deferral/pointer test on frozen Exp2 queries + Exp3 union and `Σ 1/H_q`. Assertive before deferral, then lexical score, then identity tie-break; pointers remain in the union
+- Frozen detector (locked before hosted run): body only; lowercase / collapsed whitespace / curly quotes; closed frames `are/is/was/were recorded in`, `are/is/was/were documented in`, `are/is/was/were described in`; generic S# / P# locator required within 80 characters. No `see`/`refer`/`per`; no document or chronology authority; no RP001 IDs; no gold
+- Fixture audit: **1/37** chunks classified deferral (**D09#S3** only)
+- Mode A Recall@1/3/5/8/25 = **0.204 / 0.499 / 0.609 / 0.685 / 0.859**. Mode B = **0.204 / 0.499 / 0.609 / 0.657 / 0.859**
+- Q05: D09#S3 remained discoverable; lexical **#1**; role-lite **#26**; gold moved above the explicit pointer. Q09, Q13, and Q18 controls held. First-8 did not regress vs Experiment 3. Q01 remained unsolved. Q02 remained structurally unsolved despite incidental top25 improvement
+- Detector is too thin to ship as a production ranker. **PASS** as an architectural experiment: evidence role is a distinct concern from lexical relevance. Frozen baseline SHA-256 remains `f6395382a05c4e80cd3db2dd8db32eb8bd24a416c25a5ad89bbf6a1762439a1a`
+
+Next
+- Do not start another Stage 4E retrieval-score experiment
+- Next engineering direction: Stage 4F PDF text-layer support (not started)
+
+Blocked
+- 4F not started
+- 4E-C not started
+
+Ask SITEPM Stage 4E retrieval experiment series closed — Saturday, Oct 3, 2026
+
+Status: RESEARCH SERIES CLOSED — Experiments 1–4 complete as shadow evaluators. **NO EXPERIMENT 5.** Production retrieval unchanged.
+
+Done
+- KEEP / SUPPORTED: deterministic construction-oriented query decomposition; bounded multi-query retrieval; JWT / RLS / SECURITY INVOKER path; full candidate union before final evidence prioritization; explicit first-8 evidence budget; temporal `as_of`; lexical relevance as the default relevance signal; evidence role as a distinct future architectural layer; unknown / conflict / citation behavior remains important
+- NOT SUPPORTED AS PRODUCTION RANKERS: whole-question AND retrieval; pure inverse-frequency ranking; broad hand-tuned authority rules; Experiment 4's narrow detector by itself
+- DEFER TO CONSTRUCTION STATE: entity relationships; component/location relationships; contract/installer/service routing; conflict siblings; supersession / current-state relationships
+- DEFER TO LATER EVIDENCE ROLE: pointer vs authoritative record; mixed pointer/assertion chunks; complaint vs work record; revision authority; as-built vs historical/working-record semantics
+- KNOWN BETA LIMITATIONS: Q01 relationship-dependent evidence can fall outside top25; Q02 high-frequency-only evidence can rank poorly; Q04 identifier/tokenization limits; Q05 rank-1 may still be a non-gold but relevant record; no full relationship graph; no mature evidence-role ontology; photo/binary intelligence not handled here
+
+Next
+- Stage 4F — PDF text-layer support (not started)
+- After 4F: MVP hardening → private beta
+- Remaining retrieval weaknesses should be revisited from real beta evidence or future Construction State / evidence-role architecture, not by further RP001 score optimization
+
+Blocked
+- 4F not started
+- Do not begin another retrieval-score experiment for Stage 4E
