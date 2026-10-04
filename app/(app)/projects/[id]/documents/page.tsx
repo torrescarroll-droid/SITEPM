@@ -1,6 +1,7 @@
 import { DocumentList, NewDocumentForm } from "@/components/document-list";
 import { ProjectTabs } from "@/components/project-tabs";
 import { PageHeader } from "@/components/ui";
+import { PDF_ASK_EXPECTATION } from "@/lib/beta-copy";
 import { listProjectDocuments } from "@/lib/documents";
 import { getAuthorizedProject } from "@/lib/projects";
 
@@ -15,7 +16,11 @@ export default async function ProjectDocumentsPage({
 
   return (
     <div>
-      <PageHeader kicker="Documents" title={project.name} />
+      <PageHeader
+        kicker="Documents"
+        title={project.name}
+        description={PDF_ASK_EXPECTATION}
+      />
       <ProjectTabs projectId={id} active="documents" />
       <div className="grid gap-4 lg:grid-cols-2">
         <NewDocumentForm

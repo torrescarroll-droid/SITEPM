@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ProjectTabs } from "@/components/project-tabs";
 import { Card, PageHeader, StatusPill } from "@/components/ui";
+import { listProjectFieldLogs } from "@/lib/field-logs";
 import { formatProjectDate, getAuthorizedProject } from "@/lib/projects";
 import { listProjectTasks } from "@/lib/tasks";
 
@@ -12,7 +13,9 @@ export default async function ProjectOverviewPage({
   const { id } = await params;
   const project = await getAuthorizedProject(id);
   const projectTasks = await listProjectTasks(id);
+  const projectFieldLogs = await listProjectFieldLogs(id);
   const openTaskCount = projectTasks.filter((task) => task.status !== "done").length;
+  const fieldLogCount = projectFieldLogs.length;
 
   return (
     <div>
@@ -81,7 +84,9 @@ export default async function ProjectOverviewPage({
               Field logs
             </h2>
             <p className="mt-2 text-sm text-stone-600">
-              Field records are not connected to Supabase yet.
+              {fieldLogCount === 0
+                ? "No field logs on this job yet."
+                : `${fieldLogCount} field log${fieldLogCount === 1 ? "" : "s"} on this job.`}
             </p>
             <Link href={`/projects/${id}/field`} className="mt-2 inline-block text-sm font-medium">
               Open field

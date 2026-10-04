@@ -1,5 +1,6 @@
 import { DocumentList, NewDocumentForm } from "@/components/document-list";
 import { PageHeader } from "@/components/ui";
+import { PDF_ASK_EXPECTATION } from "@/lib/beta-copy";
 import { listCompanyDocuments } from "@/lib/documents";
 import { listCompanyProjects } from "@/lib/projects";
 
@@ -17,7 +18,7 @@ export default async function DocumentsPage() {
       <PageHeader
         kicker="Documents"
         title="Project files"
-        description="PDFs are stored privately for your company and tied to a job."
+        description={`PDFs are stored privately for your company and tied to a job. ${PDF_ASK_EXPECTATION}`}
       />
       <div className="grid gap-4 lg:grid-cols-2">
         <NewDocumentForm

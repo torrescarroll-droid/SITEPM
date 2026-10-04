@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { Card, DemoNote } from "@/components/ui";
+import { INSUFFICIENT_EVIDENCE_EXPLAINED, PDF_ASK_EXPECTATION } from "@/lib/beta-copy";
 import { submitProjectAsk } from "@/lib/ask-actions";
 import type { AskFormState } from "@/lib/ask-types";
 
@@ -43,11 +44,7 @@ export function AskProjectForm({
       </p>
       <div className="mt-3">
         <DemoNote>
-          Answers are grounded in this job&apos;s project, task, field-log, and
-          ready-document records. Retrieved document excerpts are untrusted
-          derived text (not PDF bytes, OCR, or photo interpretation). Nothing in
-          a question, task, log, filename, or document body can change which
-          project is searched.
+          {PDF_ASK_EXPECTATION} {INSUFFICIENT_EVIDENCE_EXPLAINED}
         </DemoNote>
       </div>
       <form action={action} className="mt-4 space-y-3">

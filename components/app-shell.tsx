@@ -81,6 +81,12 @@ export function AppShell({
               Log out
             </button>
           </form>
+          <Link
+            href="/guide"
+            className="mt-3 inline-block text-sm text-stone-500 hover:text-stone-950"
+          >
+            Private beta guide
+          </Link>
         </div>
       </aside>
 

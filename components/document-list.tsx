@@ -47,8 +47,10 @@ export function NewDocumentForm({
       </h2>
       <div className="mt-3">
         <DemoNote>
-          Stored privately for your company. The job is taken from this form,
-          not typed as a company id. PDF only, 20 MB or smaller.
+          Stored privately for your company. PDF only, 20 MB or smaller.
+          SITEPM can search selectable text in digital PDFs. Scans, photos of
+          pages, and drawings are not searchable yet. The file can still save
+          even if that text cannot be read.
         </DemoNote>
       </div>
       <form action={action} className="mt-4 space-y-3">

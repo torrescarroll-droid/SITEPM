@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Card, PageHeader, StatusPill } from "@/components/ui";
+import { PDF_ASK_EXPECTATION } from "@/lib/beta-copy";
 import { listCompanyProjects } from "@/lib/projects";
 
 export default async function AskPage() {
@@ -10,7 +11,7 @@ export default async function AskPage() {
       <PageHeader
         kicker="Ask SITEPM"
         title="Choose a job"
-        description="Ask is always scoped to one project. Pick a job you can open. SITEPM authorizes that project again on the next screen."
+        description={`Ask is always scoped to one project. Pick a job you can open. ${PDF_ASK_EXPECTATION}`}
       />
       {projects.length === 0 ? (
         <Card>
