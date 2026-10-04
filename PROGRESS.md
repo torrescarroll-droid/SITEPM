@@ -949,3 +949,23 @@ Next
 Blocked
 - Experiment 3 not started
 - 4E-C and 4F not started
+
+Ask SITEPM Stage 4E retrieval Experiment 3 checkpoint — Saturday, Oct 3, 2026
+
+Status: SHADOW/EVALUATOR INFRASTRUCTURE ONLY — frozen historical record of Retrieval Experiment 3. Production Stage 4C RPC unchanged. Experiment 4 not started. Not 4E-C. Not 4F.
+
+Done
+- Experiment 3 (shadow only): frozen Exp2 query generation; JWT → RLS → existing `search_project_document_chunks`; full subquery union before cap; gold-free `score = Σ 1/H_q`; cap 25 then first-8 budget
+- Mode A Recall@1/3/5/8/25 = **0.204 / 0.481 / 0.609 / 0.685 / 0.850**. Mode B = **0.204 / 0.481 / 0.609 / 0.657 / 0.850**. Zero-hit = 0. No-gold@25 = 0. Full union **preserved Exp2 Recall@25 (0.850)**
+- Mode A mean full pool = **16.89**; max full pool = **33**; mean non-gold@8 = **5.11**. Inverse-frequency ranking **reduced first-8 recall vs Exp2 (0.724 → 0.685)**
+- Q01 D15#S3 entered the full pool but ranked outside top25. All six Q02 gold entered the full pool; two high-df-only chunks ranked outside top25. Q09 remained strong. Q13/Q18 remained strong. Q05 pointer remained rank 1
+- Inverse frequency is a real lexical signal and **not a production candidate**. Candidate discovery and evidence prioritization remain separate architectural responsibilities
+- Recommendation: **INVESTIGATE FURTHER** — exactly one final bounded role-lite experiment before ending the Stage 4E retrieval experiment series. Frozen baseline SHA-256 remains `f6395382a05c4e80cd3db2dd8db32eb8bd24a416c25a5ad89bbf6a1762439a1a`
+
+Next
+- Final Experiment 4 (not started): role-lite deferral vs assertion on frozen Exp3 union, still shadow-only
+- Do not change production retrieval from these scores
+
+Blocked
+- Experiment 4 not started
+- 4E-C and 4F not started
