@@ -1011,7 +1011,7 @@ Blocked
 
 Ask SITEPM Stage 4F-C complete and accepted — Sunday, Oct 4, 2026
 
-Status: ACCEPTED — secure PDF derived-evidence persistence. Restricted writer only. No service_role. Production 4C ranking / 4D Ask / RP001 gold unchanged. 4F-D not started. NO EXPERIMENT 5.
+Status: ACCEPTED — secure PDF derived-evidence persistence. Restricted writer only. No service_role. Production 4C ranking / 4D Ask / RP001 gold unchanged. NO EXPERIMENT 5.
 
 Done
 - Stage 4F-C accepted. Implementation commit `bd4e1332de9b82ebf5f44cee257de830a34c0557` (`feat: persist verified PDF evidence securely`). Prior 4F-A parser, 4F-B page drafts, and 4F-C0 parser-child env isolation remain in that lineage
@@ -1021,9 +1021,26 @@ Done
 - Leftover hosted proof document `039f4b68-c8b3-42ce-883a-5361e1f75172` plus its current derived extraction/chunks is **test residue**, not a product failure. Ready documents cannot change status; JWT/extractor have no DELETE path. Do not weaken permissions to remove it
 
 Next
-- Do not start Stage 4F-D until separately authorized
-- After 4F: MVP hardening → private beta
+- After 4F: MVP hardening → private beta (not started)
 
 Blocked
-- Stage 4F-D not started
-- Hosted proof fixture cannot be deleted under the accepted security model
+- Hosted 4F-C proof fixture cannot be deleted under the accepted security model
+
+Ask SITEPM Stage 4F-D complete — Stage 4F complete and accepted — Sunday, Oct 4, 2026
+
+Status: ACCEPTED — Stage 4F complete. Digitally-generated embedded-text PDFs are proven end-to-end. 4F-D was test/harness only; production `lib/` and `sql/` unchanged. OCR, scans, and drawings remain out of scope. NO EXPERIMENT 5.
+
+Done
+- Stage 4F-D accepted. Implementation/harness commit `bd74a5b3aa3a0381904e8e9002a2b6437822a4ef` (`test: close Stage 4F PDF intelligence end to end`)
+- Stage 4F complete: 4F-A bounded PDF text parser; 4F-B deterministic page-aware evidence drafts; 4F-C0 parser-child credential isolation; 4F-C restricted persist + hosted security acceptance; 4F-D end-to-end PDF intelligence acceptance
+- Acceptance matrix **1–20 PASS**. A real digitally-generated PDF traversed the existing production path: JWT upload → ready → byte_size/SHA-256 → timeout-child extract → `sitepm_extractor` persist → 4C retrieval (unchanged) → 4D grounded Ask (unchanged) → citation `4fd-e2e-zxq719.pdf · page-0002`
+- Production code unchanged in 4F-D. No ranking, Ask prompt, first-8 budget, citation, SQL, RLS, or grant changes
+- Hosted 4F-D leftover documents/extractions are **test residue**, not a product failure. Do not weaken permissions to delete them. OCR/scans/drawings remain explicitly out of scope
+
+Next
+- MVP hardening → private beta
+- Do not start MVP hardening until separately authorized
+
+Blocked
+- MVP hardening / private beta not started
+- Hosted 4F-C/4F-D proof fixtures cannot be deleted under the accepted security model
