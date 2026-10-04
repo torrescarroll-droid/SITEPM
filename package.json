@@ -15,6 +15,7 @@
     "test:stage4f-a": "node scripts/run-ask-stage4f-a-unit.mjs",
     "test:stage4f-b": "node scripts/run-ask-stage4f-b-unit.mjs",
     "test:stage4f-c": "node scripts/ask-stage4f-c-schema.mjs && node scripts/run-ask-stage4f-c-unit.mjs && node scripts/ask-stage4f-c-hosted.mjs",
+    "test:stage4f-d": "node scripts/ask-stage4f-d-schema.mjs && node scripts/run-ask-stage4f-d-unit.mjs && node scripts/ask-stage4f-d-hosted.mjs",
     "generate:stage4f-a-fixtures": "node scripts/generate-pdf-text-extract-fixtures.mjs",
     "test:stage4e": "node scripts/run-ask-stage4e-unit.mjs",
     "test:stage4e-fts": "node scripts/run-ask-stage4e-fts-unit.mjs && node scripts/run-ask-stage4e-fts.mjs",

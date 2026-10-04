@@ -19,6 +19,8 @@ const files = {
   "encrypted.pdf": fixtures.buildEncryptedPdf(),
   "sparse-text.pdf": fixtures.sparseTextPdf(),
   "prompt-injection.pdf": fixtures.promptInjectionPdf(),
+  "4fd-e2e-zxq719.pdf": fixtures.stage4fDDistinctivePdf(),
+  "4fd-prompt-zxq719.pdf": fixtures.stage4fDPromptLikePdf(),
 };
 
 for (const [name, bytes] of Object.entries(files)) {
