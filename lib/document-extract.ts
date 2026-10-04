@@ -1,7 +1,7 @@
 /**
  * Stage 4B Markdown/plain-text and Stage 4F-B PDF page-chunk drafts.
  * Not wired into Ask. Original documents remain authoritative.
- * 4F-B does not write document_extractions / document_chunks.
+ * Drafts are persisted only by the Stage 4F-C restricted writer.
  */
 
 import { createHash } from "node:crypto";
@@ -11,6 +11,7 @@ import type {
 } from "@/lib/document-intelligence-types";
 import {
   extractPdfTextLayer,
+  extractPdfTextLayerWithTimeout,
   type PdfExtractedPage,
   type PdfTextExtractOptions,
 } from "@/lib/pdf-text-extract";
@@ -294,13 +295,20 @@ export async function extractPdfDocument(
     parent: ReadyDocumentIdentity;
     bytes: Uint8Array | Buffer;
     expectedSha256?: string;
+    parser?: "in-process" | "timeout-child";
   } & PdfTextExtractOptions & { chunkCap?: number },
 ): Promise<DerivedExtractionDraft> {
   const sourceSha256 = assertReadySourceIdentity(input);
-  const parsed = await extractPdfTextLayer(input.bytes, {
-    maxPages: input.maxPages,
-    maxUtf8Bytes: input.maxUtf8Bytes,
-  });
+  const parsed =
+    input.parser === "timeout-child"
+      ? await extractPdfTextLayerWithTimeout(input.bytes, {
+          maxPages: input.maxPages,
+          maxUtf8Bytes: input.maxUtf8Bytes,
+        })
+      : await extractPdfTextLayer(input.bytes, {
+          maxPages: input.maxPages,
+          maxUtf8Bytes: input.maxUtf8Bytes,
+        });
   const chunks = chunkPdfPages(parsed.pages, sourceSha256, input.chunkCap);
 
   return {

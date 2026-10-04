@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { requireCompanyContext } from "@/lib/auth-context";
 import { findAuthorizedProject } from "@/lib/projects";
 import { getAuthorizedDocument } from "@/lib/documents";
+import { persistReadyPdfExtractionBestEffort } from "@/lib/document-extraction-persist";
 import {
   DOCUMENT_BUCKET,
   DOCUMENT_MAX_BYTES,
@@ -136,6 +137,13 @@ export async function uploadProjectDocument(
         "The file was stored but could not be marked ready. It will not appear in the list. Try uploading again.",
     };
   }
+
+  const authorized = await getAuthorizedDocument(documentId, { statuses: ["ready"] });
+  await persistReadyPdfExtractionBestEffort({
+    supabase,
+    document: authorized,
+    callerCompanyId: profile.company_id,
+  });
 
   revalidateDocumentPaths(project.id);
   return { error: null };
