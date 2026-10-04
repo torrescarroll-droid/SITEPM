@@ -442,6 +442,37 @@ function parseChildOutput(stdout: string): PdfTextExtractSuccess {
   );
 }
 
+export const PDF_PARSER_CHILD_OPTION_ENV = "SITEPM_PDF_EXTRACT_OPTIONS";
+
+const PDF_PARSER_CHILD_FORBIDDEN_ENV = [
+  "OPENAI_API_KEY",
+  "SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "SITEPM_EXTRACTOR_DATABASE_URL",
+  "DATABASE_URL",
+] as const;
+
+/**
+ * Explicit child environment. Does not copy process.env.
+ * Parser options travel only via SITEPM_PDF_EXTRACT_OPTIONS.
+ */
+export function pdfParserChildEnv(
+  options: PdfTextExtractOptions = {},
+): Record<string, string> {
+  const env: Record<string, string> = {
+    [PDF_PARSER_CHILD_OPTION_ENV]: JSON.stringify({
+      maxPages: options.maxPages ?? PDF_TEXT_EXTRACT_MAX_PAGES,
+      maxUtf8Bytes: options.maxUtf8Bytes ?? PDF_TEXT_EXTRACT_MAX_UTF8_BYTES,
+    }),
+  };
+  for (const name of PDF_PARSER_CHILD_FORBIDDEN_ENV) {
+    if (name in env) {
+      throw new Error("PDF parser child env must not include application secrets");
+    }
+  }
+  return env;
+}
+
 /**
  * Killable timeout wrapper. The child process is SIGKILL'd when the bound elapses.
  * In-process Promise.race is not used as a CPU kill switch.
@@ -461,13 +492,7 @@ export function extractPdfTextLayerWithTimeout(
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [childScript], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: {
-        ...process.env,
-        SITEPM_PDF_EXTRACT_OPTIONS: JSON.stringify({
-          maxPages: options.maxPages ?? PDF_TEXT_EXTRACT_MAX_PAGES,
-          maxUtf8Bytes: options.maxUtf8Bytes ?? PDF_TEXT_EXTRACT_MAX_UTF8_BYTES,
-        }),
-      },
+      env: pdfParserChildEnv(options) as NodeJS.ProcessEnv,
     });
 
     let stdout = "";

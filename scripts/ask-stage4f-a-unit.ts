@@ -1,11 +1,14 @@
+import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
+  PDF_PARSER_CHILD_OPTION_ENV,
   PDF_TEXT_EXTRACT_MAX_PAGES,
   PdfTextExtractError,
   SITEPM_PDFJS_DIST_VERSION,
   extractPdfTextLayer,
   extractPdfTextLayerWithTimeout,
+  pdfParserChildEnv,
 } from "@/lib/pdf-text-extract";
 import { extractMarkdownDocument, sha256Hex } from "@/lib/document-extract";
 import {
@@ -198,6 +201,99 @@ try {
     error instanceof PdfTextExtractError && error.code === "parser_timeout";
   assert("timeout boundary kills child", ok);
   assert("timeout fires well under stub sleep", elapsed < 2000);
+}
+
+const childEnv = pdfParserChildEnv({ maxPages: 3, maxUtf8Bytes: 1000 });
+const childEnvKeys = Object.keys(childEnv);
+assert(
+  "child env allowlist is only parser options",
+  childEnvKeys.length === 1 && childEnvKeys[0] === PDF_PARSER_CHILD_OPTION_ENV,
+);
+
+const sentinelNames = [
+  "OPENAI_API_KEY",
+  "SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "SITEPM_EXTRACTOR_DATABASE_URL",
+  "DATABASE_URL",
+] as const;
+const previousSentinels: Record<string, string | undefined> = {};
+for (const name of sentinelNames) {
+  previousSentinels[name] = process.env[name];
+  process.env[name] = `sentinel-present-${name}`;
+}
+
+try {
+  const isolated = pdfParserChildEnv();
+  assert(
+    "builder omits parent sentinel names",
+    sentinelNames.every((name) => !Object.hasOwn(isolated, name)),
+  );
+
+  const probe = await new Promise<{
+    keys: string[];
+    sentinelPresent: Record<string, boolean>;
+    optionEnvPresent: boolean;
+  }>((resolve, reject) => {
+    const child = spawn(
+      process.execPath,
+      [join(process.cwd(), "scripts/pdf-text-extract-env-probe.mjs")],
+      {
+        stdio: ["ignore", "pipe", "pipe"],
+        env: pdfParserChildEnv(),
+      },
+    );
+    let stdout = "";
+    let stderr = "";
+    child.stdout.setEncoding("utf8");
+    child.stderr.setEncoding("utf8");
+    child.stdout.on("data", (chunk: string) => {
+      stdout += chunk;
+    });
+    child.stderr.on("data", (chunk: string) => {
+      stderr += chunk;
+    });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code !== 0) {
+        reject(new Error(stderr || `env probe exited ${code}`));
+        return;
+      }
+      try {
+        resolve(JSON.parse(stdout));
+      } catch (error) {
+        reject(error);
+      }
+    });
+  });
+
+  assert("spawned child received parser options env", probe.optionEnvPresent === true);
+  assert(
+    "spawned child has no sentinel secret names",
+    sentinelNames.every((name) => probe.sentinelPresent[name] === false),
+  );
+  assert(
+    "spawned child does not inherit PATH or HOME from parent",
+    !probe.keys.includes("PATH") && !probe.keys.includes("HOME"),
+  );
+  const unexpected = probe.keys.filter(
+    (name) =>
+      name !== PDF_PARSER_CHILD_OPTION_ENV &&
+      name !== "__CF_USER_TEXT_ENCODING",
+  );
+  assert(
+    "spawned child has no unexpected application env keys",
+    unexpected.length === 0,
+  );
+} finally {
+  for (const name of sentinelNames) {
+    const previous = previousSentinels[name];
+    if (previous === undefined) {
+      delete process.env[name];
+    } else {
+      process.env[name] = previous;
+    }
+  }
 }
 
 const markdown = Buffer.from("## S1 — Title\n\nBody\n", "utf8");
