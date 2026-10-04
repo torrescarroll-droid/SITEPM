@@ -1007,5 +1007,23 @@ Next
 - Remaining retrieval weaknesses should be revisited from real beta evidence or future Construction State / evidence-role architecture, not by further RP001 score optimization
 
 Blocked
-- 4F not started
 - Do not begin another retrieval-score experiment for Stage 4E
+
+Ask SITEPM Stage 4F-C complete and accepted — Sunday, Oct 4, 2026
+
+Status: ACCEPTED — secure PDF derived-evidence persistence. Restricted writer only. No service_role. Production 4C ranking / 4D Ask / RP001 gold unchanged. 4F-D not started. NO EXPERIMENT 5.
+
+Done
+- Stage 4F-C accepted. Implementation commit `bd4e1332de9b82ebf5f44cee257de830a34c0557` (`feat: persist verified PDF evidence securely`). Prior 4F-A parser, 4F-B page drafts, and 4F-C0 parser-child env isolation remain in that lineage
+- Restricted `sitepm_extractor` LOGIN is the persist authority: EXECUTE `replace_ready_document_extraction(...)` only. Tenant ops remain anon key + authenticated JWT + RLS. Writer `search_path = pg_catalog, public`; EXECUTE revoked from PUBLIC/anon/authenticated/service_role
+- Hosted acceptance assertions **1–17 PASS**: extractor connects; writer executes without service_role; extractor cannot SELECT/DML product tables, cannot access Storage/Auth, cannot execute unrelated privileged functions; anon and authenticated JWT cannot EXECUTE the writer; Company A JWT can read persisted derived evidence; Company B cannot; wrong source hash is rejected without corrupting existing evidence; failed replacement is atomic; valid retry leaves exactly one current extraction; parser child remains credential-free
+- Regression: Stage 4F-A, 4F-B, 4B, 4C, 4D, RP001 validator, and `tsc --noEmit` passed
+- Leftover hosted proof document `039f4b68-c8b3-42ce-883a-5361e1f75172` plus its current derived extraction/chunks is **test residue**, not a product failure. Ready documents cannot change status; JWT/extractor have no DELETE path. Do not weaken permissions to remove it
+
+Next
+- Do not start Stage 4F-D until separately authorized
+- After 4F: MVP hardening → private beta
+
+Blocked
+- Stage 4F-D not started
+- Hosted proof fixture cannot be deleted under the accepted security model
