@@ -931,3 +931,21 @@ Next
 
 Blocked
 - 4E-C and 4F not started
+
+Ask SITEPM Stage 4E retrieval Experiments 1 and 2 checkpoint — Saturday, Oct 3, 2026
+
+Status: SHADOW/EVALUATOR INFRASTRUCTURE ONLY — frozen historical record of Retrieval Experiments 1 and 2. Production Stage 4C RPC unchanged. Not Experiment 3. Not 4E-C. Not 4F.
+
+Done
+- Experiment 1 (shadow only): deterministic multi-query lexical decomposition against existing `search_project_document_chunks`; Mode A Recall@25 **0.630** vs frozen baseline **0.046**; Recall@8 **0.580**; zero-hit 15→0. Exposed broad-location candidate flooding (`living room`). Not production-ready
+- Experiment 2 (shadow only): construction-family unigrams + narrow/broad merge; Mode A Recall@25 **0.850**; Recall@8 **0.724**; no-gold@25 16→0. Mean non-gold@25 rose to **13.39**. Exposed high-document-frequency unigram flooding (`record`/`installed`). Not production-ready
+- Architectural learning: candidate discovery and evidence prioritization are separate retrieval concerns
+- Frozen baseline artifact SHA-256 remains `f6395382a05c4e80cd3db2dd8db32eb8bd24a416c25a5ad89bbf6a1762439a1a`. Production FTS/SQL/Ask/RLS/GT/sources not tuned
+
+Next
+- Experiment 3 (not started): bounded full candidate union plus gold-free inverse RPC hit-count ranking, still shadow-only
+- Do not change production retrieval from these scores
+
+Blocked
+- Experiment 3 not started
+- 4E-C and 4F not started

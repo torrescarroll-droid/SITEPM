@@ -14,6 +14,8 @@
     "test:stage4d": "node scripts/run-ask-stage4d-unit.mjs",
     "test:stage4e": "node scripts/run-ask-stage4e-unit.mjs",
     "test:stage4e-fts": "node scripts/run-ask-stage4e-fts-unit.mjs && node scripts/run-ask-stage4e-fts.mjs",
+    "test:stage4e-fts-experiment1": "node scripts/run-ask-stage4e-fts-experiment1-unit.mjs && node scripts/run-ask-stage4e-fts-experiment1.mjs",
+    "test:stage4e-fts-experiment2": "node scripts/run-ask-stage4e-fts-experiment2-unit.mjs && node scripts/run-ask-stage4e-fts-experiment2.mjs",
     "generate:stage4e-fts-sql": "node scripts/run-generate-ask-stage4e-fts-sql.mjs"
   },
   "dependencies": {
