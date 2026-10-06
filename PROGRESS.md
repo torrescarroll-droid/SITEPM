@@ -1044,3 +1044,28 @@ Next
 Blocked
 - MVP hardening / private beta not started
 - Hosted 4F-C/4F-D proof fixtures cannot be deleted under the accepted security model
+
+Ask lexical retrieval — Slice 1 real-question match — Monday, Oct 5, 2026
+
+Status: IMPLEMENTED, NOT COMMITTED — production Ask no longer sends the whole question as the only `plainto_tsquery` AND. Stage 4E Experiment 5 was NOT reopened. Next authorized work: NONE until review.
+
+Done
+- Objective: a normal construction question must be able to retrieve a digitally generated PDF paragraph that answers it even when conversational words in the question do not appear in that paragraph
+- Production failure: “What must happen before tile installation in the primary shower?” returned insufficient evidence because `plainto_tsquery('english', question)` required “happen”. The waterproofing / flood-test / 24-hour sentence was excluded. A later excerpt that repeated the question could match instead. The model correctly refused
+- Implementation: `lib/ask-lexical-query.ts` derives at most 6 lexical searches (hyphen phrases, non-overlapping content bigrams, one leftover unigram). Question-frame words, including must/happen/shall, are not mandatory search terms. Each search calls the existing `search_project_document_chunks` RPC through `searchAuthorizedProjectDocumentChunks`. Hits are unioned and deduped by chunk id before the existing first-8 evidence budget. Prioritization is match count, then best 1-based RPC list position, then search order, then chunk identity. No inverse-frequency ranker, no authority rules, no evidence-role detector, no embeddings, no prompt change
+- Security invariants preserved: user JWT and RLS still authorize every RPC call; project id is the only scope passed in; a hit for another project throws; unauthorized search returns null and stops; no service_role; chunk bodies stay untrusted data; citation allowlisting and insufficient-evidence behavior are unchanged; page locators are unchanged
+- Regression matrix on a checked-in 2-page fixture (`scripts/ask-lexical-unit.ts`): shower answer page enters the budget with flood-tested / 24 hours / before tile installation and `page-0001`; kitchen “108 inches long by 42 inches wide” remains; MEP “October 30, 2026” remains; refrigerator brand/model retrieves nothing and a fabricated citation is stripped. Whole-question AND on the same fixture still returns only the question echo
+- Existing suites passed: `tsc --noEmit`, `test:ask`, `test:stage4d`, `ask-stage4c-unit`, `ask-stage4f-b-unit`, `test:ask-lexical`
+- Hosted acceptance not run. The Stage 4F-D hosted harness writes documents that cannot be deleted under the accepted security model. This slice does not change SQL, RLS, or grants, and it does not create production residue
+
+Known limitations
+- PostgreSQL still ANDs the lexemes inside each small search. A requirement that shares no content words with the question can still be missed
+- Cross-search order uses RPC result position, not raw `ts_rank_cd`, because the RPC does not return the score
+- More than eight matching chunks can still push a relevant page out of the model pack. The budget was not raised
+- Scans, drawings, and photos remain unreadable. This slice does not add Construction State
+
+Next
+- NONE until review. Do not start the job desk, navigation, citation-excerpt UI, or Experiment 5
+
+Blocked
+- None for this slice. Commit and hosted re-check of the shower question are waiting on review

@@ -5,9 +5,9 @@ import {
   documentChunkEvidenceItem,
   type AskEvidencePack,
 } from "@/lib/ask-evidence";
+import { searchAuthorizedDocumentChunksForAskQuestion } from "@/lib/ask-lexical-query";
 import { requireAuthorizedAskProject } from "@/lib/ask-scope";
 import { assertAskRetrievalProjectScope } from "@/lib/ask-scope";
-import { searchAuthorizedProjectDocumentChunks } from "@/lib/document-chunk-retrieval";
 import type { DocumentChunkHit } from "@/lib/document-intelligence-types";
 import { listProjectDocuments } from "@/lib/documents";
 import { listProjectFieldLogs } from "@/lib/field-logs";
@@ -61,16 +61,17 @@ export async function retrieveAskProjectEvidence(
   const authorizedId = scoped.project.id;
   const companyId = scoped.project.company_id;
 
-  const [tasks, fieldLogs, documents, chunkHits] = await Promise.all([
+  const [tasks, fieldLogs, documents, chunkResult] = await Promise.all([
     listProjectTasks(authorizedId),
     listProjectFieldLogs(authorizedId),
     listProjectDocuments(authorizedId),
-    searchAuthorizedProjectDocumentChunks({
+    searchAuthorizedDocumentChunksForAskQuestion({
       projectId: authorizedId,
-      query: options?.question ?? "",
+      question: options?.question ?? "",
       asOf: null,
     }),
   ]);
+  const chunkHits = chunkResult.hits;
 
   if (!chunkHits) {
     return null;
