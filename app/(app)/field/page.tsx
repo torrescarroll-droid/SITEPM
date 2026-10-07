@@ -15,9 +15,9 @@ export default async function FieldPage() {
   return (
     <div>
       <PageHeader
-        kicker="Field"
-        title="Field logs"
-        description="Keep this short in the field. Logs are stored for your company only."
+        kicker="Daily Reports"
+        title="Daily reports"
+        description="Record the day on a job. Reports stay with your company."
       />
       <div className="grid gap-4 lg:grid-cols-2">
         <NewFieldLogForm

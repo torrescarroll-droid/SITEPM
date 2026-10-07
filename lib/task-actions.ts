@@ -61,6 +61,9 @@ export async function createTask(
     priority,
     status: "open",
     ai_suggested: false,
+    trade_name: emptyToNull(String(formData.get("trade_name") ?? "")),
+    location_text: emptyToNull(String(formData.get("location_text") ?? "")),
+    responsible_name: emptyToNull(String(formData.get("responsible_name") ?? "")),
   });
 
   if (error) {
@@ -109,6 +112,9 @@ export async function updateTask(
       due_date: emptyToNull(String(formData.get("due_date") ?? "")),
       priority,
       status,
+      trade_name: emptyToNull(String(formData.get("trade_name") ?? "")),
+      location_text: emptyToNull(String(formData.get("location_text") ?? "")),
+      responsible_name: emptyToNull(String(formData.get("responsible_name") ?? "")),
       completed_at:
         status === "done"
           ? (existing.completed_at ?? new Date().toISOString())

@@ -15,7 +15,7 @@ export default async function ProjectAskPage({
   return (
     <div>
       <PageHeader
-        kicker="Ask SITEPM"
+        kicker="Ask LINEHORSE"
         title={project.name}
         description={`This Ask session is limited to this job's records. Other company projects are not included. ${PDF_ASK_EXPECTATION}`}
       />

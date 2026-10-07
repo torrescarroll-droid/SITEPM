@@ -13,8 +13,8 @@ export default function NewProjectPage() {
   return (
     <div className="max-w-xl">
       <PageHeader
-        kicker="Projects"
-        title="Create project"
+        kicker="Jobs"
+        title="Create job"
         description="Saved to your company in SITEPM. Other companies cannot see this job."
       />
       <DemoNote>
@@ -22,7 +22,7 @@ export default function NewProjectPage() {
       </DemoNote>
       <form action={action} className="mt-4 space-y-4 rounded-2xl border border-stone-200 bg-white p-4">
         <label className="block text-sm font-medium">
-          Project name
+          Job name
           <input
             name="name"
             required
@@ -79,7 +79,7 @@ export default function NewProjectPage() {
             disabled={pending}
             className="min-h-11 rounded-xl bg-stone-900 px-4 text-sm font-medium text-white disabled:opacity-60"
           >
-            {pending ? "Saving…" : "Save project"}
+            {pending ? "Saving…" : "Save job"}
           </button>
           <Link
             href="/projects"

@@ -15,9 +15,9 @@ export default async function TasksPage() {
   return (
     <div>
       <PageHeader
-        kicker="Tasks"
-        title="Follow-ups"
-        description="Open and overdue work for jobs in your company."
+        kicker="To-Dos"
+        title="To-dos"
+        description="Simple actions on jobs in your company. A to-do is not an RFI, submittal, or inspection."
       />
       <div className="mb-4">
         <NewTaskForm

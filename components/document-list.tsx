@@ -34,7 +34,7 @@ export function NewDocumentForm({
           Upload PDF
         </h2>
         <p className="mt-3 text-sm text-stone-600">
-          Create a project first. Files are saved to a company job.
+          Create a job first. Files are saved to a company job.
         </p>
       </Card>
     );
@@ -48,9 +48,10 @@ export function NewDocumentForm({
       <div className="mt-3">
         <DemoNote>
           Stored privately for your company. PDF only, 20 MB or smaller.
-          SITEPM can search selectable text in digital PDFs. Scans, photos of
-          pages, and drawings are not searchable yet. The file can still save
-          even if that text cannot be read.
+          A file is source material. It does not become the schedule, a change
+          order, or a selection workflow. LINEHORSE can search selectable text
+          in digital PDFs. Scans, photos of pages, and drawings are not
+          searchable yet. The file can still save even if that text cannot be read.
         </DemoNote>
       </div>
       <form action={action} className="mt-4 space-y-3">
@@ -58,7 +59,7 @@ export function NewDocumentForm({
           <input type="hidden" name="project_id" value={projectId} />
         ) : (
           <label className="block text-sm font-medium">
-            Project
+            Job
             <select
               name="project_id"
               required
@@ -141,7 +142,7 @@ export function DocumentList({
           <p className="mt-1 text-sm text-stone-600">
             {documentLabel(doc.document_type)}
             {showProject
-              ? ` · ${projectNames[doc.project_id] ?? "Project"}`
+              ? ` · ${projectNames[doc.project_id] ?? "Job"}`
               : null}
           </p>
           <p className="text-sm text-stone-500">

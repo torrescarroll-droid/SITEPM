@@ -5,6 +5,7 @@ import { AskProviderError } from "@/lib/ai/types";
 import { retrieveAskProjectEvidence } from "@/lib/ask-retrieval";
 import { requireAuthorizedAskProject } from "@/lib/ask-scope";
 import { inventoryFromPack } from "@/lib/ask-evidence";
+import { answerNextScheduledWork } from "@/lib/ask-schedule";
 import { projectIdFromAskForm } from "@/lib/ask-grounding";
 import type { AskFormState } from "@/lib/ask-types";
 
@@ -55,6 +56,19 @@ export async function submitProjectAsk(
       notice: null,
       inventory: null,
       ...emptyAnswer,
+    };
+  }
+
+  const scheduledNext = answerNextScheduledWork(question, pack);
+  if (scheduledNext) {
+    return {
+      error: null,
+      notice: null,
+      inventory: inventoryFromPack(pack),
+      answer: scheduledNext.answer,
+      citations: scheduledNext.citations,
+      insufficientEvidence: scheduledNext.insufficientEvidence,
+      epistemicKind: scheduledNext.epistemicKind,
     };
   }
 

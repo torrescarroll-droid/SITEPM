@@ -1069,3 +1069,99 @@ Next
 
 Blocked
 - None for this slice. Commit and hosted re-check of the shower question are waiting on review
+
+Job Desk — Slice 2 — Tuesday, Oct 6, 2026
+
+Status: IMPLEMENTED, NOT COMMITTED. Slice 1 retrieval was not changed. Slice 3 has not started.
+
+Done
+- The single-job page is now a Job Desk over existing authorized project, task, field-log, and ready-document reads. It shows job identity from stored fields only, overdue and high-priority open items, flagged daily logs, incomplete work items, recent daily logs, and ready plans and files, plus a job-scoped Ask LINEHORSE action
+- Job navigation language on that page: Job, Work Items, Daily Logs, Plans & Docs, Ask LINEHORSE. Database tables, APIs, and internal types were not renamed
+- Company navigation uses the same words: Jobs, Ask LINEHORSE, Plans & Docs, Daily Logs, Work Items. Routes stay /projects, /ask, /documents, /field, and /tasks
+- Ask composer: Enter and the button share one submit gate. Shift+Enter inserts a newline. A pending or blank question does not submit
+- Home greeting follows the browser's local hour: morning, afternoon, or evening
+- No SQL, RLS, grant, prompt, citation, or retrieval changes
+
+Next
+- Review this slice. Do not start stay-on-the-job navigation, citation excerpts, or Experiment 5 until authorized
+
+Blocked
+- None for this slice
+
+Core Job Operations v0.1 — Tuesday, Oct 6, 2026
+
+Status: IMPLEMENTED, NOT COMMITTED, NOT PUSHED, NOT DEPLOYED. Slice 2 Job Desk work was absorbed into this tranche and was not committed separately. Stage 4F and Slice 1 retrieval were not reopened.
+
+Done
+- Customer-facing identity on the working app is LINEHORSE. Internal routes, tables, APIs, and the Ask prompt opening “You are Ask SITEPM” stay as they were
+- Primary navigation is Home, Jobs, Schedule, To-Dos, Daily Reports, and Plans & Docs. Ask remains on /ask and /projects/[id]/ask, and the job desk now carries the question field
+- Additive migration `sql/week11_core_job_operations.sql`: schedule activities and dependencies, daily-report columns on field_logs, field_log_crews, private job-photos, and optional tasks.source_field_log_id. Not applied to the hosted database. The extractor login cannot run DDL, and no service-role credential is available for normal operations or for this migration
+- Schedule, daily report, crew, photo validation, and grounded evidence wiring are in the app. Photo captions can be evidence. Image bytes are not
+- To-dos remain the existing task primitive, with optional report linkage, trade, location, and responsible name
+
+Next
+- Apply week11 with a privileged database role that is not the extractor and not a client service-role shortcut, then commission 250 Sea Cliff schedule, daily report, photo, and to-do records
+- Do not start the next product tranche until that commissioning review
+
+Blocked
+- Hosted schema is still pre-week11. Reads of the new tables and columns fall back so existing jobs still open. Saves that need the new schema report the database error until week11 is applied
+
+Core Job Operations v0.1 — hosted commissioning — Tuesday, Oct 6, 2026
+
+Status: COMMISSIONED ON HOSTED PROJECT dsibhbqfklpharqujnbc. NOT COMMITTED, NOT PUSHED, NOT DEPLOYED. No application features were added in this pass.
+
+Done
+- Founder applied `sql/week11_core_job_operations.sql` once in the hosted SQL Editor. Live checks confirmed the new tables, RLS, triggers, and storage policies. Company A can read the new columns. Photo DELETE is denied. The job-photos bucket is not publicly readable
+- 250 Sea Cliff now has the four primary-bath schedule activities with the specified predecessor chain, the Oct 6 daily report with Martinez Drywall (4) and ABC Electric (2), and the linked to-do “Complete primary bath shower valve”
+- Job desk and the job schedule screen show those records. Cycle and cross-job predecessors were rejected. Company B cannot read or write Company A’s new rows
+- Grounded Ask on the job answered the crew, delay, and pre-tile questions from this job’s records. “What is scheduled next?” cited the existing overdue septic to-do rather than the upcoming waterproofing activity. Prompts were not changed
+- Regression suite passed: tsc, test:core-job, test:job-desk, test:ask, test:ask-lexical, test:stage4d, test:stage4c, test:stage4f-b
+
+Next
+- Founder review. A real jobsite photo is still required before photo-content acceptance; the repository has no non-sensitive jpeg, png, or webp fixture, and none was fabricated
+
+Blocked
+- Photo file acceptance only. Photo table, private bucket, and cross-company refusal were checked without an image
+
+
+Autonomous superintendent commissioning — Tuesday, Oct 6, 2026
+
+Status: NOT READY for unattended development. Commissioning only; no product implementation.
+
+Done
+- Approved temporary repository write/read/delete probe passed; probe removed. A normal sandbox write still failed afterward.
+- Replaced duplicate SITEPM dev servers with a supervised localhost runtime; start, inspect, stop, restart, and HTTP 200 verified. Cold compilation caused a 61-second first login response; warmed route was about 0.3 seconds.
+- Existing Company A/B credentials authenticated successfully; exact-ID cross-company reads denied for live projects, tasks, logs, documents, and schedule rows, while A retained access. No product data writes.
+- Git fetch passed; HEAD unchanged at be038fd, synchronized with origin/main. GitHub connector reports push permission; no push attempted.
+- Correct hosted Supabase inspection passed: 12 public tables with RLS; both storage buckets private.
+- TypeScript and eight selected schema/unit suites passed; ESLint retained its existing one error and three warnings.
+- Baseline hashes of 215 source/reference files were unchanged before documentation append. No environment configuration, RLS, schema, policies, or deployment changed.
+- Detailed readiness and approval ledger: docs/COMMISSIONING_2026-10-06.md. Audit-only readchecks helper saved under ignored artifacts/commissioning/.
+
+Next
+- Attach /Users/romulotorres/Projects/SITEPM as a durable writable project folder and recheck effective permissions.
+- Restore browser policy verification, complete authenticated browser A/B acceptance, and sign in to the correct Railway project for private read inspection.
+- Verify permission persistence across sessions before calling commissioning complete. Do not begin new feature development from this entry.
+
+Blocked
+- Browser tool cannot verify admin-enforced policy; local and Railway navigation denied. Founder assistance requested; no bypass attempted.
+- Durable repository write access and saved runtime/network/fetch approval scope remain unverified.
+- Railway private deployments/logs/settings/variable-name reads not yet verified; no isolated SITEPM dev database; photo live-row/content probe not performed.
+
+Week 11 checkpoint — Tuesday, Oct 6, 2026
+
+Status: VERIFIED LOCALLY. Hosted migration already applied on dsibhbqfklpharqujnbc. This entry records the checkpoint that is ready to commit. Push and production deploy are recorded only after they actually happen.
+
+Done
+- Core Job Operations stays in this working tree: job desk, schedule activities and dependencies, daily-report fields and crews, report-linked to-dos, and private job photos. Routes, tables, and RLS were not renamed or weakened
+- Founder JPEG is a ready private photo on the 250 Sea Cliff report `ee45fc19-4566-400e-a19e-c8a259f0b5bf`. Photo `28821528-7d3d-4804-bccb-859c9013e1c5`, caption “Primary bath rough-in”, 188910 bytes. Company A can sign it and the signed download matches the JPEG. A public object URL does not return the image. Company B cannot read the metadata, sign the path, or insert against that report. Delete remains denied and the row stayed ready
+- “What is scheduled next?” is answered from schedule activities. The next activity is the earliest not-started activity that starts after today. A to-do due date is not a candidate. Live Company A records for 250 Sea Cliff, with the checker’s local date 2026-10-07, cited schedule activity Primary Bath Waterproofing (2026-10-09 through 2026-10-10, after Primary Bath Rough Plumbing) and did not cite the overdue septic to-do
+- Schedule evidence tells the model to call a schedule activity an activity, not a task. Predecessor questions stay on the normal Ask path
+- Company B’s open browser session on the Company A job URL returned 404. The job desk photo list for Company A includes the ready caption above. A fresh Company A browser render of that list was not repeated in this resume
+- Verification passed: `tsc --noEmit`, `test:core-job`, `test:job-desk`, `test:ask`, `test:ask-lexical`, `test:stage4d`, `test:stage4c`, `test:stage4f-b`, and the Stage 4F-D unit script. No stale Stage 4F-D unit assertion appeared. The hosted Stage 4F-D writer was not rerun. `npm run build` passed. ESLint reports 0 errors and one pre-existing unused `tokenize` warning in `lib/ask-stage4e-fts-experiment1.ts`. Gitignored `artifacts/` is ignored by ESLint so the commissioning helper there cannot fail product lint
+
+Next
+- Commit this checkpoint and push `main` if `origin/main` has not moved
+
+Blocked
+- None in the Week 11 product path. Photo display in a new Company A browser session was not re-opened during this resume

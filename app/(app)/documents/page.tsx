@@ -16,8 +16,8 @@ export default async function DocumentsPage() {
   return (
     <div>
       <PageHeader
-        kicker="Documents"
-        title="Project files"
+        kicker="Plans & Docs"
+        title="Files"
         description={`PDFs are stored privately for your company and tied to a job. ${PDF_ASK_EXPECTATION}`}
       />
       <div className="grid gap-4 lg:grid-cols-2">

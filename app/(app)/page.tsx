@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TimeGreeting } from "@/components/time-greeting";
 import { Card, PageHeader, StatusPill } from "@/components/ui";
 import { requireCompanyContext } from "@/lib/auth-context";
 import { listRecentCompanyFieldLogs } from "@/lib/field-logs";
@@ -25,29 +26,29 @@ export default async function DashboardPage() {
     <div>
       <PageHeader
         kicker="Home"
-        title={`Good morning, ${firstName}.`}
+        title={<TimeGreeting name={firstName} />}
         description={
           activeProjects.length > 0
             ? `${activeProjects.length} active job${activeProjects.length === 1 ? "" : "s"} in your company.`
-            : "Create a project to start the job record for your company."
+            : "Create a job to start the record for your company."
         }
       />
       <p className="mb-6 -mt-3 text-sm text-stone-500">
         <Link href="/guide" className="font-medium text-stone-950">
           Private beta guide
         </Link>
-        {" — "}how to capture a job, upload a PDF, and Ask SITEPM.
+        {" — "}how to run a job: schedule, daily report, to-do, and plans.
       </p>
 
       <h2 className="mb-3 text-sm font-semibold tracking-wide text-stone-500 uppercase">
-        Active projects
+        Active jobs
       </h2>
       {activeProjects.length === 0 ? (
         <Card>
           <p className="text-sm text-stone-600">
             No active jobs yet.{" "}
             <Link href="/projects/new" className="font-medium text-stone-950">
-              Create a project
+              Create a job
             </Link>
             .
           </p>
@@ -78,17 +79,17 @@ export default async function DashboardPage() {
       <div className="mt-8 grid gap-4 lg:grid-cols-2">
         <Card>
           <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
-            Overdue tasks
+            Overdue to-dos
           </h2>
           {overdueTasks.length === 0 ? (
-            <p className="mt-2 text-sm text-stone-500">No overdue tasks.</p>
+            <p className="mt-2 text-sm text-stone-500">No overdue to-dos.</p>
           ) : (
             <ul className="mt-3 space-y-3">
               {overdueTasks.map((task) => (
                 <li key={task.id}>
                   <p className="text-sm font-medium">{task.title}</p>
                   <p className="text-sm text-stone-500">
-                    {projectNames[task.project_id] ?? "Project"} · due{" "}
+                    {projectNames[task.project_id] ?? "Job"} · due{" "}
                     {formatProjectDate(task.due_date)}
                   </p>
                 </li>
@@ -98,16 +99,16 @@ export default async function DashboardPage() {
         </Card>
         <Card>
           <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
-            Recent field activity
+            Recent daily reports
           </h2>
           {recentField.length === 0 ? (
-            <p className="mt-2 text-sm text-stone-500">No field logs yet.</p>
+            <p className="mt-2 text-sm text-stone-500">No daily reports yet.</p>
           ) : (
             <ul className="mt-3 space-y-3">
               {recentField.map((log) => (
                 <li key={log.id}>
                   <p className="text-sm font-medium">
-                    {projectNames[log.project_id] ?? "Project"}
+                    {projectNames[log.project_id] ?? "Job"}
                     {log.issue_flag ? " · Issue flagged" : ""}
                   </p>
                   <p className="text-sm text-stone-500">

@@ -6,8 +6,12 @@
 import type { AskCitation, AskSourceType } from "@/lib/ask-types";
 import type { DocumentChunkHit } from "@/lib/document-intelligence-types";
 import type { DocumentRecord } from "@/lib/document-types";
+import { formatCrewLine } from "@/lib/daily-report";
 import type { FieldLogRecord } from "@/lib/field-log-types";
+import type { PhotoRecord } from "@/lib/photo-types";
 import type { ProjectRecord } from "@/lib/projects";
+import { localTodayIso, nextScheduledActivity, schedulePosition } from "@/lib/schedule-logic";
+import type { ScheduleActivity } from "@/lib/schedule-types";
 import type { TaskRecord } from "@/lib/task-types";
 
 export type AskCitationKey = `${AskSourceType}:${string}`;
@@ -32,12 +36,14 @@ export type AskEvidenceInventory = {
   fieldLogs: number;
   documents: number;
   documentChunks: number;
+  scheduleActivities: number;
 };
 
 export const ASK_RETRIEVAL_CAPS = {
   tasks: 100,
   fieldLogs: 100,
   documents: 50,
+  scheduleActivities: 200,
 } as const;
 
 /** Initial Ask operating policy. Tunable; not a completeness guarantee. */
@@ -83,6 +89,9 @@ export function inventoryFromPack(pack: AskEvidencePack): AskEvidenceInventory {
     documentChunks: pack.evidence.filter(
       (item) => item.sourceType === "document_chunk",
     ).length,
+    scheduleActivities: pack.evidence.filter(
+      (item) => item.sourceType === "schedule_activity",
+    ).length,
   };
 }
 
@@ -123,6 +132,10 @@ export function taskEvidenceItem(
       ai_suggested: task.ai_suggested,
       created_at: task.created_at,
       completed_at: task.completed_at,
+      source_field_log_id: task.source_field_log_id ?? null,
+      trade_name: task.trade_name ?? null,
+      location_text: task.location_text ?? null,
+      responsible_name: task.responsible_name ?? null,
     },
   };
 }
@@ -130,7 +143,17 @@ export function taskEvidenceItem(
 export function fieldLogEvidenceItem(
   projectId: string,
   log: FieldLogRecord,
+  photoCaptions: string[] = [],
 ): AskEvidenceItem {
+  const crews = (log.crews ?? [])
+    .map((crew) =>
+      formatCrewLine({
+        companyName: crew.company_name,
+        tradeName: crew.trade_name,
+        workerCount: crew.worker_count,
+      }),
+    )
+    .join("; ");
   return {
     sourceType: "field_log",
     sourceId: log.id,
@@ -139,10 +162,45 @@ export function fieldLogEvidenceItem(
     data: {
       log_date: log.log_date,
       notes: log.notes,
+      work_performed: log.work_performed ?? null,
+      deliveries: log.deliveries ?? null,
+      equipment: log.equipment ?? null,
+      delays: log.delays ?? null,
+      site_events: log.site_events ?? null,
+      safety_notes: log.safety_notes ?? null,
+      tomorrow: log.tomorrow ?? null,
+      location_text: log.location_text ?? null,
+      crews: crews || null,
+      photo_captions: photoCaptions.join("; ") || null,
       issue_flag: log.issue_flag,
       created_at: log.created_at,
       created_by: log.created_by,
       created_by_name: log.created_by_name,
+    },
+  };
+}
+
+export function scheduleEvidenceItem(
+  projectId: string,
+  activity: ScheduleActivity,
+  position: string | null = null,
+): AskEvidenceItem {
+  return {
+    sourceType: "schedule_activity",
+    sourceId: activity.id,
+    projectId,
+    label: activity.name,
+    data: {
+      name: activity.name,
+      notes: activity.notes,
+      start_date: activity.start_date,
+      finish_date: activity.finish_date,
+      status: activity.status,
+      trade_name: activity.trade_name,
+      is_milestone: activity.is_milestone,
+      predecessor_id: activity.predecessor_id,
+      predecessor_name: activity.predecessor_name,
+      schedule_position: position,
     },
   };
 }
@@ -228,12 +286,34 @@ export function assembleAskEvidencePack(input: {
   fieldLogs: FieldLogRecord[];
   documents: DocumentRecord[];
   documentChunks?: AskEvidenceItem[];
+  activities?: ScheduleActivity[];
+  photos?: PhotoRecord[];
+  today?: string;
 }): AskEvidencePack {
   const projectId = input.project.id;
+  const photos = input.photos ?? [];
+  const today = input.today ?? localTodayIso();
+  const activities = input.activities ?? [];
+  const nextActivity = nextScheduledActivity(activities, today);
   const evidence: AskEvidenceItem[] = [
     projectEvidenceItem(input.project),
     ...input.tasks.map((task) => taskEvidenceItem(projectId, task)),
-    ...input.fieldLogs.map((log) => fieldLogEvidenceItem(projectId, log)),
+    ...input.fieldLogs.map((log) =>
+      fieldLogEvidenceItem(
+        projectId,
+        log,
+        photos
+          .filter((photo) => photo.field_log_id === log.id && photo.caption)
+          .map((photo) => photo.caption as string),
+      ),
+    ),
+    ...activities.map((activity) =>
+      scheduleEvidenceItem(
+        projectId,
+        activity,
+        schedulePosition(activity, today, nextActivity?.id ?? null),
+      ),
+    ),
     ...input.documents.map((document) =>
       documentEvidenceItem(projectId, document),
     ),

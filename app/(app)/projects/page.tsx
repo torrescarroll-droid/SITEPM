@@ -10,28 +10,28 @@ export default async function ProjectsPage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-xs font-medium tracking-[0.16em] text-stone-500 uppercase">
-            Projects
+            Jobs
           </p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight text-stone-950 md:text-3xl">
             Jobs
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600 md:text-base">
-            Open a project to see overview, documents, field logs, tasks, and Ask
-            SITEPM.
+            Open a job to see the desk, plans and docs, daily logs, work items,
+            and Ask LINEHORSE.
           </p>
         </div>
         <Link
           href="/projects/new"
           className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl bg-stone-900 px-4 text-sm font-medium text-white"
         >
-          Create project
+          Create job
         </Link>
       </div>
       {projects.length === 0 ? (
         <Card>
           <p className="font-medium">No jobs yet</p>
           <p className="mt-1 text-sm text-stone-600">
-            Create a project to start the job record. It is stored for your
+            Create a job to start the record. It is stored for your
             company only.
           </p>
         </Card>

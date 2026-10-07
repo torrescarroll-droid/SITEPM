@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SITEPM",
-  description: "AI Operating Layer for Construction",
+  title: "LINEHORSE",
+  description: "Built for builders, by builders.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

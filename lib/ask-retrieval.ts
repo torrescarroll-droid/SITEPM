@@ -11,6 +11,8 @@ import { assertAskRetrievalProjectScope } from "@/lib/ask-scope";
 import type { DocumentChunkHit } from "@/lib/document-intelligence-types";
 import { listProjectDocuments } from "@/lib/documents";
 import { listProjectFieldLogs } from "@/lib/field-logs";
+import { listProjectPhotos } from "@/lib/photos";
+import { listProjectScheduleActivities } from "@/lib/schedule";
 import { listProjectTasks } from "@/lib/tasks";
 
 function assertSameCompany(
@@ -61,10 +63,12 @@ export async function retrieveAskProjectEvidence(
   const authorizedId = scoped.project.id;
   const companyId = scoped.project.company_id;
 
-  const [tasks, fieldLogs, documents, chunkResult] = await Promise.all([
+  const [tasks, fieldLogs, documents, activities, photos, chunkResult] = await Promise.all([
     listProjectTasks(authorizedId),
     listProjectFieldLogs(authorizedId),
     listProjectDocuments(authorizedId),
+    listProjectScheduleActivities(authorizedId),
+    listProjectPhotos(authorizedId),
     searchAuthorizedDocumentChunksForAskQuestion({
       projectId: authorizedId,
       question: options?.question ?? "",
@@ -82,6 +86,8 @@ export async function retrieveAskProjectEvidence(
   const boundedTasks = tasks.slice(0, ASK_RETRIEVAL_CAPS.tasks);
   const boundedLogs = fieldLogs.slice(0, ASK_RETRIEVAL_CAPS.fieldLogs);
   const boundedDocs = documents.slice(0, ASK_RETRIEVAL_CAPS.documents);
+  const boundedActivities = activities.slice(0, ASK_RETRIEVAL_CAPS.scheduleActivities);
+  const readyPhotos = photos.filter((photo) => photo.status === "ready");
   const filenameById = new Map(
     documents.map((document) => [document.id, document.filename]),
   );
@@ -96,6 +102,8 @@ export async function retrieveAskProjectEvidence(
   assertAskRetrievalProjectScope(authorizedId, boundedTasks);
   assertAskRetrievalProjectScope(authorizedId, boundedLogs);
   assertAskRetrievalProjectScope(authorizedId, boundedDocs);
+  assertAskRetrievalProjectScope(authorizedId, boundedActivities);
+  assertAskRetrievalProjectScope(authorizedId, readyPhotos);
   assertAskRetrievalProjectScope(
     authorizedId,
     boundedChunks.map((item) => ({ project_id: item.projectId })),
@@ -103,6 +111,8 @@ export async function retrieveAskProjectEvidence(
   assertSameCompany(companyId, boundedTasks);
   assertSameCompany(companyId, boundedLogs);
   assertSameCompany(companyId, boundedDocs);
+  assertSameCompany(companyId, boundedActivities);
+  assertSameCompany(companyId, readyPhotos);
 
   for (const document of boundedDocs) {
     if (document.status !== "ready") {
@@ -116,5 +126,7 @@ export async function retrieveAskProjectEvidence(
     fieldLogs: boundedLogs,
     documents: boundedDocs,
     documentChunks: boundedChunks,
+    activities: boundedActivities,
+    photos: readyPhotos,
   });
 }

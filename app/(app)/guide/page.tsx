@@ -10,17 +10,17 @@ export default function PrivateBetaGuidePage() {
     <div>
       <PageHeader
         kicker="Private beta"
-        title="How to use SITEPM"
+        title="How to use LINEHORSE"
         description="Short orientation for invited builders. This is not a full help center."
       />
       <Card>
         <ol className="space-y-5 text-sm leading-6 text-stone-700">
           <li>
-            <p className="font-medium text-stone-950">1. Create a project</p>
+            <p className="font-medium text-stone-950">1. Create a job</p>
             <p className="mt-1">
               Open{" "}
               <Link href="/projects/new" className="font-medium text-stone-950">
-                Projects
+                Jobs
               </Link>{" "}
               and add the job (name, address, client if you have it). Everything
               else hangs off that job.
@@ -31,8 +31,9 @@ export default function PrivateBetaGuidePage() {
               2. Capture work on that job
             </p>
             <p className="mt-1">
-              Add a task (what needs doing, who, when) or a field log (what
-              happened on site). Photos are not part of this beta.
+              Add a to-do (a simple action), a daily report (what happened, who
+              was here, and a jobsite photo), or schedule activities for the
+              sequence of work.
             </p>
           </li>
           <li>
@@ -43,13 +44,13 @@ export default function PrivateBetaGuidePage() {
           </li>
           <li>
             <p className="font-medium text-stone-950">
-              4. Ask SITEPM about that same job
+              4. Ask LINEHORSE about that same job
             </p>
             <p className="mt-1">
-              Open the project, choose Ask SITEPM, and ask a question about{" "}
-              <em>this</em> job only — specs, dates, tasks, field notes, or PDF
-              text SITEPM could read. Then check Sources. A document source
-              should name the file and page.
+              Open the job and use the question field on the job desk. Ask about{" "}
+              <em>this</em> job only — specs, dates, to-dos, daily reports,
+              schedule, or PDF text LINEHORSE could read. Then check Sources. A
+              document source should name the file and page.
             </p>
           </li>
           <li>
@@ -62,7 +63,7 @@ export default function PrivateBetaGuidePage() {
             <p className="font-medium text-stone-950">6. If something is wrong</p>
             <p className="mt-1">
               Message the person who invited you. Include the job name, what you
-              tried (upload, Ask, task, field log), and about when it happened.
+              tried (upload, a question on the job, to-do, daily report, schedule), and about when it happened.
               Do not send passwords or other companies&apos; files.
             </p>
           </li>

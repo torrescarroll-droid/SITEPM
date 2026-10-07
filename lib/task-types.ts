@@ -13,6 +13,10 @@ export type TaskRecord = {
   ai_suggested: boolean;
   created_at: string;
   completed_at: string | null;
+  source_field_log_id?: string | null;
+  trade_name?: string | null;
+  location_text?: string | null;
+  responsible_name?: string | null;
 };
 
 export function taskIsOverdue(task: TaskRecord) {

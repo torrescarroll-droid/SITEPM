@@ -11,9 +11,9 @@ const documentTypeLabel: Record<DocumentType, string> = {
   contract: "Contract",
   plans: "Plans",
   specifications: "Specifications",
-  schedule: "Schedule",
-  selections: "Selections",
-  change_order: "Change order",
+  schedule: "Schedule file",
+  selections: "Selections file",
+  change_order: "Change-order file",
   other: "Other",
 };
 
@@ -23,7 +23,7 @@ export function PageHeader({
   description,
 }: {
   kicker?: string;
-  title: string;
+  title: ReactNode;
   description?: string;
 }) {
   return (

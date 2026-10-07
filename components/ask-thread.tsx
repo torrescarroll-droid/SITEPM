@@ -2,6 +2,10 @@
 
 import { useActionState } from "react";
 import { Card, DemoNote } from "@/components/ui";
+import {
+  askComposerKeyIntent,
+  shouldSubmitAskQuestion,
+} from "@/lib/ask-composer";
 import { INSUFFICIENT_EVIDENCE_EXPLAINED, PDF_ASK_EXPECTATION } from "@/lib/beta-copy";
 import { submitProjectAsk } from "@/lib/ask-actions";
 import type { AskFormState } from "@/lib/ask-types";
@@ -36,18 +40,29 @@ export function AskProjectForm({
   return (
     <Card>
       <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
-        Ask this job
+        Ask LINEHORSE
       </h2>
       <p className="mt-2 text-sm text-stone-600">
-        Questions stay on {projectName}. SITEPM Intelligence uses this
-        project&apos;s records only — not a generic chatbot and not other jobs.
+        Questions stay on {projectName}. LINEHORSE uses this job&apos;s records
+        only — not a generic chatbot and not other jobs.
       </p>
       <div className="mt-3">
         <DemoNote>
           {PDF_ASK_EXPECTATION} {INSUFFICIENT_EVIDENCE_EXPLAINED}
         </DemoNote>
       </div>
-      <form action={action} className="mt-4 space-y-3">
+      <form
+        action={action}
+        className="mt-4 space-y-3"
+        onSubmit={(event) => {
+          const question = String(
+            new FormData(event.currentTarget).get("question") ?? "",
+          );
+          if (!shouldSubmitAskQuestion(question, pending)) {
+            event.preventDefault();
+          }
+        }}
+      >
         <input type="hidden" name="project_id" value={projectId} />
         <label className="block text-sm font-medium" htmlFor="ask-question">
           Question
@@ -56,8 +71,15 @@ export function AskProjectForm({
             name="question"
             required
             rows={4}
-            placeholder="Ask about this project…"
+            placeholder="Ask about this job…"
             className="mt-1 min-h-24 w-full resize-y rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm"
+            onKeyDown={(event) => {
+              if (askComposerKeyIntent(event.key, event.shiftKey) !== "submit") {
+                return;
+              }
+              event.preventDefault();
+              event.currentTarget.form?.requestSubmit();
+            }}
           />
         </label>
         {state.error ? (
@@ -100,8 +122,9 @@ export function AskProjectForm({
         {state.inventory ? (
           <p className="text-sm text-stone-600">
             Evidence considered: {state.inventory.project} project record,{" "}
-            {state.inventory.tasks} tasks, {state.inventory.fieldLogs} field
-            logs, {state.inventory.documents} ready documents,{" "}
+            {state.inventory.tasks} to-dos, {state.inventory.fieldLogs} daily
+            reports, {state.inventory.scheduleActivities} schedule activities,{" "}
+            {state.inventory.documents} ready documents,{" "}
             {state.inventory.documentChunks} document excerpts.
           </p>
         ) : null}
@@ -110,7 +133,7 @@ export function AskProjectForm({
           disabled={pending}
           className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60"
         >
-          {pending ? "Asking…" : "Ask SITEPM"}
+          {pending ? "Asking…" : "Ask LINEHORSE"}
         </button>
       </form>
     </Card>

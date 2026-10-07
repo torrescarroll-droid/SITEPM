@@ -1,6 +1,7 @@
 import type { TaskRecord } from "@/lib/task-types";
 import { requireCompanyContext } from "@/lib/auth-context";
 import { getAuthorizedProject } from "@/lib/projects";
+import { missingRelationOrColumn } from "@/lib/schema-compat";
 
 export type { TaskRecord } from "@/lib/task-types";
 export { taskIsOverdue } from "@/lib/task-types";
@@ -32,6 +33,10 @@ function mapTask(row: {
   ai_suggested: boolean | null;
   created_at: string;
   completed_at: string | null;
+  source_field_log_id?: string | null;
+  trade_name?: string | null;
+  location_text?: string | null;
+  responsible_name?: string | null;
 }): TaskRecord {
   return {
     ...row,
@@ -42,7 +47,35 @@ function mapTask(row: {
 }
 
 const taskColumns =
+  "id, company_id, project_id, title, description, assigned_to, due_date, priority, status, ai_suggested, created_at, completed_at, source_field_log_id, trade_name, location_text, responsible_name";
+const legacyTaskColumns =
   "id, company_id, project_id, title, description, assigned_to, due_date, priority, status, ai_suggested, created_at, completed_at";
+
+async function selectTasks(
+  supabase: Awaited<ReturnType<typeof requireCompanyContext>>["supabase"],
+  filters: { companyId: string; projectId?: string; taskId?: string },
+) {
+  const run = (columns: string) => {
+    let query = supabase
+      .from("tasks")
+      .select(columns)
+      .eq("company_id", filters.companyId);
+    if (filters.projectId) query = query.eq("project_id", filters.projectId);
+    if (filters.taskId) query = query.eq("id", filters.taskId);
+    if (!filters.taskId) {
+      query = query
+        .order("due_date", { ascending: true, nullsFirst: false })
+        .order("created_at", { ascending: false });
+    }
+    return query;
+  };
+
+  const next = await run(taskColumns);
+  if (next.error && missingRelationOrColumn(next.error.message)) {
+    return run(legacyTaskColumns);
+  }
+  return next;
+}
 
 export async function listCompanyTasks() {
   const { supabase, profile } = await requireCompanyContext();
@@ -50,18 +83,13 @@ export async function listCompanyTasks() {
     return [];
   }
 
-  const { data, error } = await supabase
-    .from("tasks")
-    .select(taskColumns)
-    .eq("company_id", profile.company_id)
-    .order("due_date", { ascending: true, nullsFirst: false })
-    .order("created_at", { ascending: false });
+  const { data, error } = await selectTasks(supabase, { companyId: profile.company_id });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return (data ?? []).map(mapTask);
+  return ((data ?? []) as unknown as Parameters<typeof mapTask>[0][]).map(mapTask);
 }
 
 export async function listProjectTasks(projectId: string) {
@@ -71,19 +99,16 @@ export async function listProjectTasks(projectId: string) {
     return [];
   }
 
-  const { data, error } = await supabase
-    .from("tasks")
-    .select(taskColumns)
-    .eq("company_id", profile.company_id)
-    .eq("project_id", projectId)
-    .order("due_date", { ascending: true, nullsFirst: false })
-    .order("created_at", { ascending: false });
+  const { data, error } = await selectTasks(supabase, {
+    companyId: profile.company_id,
+    projectId,
+  });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return (data ?? []).map(mapTask);
+  return ((data ?? []) as unknown as Parameters<typeof mapTask>[0][]).map(mapTask);
 }
 
 export async function getAuthorizedTask(id: string) {
@@ -92,16 +117,15 @@ export async function getAuthorizedTask(id: string) {
     return null;
   }
 
-  const { data, error } = await supabase
-    .from("tasks")
-    .select(taskColumns)
-    .eq("id", id)
-    .eq("company_id", profile.company_id)
-    .maybeSingle();
+  const { data, error } = await selectTasks(supabase, {
+    companyId: profile.company_id,
+    taskId: id,
+  });
 
-  if (error || !data) {
+  const row = Array.isArray(data) ? data[0] : data;
+  if (error || !row) {
     return null;
   }
 
-  return mapTask(data);
+  return mapTask(row as unknown as Parameters<typeof mapTask>[0]);
 }

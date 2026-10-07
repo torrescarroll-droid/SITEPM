@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 const tabs = [
-  { slug: "", label: "Overview" },
-  { slug: "ask", label: "Ask SITEPM" },
-  { slug: "documents", label: "Documents" },
-  { slug: "field", label: "Field" },
-  { slug: "tasks", label: "Tasks" },
+  { slug: "", label: "Job", key: "overview" },
+  { slug: "schedule", label: "Schedule", key: "schedule" },
+  { slug: "field", label: "Daily Reports", key: "field" },
+  { slug: "tasks", label: "To-Dos", key: "tasks" },
+  { slug: "documents", label: "Plans & Docs", key: "documents" },
 ];
 
 export function ProjectTabs({
@@ -13,7 +13,7 @@ export function ProjectTabs({
   active,
 }: {
   projectId: string;
-  active: "overview" | "ask" | "documents" | "field" | "tasks";
+  active: "overview" | "ask" | "documents" | "field" | "tasks" | "schedule";
 }) {
   return (
     <div className="-mx-1 mb-6 overflow-x-auto">
@@ -22,8 +22,7 @@ export function ProjectTabs({
           const href = tab.slug
             ? `/projects/${projectId}/${tab.slug}`
             : `/projects/${projectId}`;
-          const isActive =
-            (active === "overview" && tab.slug === "") || active === tab.slug;
+          const isActive = active === tab.key;
           return (
             <Link
               key={tab.label}

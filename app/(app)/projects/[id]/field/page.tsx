@@ -2,6 +2,7 @@ import { FieldLogList, NewFieldLogForm } from "@/components/field-log";
 import { ProjectTabs } from "@/components/project-tabs";
 import { PageHeader } from "@/components/ui";
 import { listProjectFieldLogs } from "@/lib/field-logs";
+import { listProjectPhotos } from "@/lib/photos";
 import { getAuthorizedProject } from "@/lib/projects";
 
 export default async function ProjectFieldPage({
@@ -11,11 +12,14 @@ export default async function ProjectFieldPage({
 }) {
   const { id } = await params;
   const project = await getAuthorizedProject(id);
-  const logs = await listProjectFieldLogs(id);
+  const [logs, photos] = await Promise.all([
+    listProjectFieldLogs(id),
+    listProjectPhotos(id),
+  ]);
 
   return (
     <div>
-      <PageHeader kicker="Field" title={project.name} />
+      <PageHeader kicker="Daily Reports" title={project.name} />
       <ProjectTabs projectId={id} active="field" />
       <div className="grid gap-4 lg:grid-cols-2">
         <NewFieldLogForm
@@ -24,6 +28,7 @@ export default async function ProjectFieldPage({
         />
         <FieldLogList
           logs={logs}
+          photos={photos}
           projectNames={{ [project.id]: project.name }}
         />
       </div>

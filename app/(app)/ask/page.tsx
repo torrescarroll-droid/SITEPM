@@ -9,22 +9,22 @@ export default async function AskPage() {
   return (
     <div>
       <PageHeader
-        kicker="Ask SITEPM"
+        kicker="Ask LINEHORSE"
         title="Choose a job"
-        description={`Ask is always scoped to one project. Pick a job you can open. ${PDF_ASK_EXPECTATION}`}
+        description={`Ask LINEHORSE is always scoped to one job. Pick a job you can open. ${PDF_ASK_EXPECTATION}`}
       />
       {projects.length === 0 ? (
         <Card>
           <p className="font-medium">No jobs yet</p>
           <p className="mt-1 text-sm text-stone-600">
-            Create a project first. Ask cannot run across the whole company at
-            once.
+            Create a job first. Ask LINEHORSE cannot run across the whole company
+            at once.
           </p>
           <Link
             href="/projects/new"
             className="mt-4 inline-flex min-h-11 items-center text-sm font-medium text-stone-950"
           >
-            Create project
+            Create job
           </Link>
         </Card>
       ) : (
@@ -42,7 +42,7 @@ export default async function AskPage() {
                   <StatusPill status={project.status} />
                 </div>
                 <p className="mt-3 text-sm font-medium text-stone-950">
-                  Open Ask for this job
+                  Ask LINEHORSE
                 </p>
               </Card>
             </Link>

@@ -30,10 +30,10 @@ export function NewTaskForm({
     return (
       <Card>
         <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
-          Create task
+          Create to-do
         </h2>
         <p className="mt-3 text-sm text-stone-600">
-          Create a project first. Tasks are saved to a company job.
+          Create a job first. To-dos are simple actions on a company job.
         </p>
       </Card>
     );
@@ -42,7 +42,7 @@ export function NewTaskForm({
   return (
     <Card>
       <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
-        Create task
+        Create to-do
       </h2>
       <div className="mt-3">
         <DemoNote>
@@ -73,7 +73,7 @@ export function NewTaskForm({
         </label>
         {projectId ? null : (
           <label className="block text-sm font-medium">
-            Project
+            Job
             <select
               name="project_id"
               required
@@ -88,6 +88,30 @@ export function NewTaskForm({
             </select>
           </label>
         )}
+        <label className="block text-sm font-medium">
+          Responsible
+          <input
+            name="responsible_name"
+            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            placeholder="Name"
+          />
+        </label>
+        <label className="block text-sm font-medium">
+          Trade
+          <input
+            name="trade_name"
+            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            placeholder="Plumbing"
+          />
+        </label>
+        <label className="block text-sm font-medium md:col-span-2">
+          Location
+          <input
+            name="location_text"
+            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            placeholder="Primary bath"
+          />
+        </label>
         <label className="block text-sm font-medium">
           Due date
           <input
@@ -117,7 +141,7 @@ export function NewTaskForm({
             disabled={pending}
             className="min-h-11 rounded-xl bg-stone-900 px-4 text-sm font-medium text-white disabled:opacity-60"
           >
-            {pending ? "Saving…" : "Save task"}
+            {pending ? "Saving…" : "Save to-do"}
           </button>
         </div>
       </form>
@@ -137,7 +161,7 @@ export function TaskList({
   if (tasks.length === 0) {
     return (
       <Card>
-        <p className="font-medium">No tasks yet</p>
+        <p className="font-medium">No to-dos yet</p>
         <p className="mt-1 text-sm text-stone-600">
           Create a follow-up. It is stored for your company only.
         </p>
@@ -195,6 +219,7 @@ function TaskCard({
             <p className="text-sm text-stone-500">
               {projectLabel ? `${projectLabel} · ` : null}
               due {formatProjectDate(task.due_date)}
+              {task.source_field_log_id ? " · from a daily report" : ""}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -203,6 +228,30 @@ function TaskCard({
           </div>
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
+          <label className="block text-sm font-medium">
+            Responsible
+            <input
+              name="responsible_name"
+              defaultValue={task.responsible_name ?? ""}
+              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            />
+          </label>
+          <label className="block text-sm font-medium">
+            Trade
+            <input
+              name="trade_name"
+              defaultValue={task.trade_name ?? ""}
+              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            />
+          </label>
+          <label className="block text-sm font-medium">
+            Location
+            <input
+              name="location_text"
+              defaultValue={task.location_text ?? ""}
+              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            />
+          </label>
           <label className="block text-sm font-medium">
             Due date
             <input

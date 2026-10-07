@@ -15,7 +15,7 @@ export default async function ProjectTasksPage({
 
   return (
     <div>
-      <PageHeader kicker="Tasks" title={project.name} />
+      <PageHeader kicker="To-Dos" title={project.name} />
       <ProjectTabs projectId={id} active="tasks" />
       <div className="mb-4">
         <NewTaskForm

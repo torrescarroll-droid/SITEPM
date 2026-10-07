@@ -17,7 +17,7 @@ export default async function ProjectDocumentsPage({
   return (
     <div>
       <PageHeader
-        kicker="Documents"
+        kicker="Plans & Docs"
         title={project.name}
         description={PDF_ASK_EXPECTATION}
       />
