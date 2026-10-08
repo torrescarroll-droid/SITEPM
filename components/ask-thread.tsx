@@ -39,7 +39,7 @@ export function AskProjectForm({
 
   return (
     <Card>
-      <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+      <h2 className="section-title">
         Ask LINEHORSE
       </h2>
       <p className="mt-2 text-sm text-stone-600">
@@ -72,7 +72,7 @@ export function AskProjectForm({
             required
             rows={4}
             placeholder="Ask about this job…"
-            className="mt-1 min-h-24 w-full resize-y rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm"
+            className="mt-1 min-h-24 w-full resize-y rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm"
             onKeyDown={(event) => {
               if (askComposerKeyIntent(event.key, event.shiftKey) !== "submit") {
                 return;
@@ -83,10 +83,10 @@ export function AskProjectForm({
           />
         </label>
         {state.error ? (
-          <p className="text-sm text-orange-800">{state.error}</p>
+          <p className="text-sm text-danger">{state.error}</p>
         ) : null}
         {state.answer ? (
-          <div className="rounded-xl border border-stone-200 bg-stone-50 px-3 py-3">
+          <div className="rounded-lg border border-stone-200 bg-stone-50 px-3 py-3">
             {kindLabel ? (
               <p className="text-xs font-medium tracking-wide text-stone-500 uppercase">
                 {kindLabel}
@@ -131,7 +131,7 @@ export function AskProjectForm({
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60"
+          className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60"
         >
           {pending ? "Asking…" : "Ask LINEHORSE"}
         </button>

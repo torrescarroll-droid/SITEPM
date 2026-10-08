@@ -30,7 +30,7 @@ export function NewDocumentForm({
   if (selectable.length === 0) {
     return (
       <Card>
-        <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+        <h2 className="section-title">
           Upload PDF
         </h2>
         <p className="mt-3 text-sm text-stone-600">
@@ -42,7 +42,7 @@ export function NewDocumentForm({
 
   return (
     <Card>
-      <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+      <h2 className="section-title">
         Upload PDF
       </h2>
       <div className="mt-3">
@@ -63,7 +63,7 @@ export function NewDocumentForm({
             <select
               name="project_id"
               required
-              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 bg-white px-3"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3"
               defaultValue={selectable[0]?.id}
             >
               {selectable.map((project) => (
@@ -80,7 +80,7 @@ export function NewDocumentForm({
             name="document_type"
             required
             defaultValue="other"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 bg-white px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3"
           >
             {DOCUMENT_TYPES.map((type) => (
               <option key={type} value={type}>
@@ -96,16 +96,16 @@ export function NewDocumentForm({
             type="file"
             required
             accept="application/pdf,.pdf"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm"
           />
         </label>
         {state.error ? (
-          <p className="text-sm text-orange-800">{state.error}</p>
+          <p className="text-sm text-danger">{state.error}</p>
         ) : null}
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60"
+          className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60"
         >
           {pending ? "Uploading…" : "Upload PDF"}
         </button>
@@ -135,9 +135,9 @@ export function DocumentList({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="record-stack document-records">
       {documents.map((doc) => (
-        <Card key={doc.id}>
+        <Card key={doc.id} className="document-row">
           <p className="font-medium">{doc.filename}</p>
           <p className="mt-1 text-sm text-stone-600">
             {documentLabel(doc.document_type)}
@@ -149,11 +149,11 @@ export function DocumentList({
             {doc.uploaded_by_name ?? "Crew"} ·{" "}
             {formatProjectDate(doc.created_at.slice(0, 10))}
           </p>
-          <form action={openProjectDocument} className="mt-3">
+          <form action={openProjectDocument} className="document-action">
             <input type="hidden" name="document_id" value={doc.id} />
             <button
               type="submit"
-              className="text-sm font-medium text-stone-950"
+              className="control text-sm font-medium text-stone-950"
             >
               Open document
             </button>

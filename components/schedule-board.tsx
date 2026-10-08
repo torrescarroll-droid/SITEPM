@@ -15,7 +15,7 @@ import {
 } from "@/lib/schedule-types";
 
 const initialState: ScheduleFormState = { error: null };
-const inputClass = "mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3";
+const inputClass = "mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3";
 
 function ActivityForm({
   projectId,
@@ -48,7 +48,7 @@ function ActivityForm({
           name="notes"
           rows={2}
           defaultValue={activity?.notes ?? ""}
-          className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+          className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
         />
       </label>
       <div className="grid gap-3 sm:grid-cols-2">
@@ -127,11 +127,11 @@ function ActivityForm({
         />
         Milestone
       </label>
-      {state.error ? <p className="text-sm text-orange-800">{state.error}</p> : null}
+      {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
       <button
         type="submit"
         disabled={pending}
-        className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60 sm:w-auto sm:px-4"
+        className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60 sm:w-auto sm:px-4"
       >
         {pending ? "Saving…" : activity ? "Update activity" : "Add activity"}
       </button>
@@ -150,7 +150,7 @@ export function ScheduleBoard({
   return (
     <div className="space-y-4">
       <Card>
-        <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+        <h2 className="section-title">
           New activity
         </h2>
         <div className="mt-4">
@@ -165,7 +165,7 @@ export function ScheduleBoard({
           </p>
         </Card>
       ) : (
-        <ul className="space-y-3">
+        <ul className="record-stack schedule-records">
           {activities.map((activity) => {
             const late = activityIsLate(activity, today);
             return (

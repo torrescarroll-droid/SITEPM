@@ -21,7 +21,7 @@ export default async function ProjectFieldPage({
     <div>
       <PageHeader kicker="Daily Reports" title={project.name} />
       <ProjectTabs projectId={id} active="field" />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid items-start gap-6 xl:grid-cols-2">
         <NewFieldLogForm
           projectId={id}
           projects={[{ id: project.id, name: project.name }]}

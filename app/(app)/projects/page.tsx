@@ -16,13 +16,13 @@ export default async function ProjectsPage() {
             Jobs
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600 md:text-base">
-            Open a job to see the desk, plans and docs, daily logs, work items,
+            Open a job to see the desk, plans and docs, daily reports, to-dos,
             and Ask LINEHORSE.
           </p>
         </div>
         <Link
           href="/projects/new"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl bg-stone-900 px-4 text-sm font-medium text-white"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-shell px-4 text-sm font-medium text-white"
         >
           Create job
         </Link>
@@ -36,10 +36,10 @@ export default async function ProjectsPage() {
           </p>
         </Card>
       ) : (
-        <div className="grid gap-3">
+        <div className="record-stack jobs-records">
           {projects.map((project) => (
             <Link key={project.id} href={`/projects/${project.id}`}>
-              <Card className="hover:border-stone-300">
+              <Card className="job-row">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <p className="text-lg font-medium">{project.name}</p>
