@@ -5,6 +5,7 @@
   --foreground: #202421;
   --shell: #191c1b;
   --brass: #b18b4d;
+  --brass-strong: #8a672f;
   --muted: #5d625d;
   --line: #dcddd6;
   --danger: #b42318;
@@ -32,7 +33,7 @@
   }
   :where(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea) {
     background: white;
-    border-color: #969c96;
+    border-color: #858d85;
     border-radius: 6px;
     font-size: 1rem;
     max-width: 100%;
@@ -62,7 +63,7 @@
   .nav-item-active { border-left-color: var(--brass); background: #34362f; color: #f9eed9; }
   .job-tabs { border-bottom: 1px solid var(--line); }
   .job-tab { display: inline-flex; align-items: center; min-height: 48px; border-bottom: 3px solid transparent; }
-  .job-tab-active { color: var(--foreground); border-bottom-color: var(--brass); font-weight: 650; }
+  .job-tab-active { color: var(--foreground); border-bottom-color: var(--brass-strong); font-weight: 650; }
   .skip-link { position: fixed; top: 8px; left: 8px; z-index: 100; transform: translateY(-160%); padding: 12px; background: white; color: var(--foreground); border-radius: 4px; }
   .skip-link:focus { transform: translateY(0); }
   .app-shell aside :where(a, button):focus-visible { outline-color: #e5c58c; }
@@ -104,7 +105,7 @@
 
 /* Keep field boundaries legible in daylight, including existing utility-styled forms. */
 .app-shell :where(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea) {
-  border-color: #969c96;
+  border-color: #858d85;
 }
 @media (max-width: 767px) {
   .app-shell :where(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea) {
