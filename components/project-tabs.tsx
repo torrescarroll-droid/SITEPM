@@ -16,7 +16,7 @@ export function ProjectTabs({
   active: "overview" | "ask" | "documents" | "field" | "tasks" | "schedule";
 }) {
   return (
-    <div className="-mx-1 mb-6 overflow-x-auto">
+    <nav aria-label="Job sections" className="job-tabs mb-5 overflow-x-auto">
       <div className="flex min-w-max gap-1 px-1">
         {tabs.map((tab) => {
           const href = tab.slug
@@ -27,10 +27,11 @@ export function ProjectTabs({
             <Link
               key={tab.label}
               href={href}
-              className={`rounded-full px-3 py-2 text-sm font-medium whitespace-nowrap ${
+              aria-current={isActive ? "page" : undefined}
+              className={`job-tab px-3 py-2 text-sm font-medium whitespace-nowrap ${
                 isActive
-                  ? "bg-stone-900 text-white"
-                  : "bg-white text-stone-600 ring-1 ring-stone-200"
+                  ? "job-tab-active"
+                  : "text-stone-600"
               }`}
             >
               {tab.label}
@@ -38,6 +39,6 @@ export function ProjectTabs({
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }

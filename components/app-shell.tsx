@@ -40,25 +40,27 @@ export function AppShell({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-full bg-stone-100 text-stone-950">
-      <aside className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col md:bg-stone-950 md:text-stone-100">
+    <div className="app-shell min-h-full bg-background text-foreground">
+      <a href="#main-content" className="skip-link">Skip to job content</a>
+      <aside className="hidden md:fixed md:inset-y-0 md:flex md:w-60 md:flex-col md:overflow-y-auto md:bg-shell md:text-stone-100">
         <div className="border-b border-stone-800 px-5 py-5">
-          <p className="text-xs font-medium tracking-[0.18em] text-stone-400 uppercase">
+          <p className="text-xs font-medium tracking-wide text-stone-300">
             Built for builders, by builders.
           </p>
-          <p className="mt-2 text-xl font-semibold tracking-tight">LINEHORSE</p>
+          <p className="mt-2 text-xl font-semibold tracking-[0.12em]">LINEHORSE</p>
           <p className="mt-1 text-sm text-stone-400">Construction intelligence</p>
         </div>
-        <nav className="flex flex-1 flex-col gap-1 p-3">
+        <nav aria-label="Company navigation" className="flex flex-1 flex-col gap-1 p-3">
           {desktopNav.map((item) => {
             const active = isActive(pathname, item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-xl px-3 py-2.5 text-sm font-medium ${
+                aria-current={active ? "page" : undefined}
+                className={`nav-item px-3 py-2.5 text-sm font-medium ${
                   active
-                    ? "bg-stone-100 text-stone-950"
+                    ? "nav-item-active"
                     : "text-stone-200 hover:bg-stone-900"
                 }`}
               >
@@ -74,7 +76,7 @@ export function AppShell({
           <form action={signOut} className="mt-3">
             <button
               type="submit"
-              className="text-sm font-medium text-stone-200 hover:text-white"
+              className="control text-sm font-medium text-stone-200 hover:text-white"
             >
               Log out
             </button>
@@ -88,7 +90,7 @@ export function AppShell({
         </div>
       </aside>
 
-      <div className="md:pl-64">
+      <div className="min-w-0 md:pl-60">
         <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-stone-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden">
           <div>
             <p className="text-xs font-medium tracking-[0.18em] text-stone-500 uppercase">
@@ -99,16 +101,16 @@ export function AppShell({
           <form action={signOut}>
             <button
               type="submit"
-              className="min-h-11 text-sm font-medium text-stone-700"
+              className="control min-h-11 text-sm font-medium text-stone-700"
             >
               Log out
             </button>
           </form>
         </header>
-        <main className="px-4 py-5 pb-28 md:px-8 md:py-8 md:pb-8">{children}</main>
+        <main id="main-content" tabIndex={-1} className="workspace">{children}</main>
       </div>
 
-      <nav className="fixed right-0 bottom-0 left-0 z-10 border-t border-stone-800 bg-stone-950 pb-[env(safe-area-inset-bottom)] md:hidden">
+      <nav aria-label="Mobile company navigation" className="fixed right-0 bottom-0 left-0 z-10 border-t border-stone-800 bg-shell pb-[env(safe-area-inset-bottom)] md:hidden">
         <ul className="grid grid-cols-5">
           {mobileNav.map((item) => {
             const active = isActive(pathname, item.href);
@@ -116,8 +118,9 @@ export function AppShell({
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  aria-current={active ? "page" : undefined}
                   className={`flex min-h-14 items-center justify-center px-1 text-center text-xs font-medium ${
-                    active ? "text-white" : "text-stone-400"
+                    active ? "border-t-2 border-brass bg-white/10 text-white" : "border-t-2 border-transparent text-stone-300"
                   }`}
                 >
                   {item.label}
