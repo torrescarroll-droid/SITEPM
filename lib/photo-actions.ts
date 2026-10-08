@@ -20,6 +20,8 @@ function revalidatePhotoPaths(projectId: string) {
   revalidatePath(`/projects/${projectId}`);
   revalidatePath(`/projects/${projectId}/field`);
   revalidatePath("/field");
+  revalidatePath(`/projects/${projectId}/lookahead`);
+  revalidatePath(`/projects/${projectId}/field`, "layout");
 }
 
 export async function uploadReportPhoto(

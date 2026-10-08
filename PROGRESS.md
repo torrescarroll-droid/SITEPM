@@ -1165,3 +1165,45 @@ Next
 
 Blocked
 - None in the Week 11 product path. Photo display in a new Company A browser session was not re-opened during this resume
+
+Operational lookahead and report follow-through — Wednesday, Oct 7, 2026
+
+Status: IMPLEMENTED AND VERIFIED on feature branch `codex/operational-lookahead`, based on `f70d654`. No deployment, push, merge into main, or production business-data writes. This progress entry is intentionally uncommitted for founder review.
+
+Done
+- Added a job-scoped fourteen-day lookahead connected to Home, Job Desk, and job tabs: due/overdue actions, held/current/planned activities, predecessor readiness, trade coordination, and missing-owner/date follow-ups.
+- Added authorized source-report pages with full report details, private photo links, linked task review/editing, and additional accountable follow-ups. Source-report attachment is validated against company and job before persistence. Task completion preserves report flags and evidence.
+- Added pending/success/error feedback for task status changes, strict due-date validation, completion/reopen handling, and failed/stale-write detection. Mutations refresh lookahead and report views. No schema, RLS, dependencies, or Ask changes.
+- Passed operations action/derivation tests, Core Job schema/unit, Job Desk, Ask Stage 3, Ask lexical, TypeScript, and lint (zero errors; one pre-existing unused-function warning). Final webpack production build passed. Default Turbopack build hit an environment worker-port restriction, including its elevated retry.
+- Authenticated read-only A/B RLS checks passed. Local production-route acceptance passed for authorized rendering, cross-company not-found refusal without protected content, malformed report IDs, Home links, and signed-out redirects. Next.js streamed not-found responses can have HTTP 200; acceptance verifies the actual refusal and absence of protected content.
+- Commissioning document remains untracked and byte-identical. Detailed baseline, file inventory, results, and limits: docs/OPERATIONS_LOOKAHEAD_SPRINT_2026-10-07.md.
+
+Next
+- Review the feature branch and this uncommitted progress entry. No merge or deployment has been performed.
+- Recommended next milestone: atomic daily-report/crew persistence and recovery from partial saves, backed by an isolated development database and mutation acceptance.
+
+Blocked
+- No blocker for the implemented workflow. Hosted write acceptance and browser interaction testing remain unverified; no isolated development database is configured.
+- Default Turbopack build cannot bind its CSS-worker port in this environment; supported webpack production build is verified.
+
+Operational Lookahead sprint closeout — Wednesday, Oct 7, 2026
+
+Status: REVIEWED for merge review on `codex/operational-lookahead`. The founder authorized committing the previously reviewed progress entry and pushing the branch/opening a PR. No merge or deployment is authorized or performed.
+
+Done
+- Reviewed implementation `318937d` against the accepted objectives, server authorization, company/job scoping, existing RLS, and report-to-task workflow. No new blocking authorization or architectural issue found.
+- Fixed the task editor's status selector to refresh when persisted status changes and added accessible save success/error feedback.
+- Completed read-only browser interaction acceptance: Home/lookahead/report navigation, unsaved input and status selection, native required-title validation, report editor expansion, and authorized private photo opening. Company B sees not-found views on Company A's report and lookahead; signed-out access redirects to Sign in. Both browser sessions were logged out. No business records were written.
+- Verified that no isolated SITEPM write environment is available: only unrelated local Docker services and no SITEPM Supabase development branches. Production write acceptance was not attempted.
+- Reviewed the historical uncommitted sprint progress entry and confirmed its claims are accurate for that session. Its historical wording is preserved; it is included in this closeout commit under explicit founder authorization.
+- Commissioning document remains untracked and byte-identical (SHA-256 `261b83d63bfbd68a4e10fc4535c2bfc828bdc9d7604fa6f5d226476aefe20ab9`).
+
+- Closeout verification completed: `test:operations`, `test:core-job`, `test:job-desk`, `test:ask`, `test:ask-lexical`, TypeScript, lint (zero errors; one existing warning), and final `npm run build -- --webpack` passed. `git diff --check` passed. The temporary browser review tab and local production server were closed after testing.
+
+Next
+- Push the reviewed feature branch and open a pull request against main with the verification evidence and limitations. Do not merge or deploy.
+- Before calling write acceptance complete, exercise create/edit/complete/reopen flows and tenant-denied writes against an isolated SITEPM database.
+
+Blocked
+- Isolated database-write acceptance and browser saved-mutation acceptance remain unverified because no isolated SITEPM environment is available. No production business data was used for write tests.
+- Existing default Turbopack worker-port restriction remains documented; use the verified webpack production build in this environment. Lint retains its existing unused `tokenize` warning.
