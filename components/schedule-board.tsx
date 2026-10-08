@@ -9,6 +9,7 @@ import {
 import { localTodayIso, activityIsLate } from "@/lib/schedule-logic";
 import {
   activityTimeLabel,
+  scheduleTaskOptions,
   scheduleHistoryLines,
   calendarDays,
   navigateDate,
@@ -476,13 +477,11 @@ export function ScheduleBoard({
                   defaultValue={editing?.source_task_id ?? ""}
                 >
                   <option value="">None</option>
-                  {tasks
-                    .filter(
-                      (t) =>
-                        t.project_id ===
-                        (editing?.project_id || selectedJob || projects[0]?.id),
-                    )
-                    .map((t) => (
+                  {scheduleTaskOptions(
+                    tasks,
+                    editing?.project_id || selectedJob || projects[0]?.id,
+                    editing?.source_task_id,
+                  ).map((t) => (
                       <option key={t.id} value={t.id}>
                         {t.title}
                       </option>
@@ -787,19 +786,19 @@ export function ScheduleBoard({
           {overlaps.map((o) => (
             <li key={o.left.id + o.right.id} className="text-sm">
               {o.resources.map(name).join(", ")}:{" "}
-              <button
+              <Link
                 className="min-h-11 underline"
-                onClick={() => setEditing(o.left)}
+                href={`/projects/${o.left.project_id}/schedule`}
               >
                 {o.left.name} ({projectName(o.left.project_id)})
-              </button>{" "}
+              </Link>{" "}
               ↔{" "}
-              <button
+              <Link
                 className="min-h-11 underline"
-                onClick={() => setEditing(o.right)}
+                href={`/projects/${o.right.project_id}/schedule`}
               >
                 {o.right.name} ({projectName(o.right.project_id)})
-              </button>
+              </Link>
             </li>
           ))}
         </ul>

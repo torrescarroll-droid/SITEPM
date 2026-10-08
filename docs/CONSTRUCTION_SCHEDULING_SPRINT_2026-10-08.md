@@ -103,3 +103,7 @@ During verification, concurrent execution of standalone TypeScript and a build b
 - `lib/schedule.ts`, `schedule-types.ts`, `schedule-actions.ts`, `schedule-logic.ts`, `construction-calendar.ts`, `operational-lookahead.ts`.
 - One scheduling migration; scheduling database/unit suites; local browser fixture controls; isolated app build launcher and package scripts.
 - Product vision, roadmap, this implementation/acceptance/release document, and an architecture addendum. PROGRESS is appended separately and deliberately left uncommitted for user review. Main commissioning documentation is unchanged.
+
+## Subsequent production-bound review
+
+The independent code/database review reproduced direct-write integrity blockers despite the original RPC acceptance passing. Current verdict is **NOT READY**; see [review findings and reproduction](SPRINT_4_ENGINEERING_REVIEW_2026-10-08.md). Earlier acceptance results describe their tested scope, not complete production readiness.

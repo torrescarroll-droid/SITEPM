@@ -178,3 +178,9 @@ assert((await h.save({}, form())).uncertain);
 console.log(
   "PASS actual schedule actions: validation before write, single RPC, tenant from authenticated context, sanitized errors, stale rejection and uncertain retry classification",
 );
+
+const taskOptions = [{id: "same", project_id: "one", title: "Own task"}, {id: "other", project_id: "two", title: "Other task"}];
+assert.deepEqual(cal.scheduleTaskOptions(taskOptions, "one").map(t => t.id), ["same"]);
+assert.deepEqual(cal.scheduleTaskOptions(taskOptions, "one", "missing").map(t => t.id), ["same", "missing"]);
+assert.equal(cal.scheduleTaskOptions(taskOptions, "one", "same").length, 1);
+console.log("PASS task options retain omitted current link without showing another project's task options");

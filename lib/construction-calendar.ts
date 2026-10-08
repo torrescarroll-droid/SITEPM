@@ -158,3 +158,15 @@ export function scheduleHistoryLines(
     );
   return lines.length ? lines : ["Activity saved; schedule details unchanged."];
 }
+
+/** Preserve a linked task even when the task-option query was capped or the label is unavailable. */
+export function scheduleTaskOptions(
+  tasks: { id: string; project_id: string; title: string }[],
+  projectId: string | undefined,
+  currentTaskId?: string | null,
+) {
+  const options = tasks.filter((task) => task.project_id === projectId);
+  if (currentTaskId && !options.some((task) => task.id === currentTaskId))
+    return [...options, { id: currentTaskId, project_id: projectId ?? "", title: "Current linked to-do (not loaded)" }];
+  return options;
+}
