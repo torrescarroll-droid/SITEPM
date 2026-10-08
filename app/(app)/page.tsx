@@ -33,52 +33,10 @@ export default async function DashboardPage() {
             : "Create a job to start the record for your company."
         }
       />
-      <p className="mb-6 -mt-3 text-sm text-stone-500">
-        <Link href="/guide" className="font-medium text-stone-950">
-          Private beta guide
-        </Link>
-        {" — "}how to run a job: schedule, daily report, to-do, and plans.
-      </p>
-
-      <h2 className="mb-3 text-sm font-semibold tracking-wide text-stone-500 uppercase">
-        Active jobs
-      </h2>
-      {activeProjects.length === 0 ? (
+      <div className="home-grid">
+        <section aria-label="Overdue to-dos" className="home-attention">
         <Card>
-          <p className="text-sm text-stone-600">
-            No active jobs yet.{" "}
-            <Link href="/projects/new" className="font-medium text-stone-950">
-              Create a job
-            </Link>
-            .
-          </p>
-        </Card>
-      ) : (
-        <div className="grid gap-3 md:grid-cols-2">
-          {activeProjects.map((project) => (
-            <Link key={project.id} href={`/projects/${project.id}`}>
-              <Card className="h-full hover:border-stone-300">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="font-medium">{project.name}</p>
-                    <p className="mt-1 text-sm text-stone-500">
-                      {project.address ?? "No address listed"}
-                    </p>
-                  </div>
-                  <StatusPill status={project.status} />
-                </div>
-                <p className="mt-3 text-sm text-stone-600">
-                  Target {formatProjectDate(project.target_completion_date)}
-                </p>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      )}
-
-      <div className="mt-8 grid gap-4 lg:grid-cols-2">
-        <Card>
-          <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+          <h2 className="section-title">
             Overdue to-dos
           </h2>
           {overdueTasks.length === 0 ? (
@@ -97,8 +55,49 @@ export default async function DashboardPage() {
             </ul>
           )}
         </Card>
+        </section>
+        <section aria-label="Active jobs" className="home-jobs">
+      <h2 className="mb-3 section-title">
+        Active jobs
+      </h2>
+      {activeProjects.length === 0 ? (
         <Card>
-          <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+          <p className="text-sm text-stone-600">
+            No active jobs yet.{" "}
+            <Link href="/projects/new" className="font-medium text-stone-950">
+              Create a job
+            </Link>
+            .
+          </p>
+        </Card>
+      ) : (
+        <div className="grid gap-3">
+          {activeProjects.map((project) => (
+            <Link key={project.id} href={`/projects/${project.id}`}>
+              <Card className="h-full hover:border-stone-400">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-medium">{project.name}</p>
+                    <p className="mt-1 text-sm text-stone-500">
+                      {project.address ?? "No address listed"}
+                    </p>
+                  </div>
+                  <StatusPill status={project.status} />
+                </div>
+                <p className="mt-3 text-sm text-stone-600">
+                  Target {formatProjectDate(project.target_completion_date)}
+                </p>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
+
+
+        </section>
+        <section aria-label="Recent daily reports" className="home-reports">
+        <Card>
+          <h2 className="section-title">
             Recent daily reports
           </h2>
           {recentField.length === 0 ? (
@@ -120,7 +119,15 @@ export default async function DashboardPage() {
             </ul>
           )}
         </Card>
+        </section>
       </div>
+      <p className="mt-6 text-sm text-stone-500">
+        <Link href="/guide" className="font-medium text-stone-950">
+          Private beta guide
+        </Link>
+        {" — "}how to run a job: schedule, daily report, to-do, and plans.
+      </p>
+
     </div>
   );
 }
