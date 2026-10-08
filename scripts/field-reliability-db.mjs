@@ -19,7 +19,7 @@ async function account(label) {
   assert.ifError(signed.error); assert(signed.data.session);
   const profile = await client.from('profiles').select('id,company_id').single(); assert.ifError(profile.error);
   const project = await client.from('projects').insert({company_id:profile.data.company_id,name:`Field reliability ${label}`}).select('id').single(); assert.ifError(project.error);
-  return {client,company:profile.data.company_id,project:project.data.id,user:signed.data.user.id};
+  return {client,company:profile.data.company_id,project:project.data.id,user:signed.data.user.id,profile:profile.data.id};
 }
 const report = {log_date:'2026-10-07',issue_flag:false,work_performed:'Framed east wall',notes:null,deliveries:null,delays:null};
 const crew = {companyName:'Test framing',tradeName:'Carpentry',workerCount:3};
@@ -74,6 +74,15 @@ try {
   assert.ifError((await call(a,{p_request_id:request})).error);
   assert.equal((await a.client.from('field_logs').select('revision').eq('id',id).single()).data.revision,3,'Old create replay must not revert newer report');
   console.log('PASS simultaneous editors: one commits, one conflicts; late retry cannot revert newer data');
+  // The deployed pre-Sprint-3 app writes tables directly and omits revision.
+  const legacy=await a.client.from('field_logs').insert({company_id:a.company,project_id:a.project,created_by:a.profile,log_date:report.log_date,work_performed:'Legacy deployed application'}).select('id,revision').single();
+  assert.ifError(legacy.error);assert.equal(legacy.data.revision,1);
+  const legacyCrew=await a.client.from('field_log_crews').insert({company_id:a.company,project_id:a.project,field_log_id:legacy.data.id,company_name:'Legacy crew',trade_name:'Carpentry',worker_count:2});assert.ifError(legacyCrew.error);
+  const legacyEdit=await a.client.from('field_logs').update({work_performed:'Legacy edited'}).eq('id',legacy.data.id).select('revision').single();assert.ifError(legacyEdit.error);assert.equal(legacyEdit.data.revision,2);
+  assert.ifError((await a.client.from('field_log_crews').delete().eq('field_log_id',legacy.data.id)).error);
+  assert.ifError((await a.client.from('field_log_crews').insert({company_id:a.company,project_id:a.project,field_log_id:legacy.data.id,company_name:'Legacy crew',trade_name:'Carpentry',worker_count:4})).error);
+  assert.ifError((await call(a,{p_report_id:legacy.data.id,p_expected_revision:2,p_follow_up:null})).error);
+  console.log('PASS deployed-app compatibility: legacy direct insert/update and crew replacement; handoff to atomic RPC');
   await Promise.all([a.client.auth.signOut(),b.client.auth.signOut()]);
   console.log('Isolated live Supabase database-write acceptance PASSED. Synthetic local fixtures retained for inspection.');
 } finally {

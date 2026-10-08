@@ -34,7 +34,7 @@ export function ReliableReportForm({ scope, projectId, reportId, revision, child
     setUncertain(Boolean(result.uncertain));
     if (result.error && !result.uncertain && draft.current) { draft.current.submitted = false; persist(); }
     if (!result.error && result.reportId) {
-      setSaved(true); setDirty(false);
+      setSaved(true); setDirty(false); setRecovered(false);
       if (draft.current) { draft.current.revision = result.revision; draft.current.submitted = false; }
       try { sessionStorage.removeItem(key); } catch { setStorageWarning(true); }
       onSaved?.(result);
