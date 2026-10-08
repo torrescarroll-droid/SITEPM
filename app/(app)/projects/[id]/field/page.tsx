@@ -1,3 +1,4 @@
+import { requireCompanyContext } from "@/lib/auth-context";
 import { FieldLogList, NewFieldLogForm } from "@/components/field-log";
 import { ProjectTabs } from "@/components/project-tabs";
 import { PageHeader } from "@/components/ui";
@@ -10,6 +11,8 @@ export default async function ProjectFieldPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { user, profile } = await requireCompanyContext();
+  const draftScope = `${profile?.company_id}:${user.id}`;
   const { id } = await params;
   const project = await getAuthorizedProject(id);
   const [logs, photos] = await Promise.all([
@@ -22,11 +25,11 @@ export default async function ProjectFieldPage({
       <PageHeader kicker="Daily Reports" title={project.name} />
       <ProjectTabs projectId={id} active="field" />
       <div className="grid items-start gap-6 xl:grid-cols-2">
-        <NewFieldLogForm
+        <NewFieldLogForm draftScope={draftScope}
           projectId={id}
           projects={[{ id: project.id, name: project.name }]}
         />
-        <FieldLogList
+        <FieldLogList draftScope={draftScope}
           logs={logs}
           photos={photos}
           projectNames={{ [project.id]: project.name }}

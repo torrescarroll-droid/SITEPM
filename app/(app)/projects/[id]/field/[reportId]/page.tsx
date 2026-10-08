@@ -1,3 +1,4 @@
+import { requireCompanyContext } from "@/lib/auth-context";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FieldLogList } from "@/components/field-log";
@@ -12,6 +13,8 @@ import { getAuthorizedProject } from "@/lib/projects";
 import { listProjectTasks } from "@/lib/tasks";
 
 export default async function ReportPage({ params }: { params: Promise<{ id: string; reportId: string }> }) {
+  const { user, profile } = await requireCompanyContext();
+  const draftScope = `${profile?.company_id}:${user.id}`;
   const { id, reportId } = await params;
   const project = await getAuthorizedProject(id);
   const report = await findAuthorizedFieldLog(id, reportId);
@@ -23,7 +26,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
       <PageHeader kicker="Source daily report" title={`${project.name} · ${formatProjectDate(report.log_date)}`} />
       <ProjectTabs projectId={id} active="field" />
       <Link className="inline-block text-sm underline" href={`/projects/${id}/lookahead`}>Back to lookahead</Link>
-      <FieldLogList logs={[report]} photos={photos} projectNames={{ [id]: project.name }} />
+      <FieldLogList draftScope={draftScope} logs={[report]} photos={photos} projectNames={{ [id]: project.name }} />
       <Card>
         <h2 className="section-title">Photo evidence</h2>
         {photos.length ? <ul className="mt-3 space-y-2">{photos.map((photo) => <li key={photo.id}><form action={openReportPhoto}><input type="hidden" name="photo_id" value={photo.id} /><button className="control min-h-11 text-sm underline">{photo.caption || "Open jobsite photo"}</button></form></li>)}</ul> : <p className="mt-3 text-sm text-stone-600">No photos on this report yet. Add a photo above.</p>}

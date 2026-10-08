@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
+import { clearOtherReportDrafts } from "@/lib/report-draft-storage";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
 
@@ -31,13 +33,21 @@ export function AppShell({
   userName,
   companyName,
   roleLabel,
+  userId,
 }: {
+  userId?: string;
   children: React.ReactNode;
   userName: string;
   companyName: string;
   roleLabel: string;
 }) {
   const pathname = usePathname();
+  useEffect(() => {
+    try { clearOtherReportDrafts(sessionStorage, userId); } catch { /* Storage may be blocked. */ }
+  }, [userId]);
+  function clearDraftsOnLogout() {
+    try { clearOtherReportDrafts(sessionStorage); } catch { /* Never prevent logout. */ }
+  }
 
   return (
     <div className="app-shell min-h-full bg-background text-foreground">
@@ -73,7 +83,7 @@ export function AppShell({
           <p className="font-medium">{userName}</p>
           <p className="text-stone-400">{companyName}</p>
           <p className="text-stone-400 capitalize">{roleLabel}</p>
-          <form action={signOut} className="mt-3">
+          <form action={signOut} onSubmit={clearDraftsOnLogout} title="Logging out clears this tab’s report drafts." className="mt-3">
             <button
               type="submit"
               className="control text-sm font-medium text-stone-200 hover:text-white"
@@ -98,7 +108,7 @@ export function AppShell({
             </p>
             <p className="text-sm text-stone-600">{companyName}</p>
           </div>
-          <form action={signOut}>
+          <form action={signOut} onSubmit={clearDraftsOnLogout} title="Logging out clears this tab’s report drafts.">
             <button
               type="submit"
               className="control min-h-11 text-sm font-medium text-stone-700"

@@ -1,15 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { Card, DemoNote } from "@/components/ui";
 import { formatCrewLine } from "@/lib/daily-report";
 import { formatProjectDate } from "@/lib/format-date";
-import {
-  createFieldLog,
-  updateFieldLog,
-  type FieldLogFormState,
-} from "@/lib/field-log-actions";
+import type { FieldLogFormState } from "@/lib/field-log-actions";
+import { ReliableReportForm } from "@/components/reliable-report-form";
 import type { FieldLogRecord } from "@/lib/field-log-types";
 import { uploadReportPhoto, type PhotoFormState } from "@/lib/photo-actions";
 import type { PhotoRecord } from "@/lib/photo-types";
@@ -250,11 +247,14 @@ export function ReportPhotoForm({
 export function NewFieldLogForm({
   projectId,
   projects,
+  draftScope,
 }: {
+  draftScope: string;
   projectId?: string;
   projects: { id: string; name: string }[];
 }) {
-  const [state, action, pending] = useActionState(createFieldLog, initialState);
+  const [state, setState] = useState<FieldLogFormState>(initialState);
+  const [generation, setGeneration] = useState(0);
   const selectable = projectId
     ? projects.filter((project) => project.id === projectId)
     : projects;
@@ -283,7 +283,7 @@ export function NewFieldLogForm({
           The photo stays private to the job.
         </DemoNote>
       </div>
-      <form action={action} className="mt-4 space-y-3">
+      <ReliableReportForm key={generation} scope={draftScope} projectId={projectId} onSaved={setState}>
         {projectId ? (
           <input type="hidden" name="project_id" value={projectId} />
         ) : (
@@ -312,18 +312,8 @@ export function NewFieldLogForm({
             className={inputClass}
           />
         </label>
-        {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
-        {state.reportId && !state.error ? (
-          <p className="text-sm text-stone-700">Report saved. Add a photo below if you have one.</p>
-        ) : null}
-        <button
-          type="submit"
-          disabled={pending}
-          className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60"
-        >
-          {pending ? "Saving…" : "Save daily report"}
-        </button>
-      </form>
+      </ReliableReportForm>
+      {state.reportId ? <button type="button" className="mt-3 min-h-11 text-sm underline" onClick={() => { setState(initialState); setGeneration(value => value + 1); }}>Start another report</button> : null}
       {state.reportId ? (
         <ReportPhotoForm
           projectId={state.projectId ?? projectId ?? ""}
@@ -334,26 +324,13 @@ export function NewFieldLogForm({
   );
 }
 
-function ReportEditor({ log }: { log: FieldLogRecord }) {
-  const [state, action, pending] = useActionState(updateFieldLog, {
-    error: null,
-    reportId: log.id,
-  });
+function ReportEditor({ log, draftScope }: { log: FieldLogRecord; draftScope: string }) {
   return (
     <details className="mt-3">
       <summary className="min-h-11 cursor-pointer text-sm font-medium">Edit report</summary>
-      <form action={action} className="mt-3 space-y-3">
-        <input type="hidden" name="field_log_id" value={log.id} />
+      <ReliableReportForm scope={draftScope} projectId={log.project_id} reportId={log.id} revision={log.revision}>
         <ReportFields log={log} />
-        {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
-        <button
-          type="submit"
-          disabled={pending}
-          className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60"
-        >
-          {pending ? "Saving…" : "Update report"}
-        </button>
-      </form>
+      </ReliableReportForm>
     </details>
   );
 }
@@ -363,7 +340,9 @@ export function FieldLogList({
   projectNames,
   showProject,
   photos = [],
+  draftScope,
 }: {
+  draftScope: string;
   logs: FieldLogRecord[];
   projectNames: Record<string, string>;
   showProject?: boolean;
@@ -449,7 +428,7 @@ export function FieldLogList({
               </p>
             ) : null}
             <ReportPhotoForm projectId={log.project_id} reportId={log.id} />
-            <ReportEditor log={log} />
+            <ReportEditor log={log} draftScope={draftScope} />
           </Card>
         );
       })}
