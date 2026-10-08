@@ -19,7 +19,7 @@ export default async function FieldPage() {
         title="Daily reports"
         description="Record the day on a job. Reports stay with your company."
       />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid items-start gap-6 xl:grid-cols-2">
         <NewFieldLogForm
           projects={projects.map((project) => ({
             id: project.id,
@@ -27,7 +27,7 @@ export default async function FieldPage() {
           }))}
         />
         <div>
-          <h2 className="mb-3 text-sm font-semibold tracking-wide text-stone-500 uppercase">
+          <h2 className="mb-3 section-title">
             Recent
           </h2>
           <FieldLogList logs={logs} projectNames={projectNames} showProject />

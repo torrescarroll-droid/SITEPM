@@ -29,7 +29,7 @@ export function NewTaskForm({
   if (selectable.length === 0) {
     return (
       <Card>
-        <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+        <h2 className="section-title">
           Create to-do
         </h2>
         <p className="mt-3 text-sm text-stone-600">
@@ -41,7 +41,7 @@ export function NewTaskForm({
 
   return (
     <Card>
-      <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+      <h2 className="section-title">
         Create to-do
       </h2>
       <div className="mt-3">
@@ -59,7 +59,7 @@ export function NewTaskForm({
           <input
             name="title"
             required
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             placeholder="Follow up on panel approval"
           />
         </label>
@@ -68,7 +68,7 @@ export function NewTaskForm({
           <textarea
             name="description"
             rows={2}
-            className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
           />
         </label>
         {projectId ? null : (
@@ -77,7 +77,7 @@ export function NewTaskForm({
             <select
               name="project_id"
               required
-              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 bg-white px-3"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3"
               defaultValue={selectable[0]?.id}
             >
               {selectable.map((project) => (
@@ -92,7 +92,7 @@ export function NewTaskForm({
           Responsible
           <input
             name="responsible_name"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             placeholder="Name"
           />
         </label>
@@ -100,7 +100,7 @@ export function NewTaskForm({
           Trade
           <input
             name="trade_name"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             placeholder="Plumbing"
           />
         </label>
@@ -108,7 +108,7 @@ export function NewTaskForm({
           Location
           <input
             name="location_text"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             placeholder="Primary bath"
           />
         </label>
@@ -117,7 +117,7 @@ export function NewTaskForm({
           <input
             name="due_date"
             type="date"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
           />
         </label>
         <label className="block text-sm font-medium">
@@ -125,7 +125,7 @@ export function NewTaskForm({
           <select
             name="priority"
             defaultValue="medium"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 bg-white px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3"
           >
             <option value="high">high</option>
             <option value="medium">medium</option>
@@ -133,13 +133,13 @@ export function NewTaskForm({
           </select>
         </label>
         {state.error ? (
-          <p className="text-sm text-orange-800 md:col-span-2">{state.error}</p>
+          <p className="text-sm text-danger md:col-span-2">{state.error}</p>
         ) : null}
         <div className="md:col-span-2">
           <button
             type="submit"
             disabled={pending}
-            className="min-h-11 rounded-xl bg-stone-900 px-4 text-sm font-medium text-white disabled:opacity-60"
+            className="control min-h-11 rounded-lg bg-shell px-4 text-sm font-medium text-white disabled:opacity-60"
           >
             {pending ? "Saving…" : "Save to-do"}
           </button>
@@ -170,7 +170,7 @@ export function TaskList({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="record-stack">
       {tasks.map((task) => (
         <TaskCard
           key={task.id}
@@ -204,7 +204,7 @@ function TaskCard({
                 name="title"
                 required
                 defaultValue={task.title}
-                className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3 font-medium"
+                className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3 font-medium"
               />
             </label>
             <label className="block text-sm font-medium">
@@ -213,7 +213,7 @@ function TaskCard({
                 name="description"
                 rows={2}
                 defaultValue={task.description ?? ""}
-                className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2 text-sm"
               />
             </label>
             <p className="text-sm text-stone-500">
@@ -233,7 +233,7 @@ function TaskCard({
             <input
               name="responsible_name"
               defaultValue={task.responsible_name ?? ""}
-              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             />
           </label>
           <label className="block text-sm font-medium">
@@ -241,7 +241,7 @@ function TaskCard({
             <input
               name="trade_name"
               defaultValue={task.trade_name ?? ""}
-              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             />
           </label>
           <label className="block text-sm font-medium">
@@ -249,7 +249,7 @@ function TaskCard({
             <input
               name="location_text"
               defaultValue={task.location_text ?? ""}
-              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             />
           </label>
           <label className="block text-sm font-medium">
@@ -258,7 +258,7 @@ function TaskCard({
               name="due_date"
               type="date"
               defaultValue={task.due_date ?? ""}
-              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             />
           </label>
           <label className="block text-sm font-medium">
@@ -266,7 +266,7 @@ function TaskCard({
             <select
               name="priority"
               defaultValue={task.priority ?? "medium"}
-              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 bg-white px-3"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3"
             >
               <option value="high">high</option>
               <option value="medium">medium</option>
@@ -278,7 +278,7 @@ function TaskCard({
             <select
               name="status"
               defaultValue={task.status}
-              className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 bg-white px-3"
+              className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3"
             >
               <option value="open">open</option>
               <option value="in_progress">in progress</option>
@@ -287,13 +287,13 @@ function TaskCard({
           </label>
         </div>
         {state.error ? (
-          <p className="text-sm text-orange-800">{state.error}</p>
+          <p className="text-sm text-danger">{state.error}</p>
         ) : null}
         <div className="flex flex-wrap gap-3">
           <button
             type="submit"
             disabled={pending}
-            className="min-h-11 rounded-xl bg-stone-900 px-4 text-sm font-medium text-white disabled:opacity-60"
+            className="control min-h-11 rounded-lg bg-shell px-4 text-sm font-medium text-white disabled:opacity-60"
           >
             {pending ? "Saving…" : "Save changes"}
           </button>
@@ -304,7 +304,7 @@ function TaskCard({
           <form action={setTaskStatus}>
             <input type="hidden" name="task_id" value={task.id} />
             <input type="hidden" name="status" value="open" />
-            <button type="submit" className="text-sm font-medium text-stone-700">
+            <button type="submit" className="control text-sm font-medium text-stone-700">
               Reopen
             </button>
           </form>
@@ -312,14 +312,14 @@ function TaskCard({
           <form action={setTaskStatus}>
             <input type="hidden" name="task_id" value={task.id} />
             <input type="hidden" name="status" value="done" />
-            <button type="submit" className="text-sm font-medium text-stone-700">
+            <button type="submit" className="control text-sm font-medium text-stone-700">
               Mark done
             </button>
           </form>
         )}
         <form action={deleteTask}>
           <input type="hidden" name="task_id" value={task.id} />
-          <button type="submit" className="text-sm font-medium text-orange-800">
+          <button type="submit" className="control text-sm font-medium text-danger">
             Delete
           </button>
         </form>

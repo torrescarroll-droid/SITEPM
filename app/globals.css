@@ -1,19 +1,115 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f5f4;
-  --foreground: #1c1917;
+  --background: #f5f4f0;
+  --foreground: #202421;
+  --shell: #191c1b;
+  --brass: #b18b4d;
+  --brass-strong: #8a672f;
+  --muted: #5d625d;
+  --line: #dcddd6;
+  --danger: #b42318;
+  --attention: #8a5700;
+  --success: #267044;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-shell: var(--shell);
+  --color-brass: var(--brass);
+  --color-danger: var(--danger);
+  --color-attention: var(--attention);
+  --color-success: var(--success);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-html,
-body {
-  background: var(--background);
-  color: var(--foreground);
+@layer base {
+  html, body { background: var(--background); color: var(--foreground); }
+  :where(a, button, input, select, textarea, summary):focus-visible {
+    outline: 2px solid var(--attention);
+    outline-offset: 3px;
+  }
+  :where(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    background: white;
+    border-color: #858d85;
+    border-radius: 6px;
+    font-size: 1rem;
+    max-width: 100%;
+  }
+  :where(input[type="checkbox"], input[type="radio"]) { accent-color: var(--shell); }
+  button:not(:disabled), summary { cursor: pointer; }
+  button:disabled { cursor: wait; }
+  summary { padding-block: 12px; }
+  p, dd, h1, h2, h3, a { overflow-wrap: anywhere; }
+}
+
+@layer components {
+  .workspace { max-width: 1600px; margin-inline: auto; padding: 24px 16px 112px; min-width: 0; }
+  .page-header { margin-bottom: 20px; }
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .page-title { margin-top: 4px; font-size: 26px; line-height: 1.2; font-weight: 650; letter-spacing: -.025em; }
+  .section-title { font-size: 16px; line-height: 1.4; font-weight: 650; color: var(--foreground); }
+  .panel { min-width: 0; border: 1px solid var(--line); border-radius: 10px; background: white; padding: 16px; }
+  .notice { border-left: 3px solid var(--line); background: #f5f5f1; padding: 12px; font-size: 14px; line-height: 1.6; color: var(--muted); }
+  .control { min-height: 44px; padding-inline: 12px; border-radius: 6px; }
+  .status-badge { display: inline-flex; align-items: center; border-radius: 4px; padding: 3px 8px; font-size: 13px; line-height: 1.4; font-weight: 600; white-space: nowrap; }
+  .status-neutral { background: #eeefeb; color: #4a514b; }
+  .status-attention { background: #fff3d6; color: var(--attention); }
+  .status-success { background: #edf6ee; color: var(--success); }
+  .status-overdue { color: var(--danger); }
+  .nav-item { display: flex; align-items: center; min-height: 44px; border-radius: 6px; border-left: 3px solid transparent; }
+  .nav-item-active { border-left-color: var(--brass); background: #34362f; color: #f9eed9; }
+  .job-tabs { border-bottom: 1px solid var(--line); }
+  .job-tab { display: inline-flex; align-items: center; min-height: 48px; border-bottom: 3px solid transparent; }
+  .job-tab-active { color: var(--foreground); border-bottom-color: var(--brass-strong); font-weight: 650; }
+  .skip-link { position: fixed; top: 8px; left: 8px; z-index: 100; transform: translateY(-160%); padding: 12px; background: white; color: var(--foreground); border-radius: 4px; }
+  .skip-link:focus { transform: translateY(0); }
+  .app-shell aside :where(a, button):focus-visible { outline-color: #e5c58c; }
+  .job-desk { display: grid; gap: 20px; }
+  .job-metadata { border-bottom: 1px solid var(--line); padding-bottom: 20px; }
+  .desk-columns, .desk-primary, .desk-secondary { display: grid; align-content: start; gap: 20px; min-width: 0; }
+  .desk-section { scroll-margin-top: 96px; }
+  .desk-ask { min-width: 0; }
+  .desk-ask form { max-width: 72ch; }
+  .home-grid { display: grid; align-items: start; gap: 24px; }
+  .home-grid > section { min-width: 0; }
+  .record-stack { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: white; }
+  .record-stack > .panel, .record-stack > li > .panel, .record-stack > a > .panel { border: 0; border-radius: 0; }
+  .record-stack > * + * { border-top: 1px solid var(--line); }
+  .record-stack > a { display: block; }
+  .record-stack > a:hover { background: #f5f5f1; }
+  .record-stack > a:hover > .panel { background: transparent; }
+  .document-row { display: grid; gap: 8px; align-items: center; }
+  .document-action { justify-self: start; }
+  .jobs-records .job-row { display: grid; gap: 12px; align-items: center; }
+}
+
+@media (min-width: 768px) {
+  .workspace { padding: 28px 28px 40px; }
+  .page-title { font-size: 30px; }
+  .panel { padding: 20px; }
+}
+@media (min-width: 1280px) {
+  .desk-columns { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px; }
+  .home-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+  .home-reports { grid-column: 1 / -1; }
+  .document-row { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) auto; gap: 16px; }
+  .jobs-records .job-row { grid-template-columns: minmax(0, 1fr) auto; }
+}
+@media (max-width: 767px) {
+  .control { min-height: 48px; }
+  .workspace { padding-bottom: calc(112px + env(safe-area-inset-bottom)); }
+}
+
+/* Keep field boundaries legible in daylight, including existing utility-styled forms. */
+.app-shell :where(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  border-color: #858d85;
+}
+@media (max-width: 767px) {
+  .app-shell :where(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    font-size: 16px;
+    min-height: 48px;
+  }
 }

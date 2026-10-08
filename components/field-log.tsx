@@ -23,7 +23,7 @@ function todayLocalIso() {
   return `${now.getFullYear()}-${month}-${day}`;
 }
 
-const inputClass = "mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3";
+const inputClass = "mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3";
 
 function CrewFields({
   defaults,
@@ -114,7 +114,7 @@ function ReportFields({
           rows={3}
           defaultValue={log?.work_performed ?? ""}
           placeholder="What got done today?"
-          className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+          className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
         />
       </label>
       <CrewFields
@@ -130,7 +130,7 @@ function ReportFields({
           name="deliveries"
           rows={2}
           defaultValue={log?.deliveries ?? ""}
-          className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+          className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
         />
       </label>
       <label className="block text-sm font-medium">
@@ -140,7 +140,7 @@ function ReportFields({
           rows={2}
           defaultValue={log?.delays ?? ""}
           placeholder="What held the work?"
-          className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+          className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
         />
       </label>
       <label className="block text-sm font-medium">
@@ -149,10 +149,10 @@ function ReportFields({
           name="tomorrow"
           rows={2}
           defaultValue={log?.tomorrow ?? ""}
-          className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+          className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
         />
       </label>
-      <details className="rounded-xl border border-stone-200 px-3 py-2">
+      <details className="rounded-lg border border-stone-200 px-3 py-2">
         <summary className="min-h-11 cursor-pointer text-sm font-medium">
           More for this day
         </summary>
@@ -163,7 +163,7 @@ function ReportFields({
               name="equipment"
               rows={2}
               defaultValue={log?.equipment ?? ""}
-              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
             />
           </label>
           <label className="block text-sm font-medium">
@@ -172,7 +172,7 @@ function ReportFields({
               name="site_events"
               rows={2}
               defaultValue={log?.site_events ?? ""}
-              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
             />
           </label>
           <label className="block text-sm font-medium">
@@ -181,7 +181,7 @@ function ReportFields({
               name="safety_notes"
               rows={2}
               defaultValue={log?.safety_notes ?? ""}
-              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
             />
           </label>
           <label className="block text-sm font-medium">
@@ -190,7 +190,7 @@ function ReportFields({
               name="notes"
               rows={2}
               defaultValue={log?.notes ?? ""}
-              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
             />
           </label>
         </div>
@@ -234,11 +234,11 @@ export function ReportPhotoForm({
         placeholder="Caption"
         className={inputClass}
       />
-      {state.error ? <p className="text-sm text-orange-800">{state.error}</p> : null}
+      {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
       <button
         type="submit"
         disabled={pending}
-        className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60"
+        className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60"
       >
         {pending ? "Uploading…" : "Add photo"}
       </button>
@@ -261,7 +261,7 @@ export function NewFieldLogForm({
   if (selectable.length === 0) {
     return (
       <Card>
-        <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+        <h2 className="section-title">
           New daily report
         </h2>
         <p className="mt-3 text-sm text-stone-600">
@@ -273,7 +273,7 @@ export function NewFieldLogForm({
 
   return (
     <Card>
-      <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
+      <h2 className="section-title">
         New daily report
       </h2>
       <div className="mt-3">
@@ -311,14 +311,14 @@ export function NewFieldLogForm({
             className={inputClass}
           />
         </label>
-        {state.error ? <p className="text-sm text-orange-800">{state.error}</p> : null}
+        {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
         {state.reportId && !state.error ? (
           <p className="text-sm text-stone-700">Report saved. Add a photo below if you have one.</p>
         ) : null}
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60"
+          className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60"
         >
           {pending ? "Saving…" : "Save daily report"}
         </button>
@@ -344,11 +344,11 @@ function ReportEditor({ log }: { log: FieldLogRecord }) {
       <form action={action} className="mt-3 space-y-3">
         <input type="hidden" name="field_log_id" value={log.id} />
         <ReportFields log={log} />
-        {state.error ? <p className="text-sm text-orange-800">{state.error}</p> : null}
+        {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60"
+          className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60"
         >
           {pending ? "Saving…" : "Update report"}
         </button>
@@ -399,7 +399,7 @@ export function FieldLogList({
                 </p>
               </div>
               {log.issue_flag ? (
-                <span className="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-900">
+                <span className="status-badge status-attention">
                   Needs attention
                 </span>
               ) : null}
@@ -424,7 +424,7 @@ export function FieldLogList({
               <p className="mt-2 text-sm text-stone-700">Delivery: {log.deliveries}</p>
             ) : null}
             {log.delays ? (
-              <p className="mt-2 text-sm text-orange-900">Delay: {log.delays}</p>
+              <p className="mt-2 text-sm text-attention">Delay: {log.delays}</p>
             ) : null}
             {log.tomorrow ? (
               <p className="mt-2 text-sm text-stone-700">Tomorrow: {log.tomorrow}</p>

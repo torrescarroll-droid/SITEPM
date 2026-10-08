@@ -22,7 +22,7 @@ export default async function ProjectDocumentsPage({
         description={PDF_ASK_EXPECTATION}
       />
       <ProjectTabs projectId={id} active="documents" />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(18rem,0.8fr)_minmax(0,1.4fr)]">
         <NewDocumentForm
           projectId={id}
           projects={[{ id: project.id, name: project.name }]}

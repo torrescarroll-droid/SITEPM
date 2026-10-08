@@ -20,7 +20,7 @@ export default async function DocumentsPage() {
         title="Files"
         description={`PDFs are stored privately for your company and tied to a job. ${PDF_ASK_EXPECTATION}`}
       />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(18rem,0.8fr)_minmax(0,1.4fr)]">
         <NewDocumentForm
           projects={projects.map((project) => ({
             id: project.id,

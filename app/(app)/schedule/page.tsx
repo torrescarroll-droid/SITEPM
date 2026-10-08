@@ -31,7 +31,7 @@ export default async function CompanySchedulePage() {
           </p>
         </Card>
       ) : (
-        <ul className="space-y-3">
+        <ul className="record-stack schedule-records">
           {activities.map((activity) => (
             <li key={activity.id}>
               <Card>

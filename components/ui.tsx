@@ -27,13 +27,13 @@ export function PageHeader({
   description?: string;
 }) {
   return (
-    <header className="mb-6">
+    <header className="page-header">
       {kicker ? (
-        <p className="text-xs font-medium tracking-[0.16em] text-stone-500 uppercase">
+        <p className="eyebrow">
           {kicker}
         </p>
       ) : null}
-      <h1 className="mt-1 text-2xl font-semibold tracking-tight text-stone-950 md:text-3xl">
+      <h1 className="page-title">
         {title}
       </h1>
       {description ? (
@@ -54,7 +54,7 @@ export function Card({
 }) {
   return (
     <section
-      className={`rounded-2xl border border-stone-200 bg-white p-4 shadow-sm md:p-5 ${className}`}
+      className={`panel ${className}`}
     >
       {children}
     </section>
@@ -64,12 +64,12 @@ export function Card({
 export function StatusPill({ status }: { status: ProjectStatus }) {
   const tone =
     status === "active"
-      ? "bg-emerald-50 text-emerald-800"
+      ? "status-neutral"
       : status === "on_hold"
-        ? "bg-amber-50 text-amber-900"
-        : "bg-stone-100 text-stone-600";
+        ? "status-attention"
+        : "status-success";
   return (
-    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${tone}`}>
+    <span className={`status-badge ${tone}`}>
       {projectStatusLabel[status]}
     </span>
   );
@@ -78,12 +78,12 @@ export function StatusPill({ status }: { status: ProjectStatus }) {
 export function PriorityPill({ priority }: { priority: TaskPriority }) {
   const tone =
     priority === "high"
-      ? "bg-orange-50 text-orange-900"
+      ? "status-attention"
       : priority === "medium"
-        ? "bg-stone-100 text-stone-700"
-        : "bg-stone-50 text-stone-500";
+        ? "status-neutral"
+        : "status-neutral";
   return (
-    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${tone}`}>
+    <span className={`status-badge ${tone}`}>
       {priority}
     </span>
   );
@@ -97,11 +97,11 @@ export function TaskStatusText({
   overdue?: boolean;
 }) {
   if (overdue && status !== "done") {
-    return <span className="text-sm font-medium text-orange-800">Overdue</span>;
+    return <span className="status-overdue text-sm font-medium">Overdue</span>;
   }
   const label =
     status === "done" ? "Done" : status === "in_progress" ? "In progress" : "Open";
-  return <span className="text-sm text-stone-600">{label}</span>;
+  return <span className={status === "done" ? "status-success status-badge" : "status-neutral status-badge"}>{label}</span>;
 }
 
 export function documentLabel(type: DocumentType) {
@@ -110,6 +110,6 @@ export function documentLabel(type: DocumentType) {
 
 export function DemoNote({ children }: { children: ReactNode }) {
   return (
-    <p className="rounded-xl bg-stone-100 px-3 py-2 text-sm text-stone-600">{children}</p>
+    <p className="notice">{children}</p>
   );
 }

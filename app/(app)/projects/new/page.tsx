@@ -26,7 +26,7 @@ export default function NewProjectPage() {
           <input
             name="name"
             required
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             placeholder="184 Willow Ave Remodel"
           />
         </label>
@@ -34,7 +34,7 @@ export default function NewProjectPage() {
           Client
           <input
             name="client_name"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             placeholder="Client name"
           />
         </label>
@@ -42,7 +42,7 @@ export default function NewProjectPage() {
           Address
           <input
             name="address"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             placeholder="Jobsite address"
           />
         </label>
@@ -51,7 +51,7 @@ export default function NewProjectPage() {
           <textarea
             name="description"
             rows={3}
-            className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
           />
         </label>
         <label className="block text-sm font-medium">
@@ -59,7 +59,7 @@ export default function NewProjectPage() {
           <input
             name="start_date"
             type="date"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
           />
         </label>
         <label className="block text-sm font-medium">
@@ -67,17 +67,17 @@ export default function NewProjectPage() {
           <input
             name="target_completion_date"
             type="date"
-            className="mt-1 min-h-11 w-full rounded-xl border border-stone-200 px-3"
+            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
           />
         </label>
         {state.error ? (
-          <p className="text-sm text-orange-800">{state.error}</p>
+          <p className="text-sm text-danger">{state.error}</p>
         ) : null}
         <div className="flex gap-3">
           <button
             type="submit"
             disabled={pending}
-            className="min-h-11 rounded-xl bg-stone-900 px-4 text-sm font-medium text-white disabled:opacity-60"
+            className="control min-h-11 rounded-lg bg-shell px-4 text-sm font-medium text-white disabled:opacity-60"
           >
             {pending ? "Saving…" : "Save job"}
           </button>
