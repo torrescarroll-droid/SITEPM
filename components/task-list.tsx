@@ -1,12 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
+import { TaskStatusControl } from "@/components/task-status-control";
 import { Card, DemoNote, PriorityPill, TaskStatusText } from "@/components/ui";
 import { formatProjectDate } from "@/lib/format-date";
 import {
   createTask,
   deleteTask,
-  setTaskStatus,
   updateTask,
   type TaskFormState,
 } from "@/lib/task-actions";
@@ -17,9 +18,11 @@ const initialState: TaskFormState = { error: null };
 export function NewTaskForm({
   projectId,
   projects,
+  sourceReport,
 }: {
   projectId?: string;
   projects: { id: string; name: string }[];
+  sourceReport?: { id: string; location: string | null; description: string | null };
 }) {
   const [state, action, pending] = useActionState(createTask, initialState);
   const selectable = projectId
@@ -51,6 +54,7 @@ export function NewTaskForm({
         </DemoNote>
       </div>
       <form action={action} className="mt-4 grid gap-3 md:grid-cols-2">
+        {sourceReport ? <input type="hidden" name="source_field_log_id" value={sourceReport.id} /> : null}
         {projectId ? (
           <input type="hidden" name="project_id" value={projectId} />
         ) : null}
@@ -67,6 +71,7 @@ export function NewTaskForm({
           Description
           <textarea
             name="description"
+            defaultValue={sourceReport?.description ?? ""}
             rows={2}
             className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2"
           />
@@ -108,6 +113,7 @@ export function NewTaskForm({
           Location
           <input
             name="location_text"
+            defaultValue={sourceReport?.location ?? ""}
             className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 px-3"
             placeholder="Primary bath"
           />
@@ -133,8 +139,9 @@ export function NewTaskForm({
           </select>
         </label>
         {state.error ? (
-          <p className="text-sm text-danger md:col-span-2">{state.error}</p>
+          <p role="alert" className="text-sm text-danger md:col-span-2">{state.error}</p>
         ) : null}
+        {state.success ? <p role="status" className="text-sm text-stone-600 md:col-span-2">{state.success}</p> : null}
         <div className="md:col-span-2">
           <button
             type="submit"
@@ -193,7 +200,7 @@ function TaskCard({
   const overdue = taskIsOverdue(task);
 
   return (
-    <Card>
+    <Card id={`task-${task.id}`}>
       <form action={action} className="space-y-3">
         <input type="hidden" name="task_id" value={task.id} />
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -219,7 +226,9 @@ function TaskCard({
             <p className="text-sm text-stone-500">
               {projectLabel ? `${projectLabel} · ` : null}
               due {formatProjectDate(task.due_date)}
-              {task.source_field_log_id ? " · from a daily report" : ""}
+              {task.source_field_log_id ? (
+                <> · <Link className="underline" href={`/projects/${task.project_id}/field/${task.source_field_log_id}`}>Source daily report</Link></>
+              ) : null}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -277,6 +286,7 @@ function TaskCard({
             Status
             <select
               name="status"
+              key={task.status}
               defaultValue={task.status}
               className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3"
             >
@@ -287,8 +297,9 @@ function TaskCard({
           </label>
         </div>
         {state.error ? (
-          <p className="text-sm text-danger">{state.error}</p>
+          <p role="alert" className="text-sm text-danger">{state.error}</p>
         ) : null}
+        {state.success ? <p role="status" className="text-sm text-stone-600">{state.success}</p> : null}
         <div className="flex flex-wrap gap-3">
           <button
             type="submit"
@@ -300,23 +311,7 @@ function TaskCard({
         </div>
       </form>
       <div className="mt-3 flex flex-wrap gap-3 border-t border-stone-100 pt-3">
-        {task.status === "done" ? (
-          <form action={setTaskStatus}>
-            <input type="hidden" name="task_id" value={task.id} />
-            <input type="hidden" name="status" value="open" />
-            <button type="submit" className="control text-sm font-medium text-stone-700">
-              Reopen
-            </button>
-          </form>
-        ) : (
-          <form action={setTaskStatus}>
-            <input type="hidden" name="task_id" value={task.id} />
-            <input type="hidden" name="status" value="done" />
-            <button type="submit" className="control text-sm font-medium text-stone-700">
-              Mark done
-            </button>
-          </form>
-        )}
+        <TaskStatusControl task={task} />
         <form action={deleteTask}>
           <input type="hidden" name="task_id" value={task.id} />
           <button type="submit" className="control text-sm font-medium text-danger">

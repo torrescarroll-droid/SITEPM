@@ -35,6 +35,13 @@ export default function PrivateBetaGuidePage() {
               was here, and a jobsite photo), or schedule activities for the
               sequence of work.
             </p>
+            <p className="mt-2">
+              Open the job&apos;s Lookahead to review the next two weeks, overdue
+              to-dos, held activities, and trade work. Under Report follow-through,
+              open a source report, check the photos, and add a follow-up with an
+              owner, trade, and due date. Completing a linked to-do preserves the
+              report&apos;s original flag; verify the field condition before clearing it.
+            </p>
           </li>
           <li>
             <p className="font-medium text-stone-950">

@@ -26,7 +26,8 @@
     "test:stage4e-fts-experiment2": "node scripts/run-ask-stage4e-fts-experiment2-unit.mjs && node scripts/run-ask-stage4e-fts-experiment2.mjs",
     "test:stage4e-fts-experiment3": "node scripts/run-ask-stage4e-fts-experiment3-unit.mjs && node scripts/run-ask-stage4e-fts-experiment3.mjs",
     "test:stage4e-fts-experiment4": "node scripts/run-ask-stage4e-fts-experiment4-unit.mjs && node scripts/run-ask-stage4e-fts-experiment4.mjs",
-    "generate:stage4e-fts-sql": "node scripts/run-generate-ask-stage4e-fts-sql.mjs"
+    "generate:stage4e-fts-sql": "node scripts/run-generate-ask-stage4e-fts-sql.mjs",
+    "test:operations": "node scripts/run-operational-lookahead-unit.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

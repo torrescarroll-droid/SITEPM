@@ -68,6 +68,7 @@ async function queryFieldLogs(filters: {
   companyId: string;
   projectId?: string;
   limit?: number;
+  reportId?: string;
 }) {
   const { supabase } = await requireCompanyContext();
   const applyFilters = (select: string) => {
@@ -81,6 +82,7 @@ async function queryFieldLogs(filters: {
     if (filters.projectId) {
       query = query.eq("project_id", filters.projectId);
     }
+    if (filters.reportId) query = query.eq("id", filters.reportId);
     if (filters.limit) {
       query = query.limit(filters.limit);
     }
@@ -153,4 +155,13 @@ export async function listProjectFieldLogs(projectId: string) {
     return [];
   }
   return queryFieldLogs({ companyId: profile.company_id, projectId });
+}
+
+export async function findAuthorizedFieldLog(projectId: string, reportId: string) {
+  await getAuthorizedProject(projectId);
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reportId)) return null;
+  const { profile } = await requireCompanyContext();
+  if (!profile?.company_id) return null;
+  const logs = await queryFieldLogs({ companyId: profile.company_id, projectId, reportId, limit: 1 });
+  return logs[0] ?? null;
 }

@@ -2,16 +2,22 @@ import Link from "next/link";
 import { TimeGreeting } from "@/components/time-greeting";
 import { Card, PageHeader, StatusPill } from "@/components/ui";
 import { requireCompanyContext } from "@/lib/auth-context";
-import { listRecentCompanyFieldLogs } from "@/lib/field-logs";
+import { listCompanyFieldLogs } from "@/lib/field-logs";
+import { buildOperationalLookahead } from "@/lib/operational-lookahead";
+import { listCompanyScheduleActivities } from "@/lib/schedule";
 import { formatProjectDate, listCompanyProjects } from "@/lib/projects";
 import { listCompanyTasks } from "@/lib/tasks";
 import { taskIsOverdue } from "@/lib/task-types";
 
 export default async function DashboardPage() {
   const { profile } = await requireCompanyContext();
-  const liveProjects = await listCompanyProjects();
-  const liveTasks = await listCompanyTasks();
-  const recentField = await listRecentCompanyFieldLogs(3);
+  const [liveProjects, liveTasks, reports, activities] = await Promise.all([
+    listCompanyProjects(), listCompanyTasks(), listCompanyFieldLogs(), listCompanyScheduleActivities(),
+  ]);
+  const recentField = reports.slice(0, 3);
+  const lookaheads = new Map(liveProjects.map((project) => [project.id, buildOperationalLookahead({
+    companyId: project.company_id, projectId: project.id, tasks: liveTasks, reports, activities, photos: [],
+  })]));
   const projectNames = Object.fromEntries(
     liveProjects.map((project) => [project.id, project.name]),
   );
@@ -45,7 +51,7 @@ export default async function DashboardPage() {
             <ul className="mt-3 space-y-3">
               {overdueTasks.map((task) => (
                 <li key={task.id}>
-                  <p className="text-sm font-medium">{task.title}</p>
+                  <Link href={`/projects/${task.project_id}/tasks#task-${task.id}`} className="text-sm font-medium underline">{task.title}</Link>
                   <p className="text-sm text-stone-500">
                     {projectNames[task.project_id] ?? "Job"} · due{" "}
                     {formatProjectDate(task.due_date)}
@@ -73,7 +79,8 @@ export default async function DashboardPage() {
       ) : (
         <div className="grid gap-3">
           {activeProjects.map((project) => (
-            <Link key={project.id} href={`/projects/${project.id}`}>
+            <div key={project.id}>
+            <Link href={`/projects/${project.id}`}>
               <Card className="h-full hover:border-stone-400">
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -87,8 +94,13 @@ export default async function DashboardPage() {
                 <p className="mt-3 text-sm text-stone-600">
                   Target {formatProjectDate(project.target_completion_date)}
                 </p>
+                <p className="mt-2 text-sm text-stone-600">
+                  {lookaheads.get(project.id)?.dueTasks.length ?? 0} to-dos due / overdue · {lookaheads.get(project.id)?.reportFollowUps.filter((item) => item.state === "needs_action").length ?? 0} reports without a linked action
+                </p>
               </Card>
             </Link>
+            <Link className="inline-block min-h-11 py-2 text-sm font-medium underline" href={`/projects/${project.id}/lookahead`}>Open two-week lookahead →</Link>
+            </div>
           ))}
         </div>
       )}
@@ -106,10 +118,10 @@ export default async function DashboardPage() {
             <ul className="mt-3 space-y-3">
               {recentField.map((log) => (
                 <li key={log.id}>
-                  <p className="text-sm font-medium">
+                  <Link href={`/projects/${log.project_id}/field/${log.id}`} className="text-sm font-medium underline">
                     {projectNames[log.project_id] ?? "Job"}
                     {log.issue_flag ? " · Issue flagged" : ""}
-                  </p>
+                  </Link>
                   <p className="text-sm text-stone-500">
                     {formatProjectDate(log.log_date)}
                     {log.created_by_name ? ` · ${log.created_by_name}` : ""}

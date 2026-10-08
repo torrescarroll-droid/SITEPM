@@ -105,7 +105,7 @@ export function JobDesk({
         </p>
       ) : null}
 
-      <Section id="needs-attention" title="Needs attention">
+      <Section id="needs-attention" title="Needs attention" action={{ href: `${jobHref}/lookahead`, label: "Plan & follow through →" }}>
         {desk.hasAttention ? (
           <ul className="space-y-3">
             {desk.attention.overdue.map((task) => (

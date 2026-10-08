@@ -17,6 +17,8 @@ function revalidateFieldLogPaths(projectId: string) {
   revalidatePath(`/projects/${projectId}`);
   revalidatePath(`/projects/${projectId}/field`);
   revalidatePath(`/projects/${projectId}/tasks`);
+  revalidatePath(`/projects/${projectId}/lookahead`);
+  revalidatePath(`/projects/${projectId}/field`, "layout");
 }
 
 function parseLogDate(value: string) {

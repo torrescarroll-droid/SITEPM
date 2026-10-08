@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { Card, DemoNote } from "@/components/ui";
 import { formatCrewLine } from "@/lib/daily-report";
 import { formatProjectDate } from "@/lib/format-date";
@@ -432,6 +433,10 @@ export function FieldLogList({
             {log.notes ? (
               <p className="mt-2 text-sm leading-6 text-stone-600">{log.notes}</p>
             ) : null}
+            {[["Equipment", log.equipment], ["Site events / inspections", log.site_events], ["Safety", log.safety_notes]].map(([label, value]) => value ? (
+              <p key={label} className="mt-2 whitespace-pre-wrap text-sm text-stone-700">{label}: {value}</p>
+            ) : null)}
+            <Link className="mt-3 inline-block min-h-11 py-2 text-sm underline" href={`/projects/${log.project_id}/field/${log.id}#follow-up`}>Report details & follow-ups</Link>
             {reportPhotos.length > 0 ? (
               <p className="mt-2 text-sm text-stone-500">
                 {reportPhotos.length} photo{reportPhotos.length === 1 ? "" : "s"} on this report

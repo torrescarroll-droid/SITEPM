@@ -28,6 +28,7 @@ function revalidateSchedule(projectId: string) {
   revalidatePath("/schedule");
   revalidatePath(`/projects/${projectId}`);
   revalidatePath(`/projects/${projectId}/schedule`);
+  revalidatePath(`/projects/${projectId}/lookahead`);
 }
 
 export async function saveScheduleActivity(

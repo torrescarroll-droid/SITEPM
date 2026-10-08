@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const tabs = [
   { slug: "", label: "Job", key: "overview" },
+  { slug: "lookahead", label: "Lookahead", key: "lookahead" },
   { slug: "schedule", label: "Schedule", key: "schedule" },
   { slug: "field", label: "Daily Reports", key: "field" },
   { slug: "tasks", label: "To-Dos", key: "tasks" },
@@ -13,7 +14,7 @@ export function ProjectTabs({
   active,
 }: {
   projectId: string;
-  active: "overview" | "ask" | "documents" | "field" | "tasks" | "schedule";
+  active: "overview" | "ask" | "documents" | "field" | "tasks" | "schedule" | "lookahead";
 }) {
   return (
     <nav aria-label="Job sections" className="job-tabs mb-5 overflow-x-auto">
