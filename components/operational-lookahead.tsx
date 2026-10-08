@@ -58,6 +58,8 @@ export function OperationalLookaheadView({ projectId, view }: { projectId: strin
               <p className="text-sm text-stone-600">{formatProjectDate(activity.start_date)} → {formatProjectDate(activity.finish_date)}</p>
               {late ? <p className="text-sm text-attention">Planned finish has passed.</p> : null}
               {predecessorPending ? <p className="text-sm text-attention">Predecessor not recorded complete: {predecessorName}. Confirm readiness before starting.</p> : null}
+              {activity.assignments?.length ? <p className="text-sm">{activity.assignments.length} expected resource assignment(s) · not actual attendance</p> : null}
+              {activity.source_task_id ? <Link className="min-h-11 inline-flex items-center text-sm underline" href={`${base}/tasks#task-${activity.source_task_id}`}>Source to-do</Link> : null}
               {activity.notes ? <p className="mt-1 whitespace-pre-wrap text-sm">{activity.notes}</p> : null}
             </li>
           ))}</ul> : <p className="mt-3 text-sm text-stone-600">No recorded activities in this window. Add dates in Schedule to plan the next trades.</p>}

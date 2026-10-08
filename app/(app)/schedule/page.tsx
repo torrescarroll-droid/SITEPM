@@ -1,66 +1,40 @@
-import Link from "next/link";
-import { Card, PageHeader } from "@/components/ui";
-import { formatProjectDate } from "@/lib/format-date";
+import { PageHeader } from "@/components/ui";
+import { ScheduleBoard } from "@/components/schedule-board";
 import { listCompanyProjects } from "@/lib/projects";
-import { listCompanyScheduleActivities } from "@/lib/schedule";
-import { activityIsLate, localTodayIso } from "@/lib/schedule-logic";
-import { scheduleStatusLabel } from "@/lib/schedule-types";
-
+import {
+  listCompanyScheduleActivities,
+  listScheduleResources,
+  listScheduleHistory,
+} from "@/lib/schedule";
+import { requireCompanyContext } from "@/lib/auth-context";
 export default async function CompanySchedulePage() {
-  const [projects, activities] = await Promise.all([
+  const { supabase, profile, user } = await requireCompanyContext();
+  const [projects, activities, resources, history, tasks] = await Promise.all([
     listCompanyProjects(),
     listCompanyScheduleActivities(),
+    listScheduleResources(),
+    listScheduleHistory(),
+    supabase
+      .from("tasks")
+      .select("id,project_id,title")
+      .eq("company_id", profile!.company_id),
   ]);
-  const projectNames = Object.fromEntries(
-    projects.map((project) => [project.id, project.name]),
-  );
-  const today = localTodayIso();
-
+  if (tasks.error) throw new Error("Source to-dos could not load.");
   return (
-    <div>
+    <>
       <PageHeader
-        kicker="Schedule"
-        title="Job schedules"
-        description="Open a job to add activities. Dates here come from those records."
+        kicker="Company schedule"
+        title="Construction schedule"
+        description="Who is expected, where, and when. Coordinate every job from one working calendar."
       />
-      {activities.length === 0 ? (
-        <Card>
-          <p className="font-medium">No schedule activities yet</p>
-          <p className="mt-1 text-sm text-stone-600">
-            A schedule file in Plans & Docs is not the schedule. Add activities on the job.
-          </p>
-        </Card>
-      ) : (
-        <ul className="record-stack schedule-records">
-          {activities.map((activity) => (
-            <li key={activity.id}>
-              <Card>
-                <p className="text-sm text-stone-500">
-                  {projectNames[activity.project_id] ?? "Job"}
-                </p>
-                <p className="mt-1 font-medium">{activity.name}</p>
-                <p className="mt-1 text-sm text-stone-600">
-                  {scheduleStatusLabel(activity.status)}
-                  {activity.trade_name ? ` · ${activity.trade_name}` : ""}
-                  {activityIsLate(activity, today) ? " · Late" : ""}
-                  {activity.is_milestone ? " · Milestone" : ""}
-                </p>
-                <p className="mt-1 text-sm text-stone-500">
-                  {activity.start_date ? formatProjectDate(activity.start_date) : "No start"}
-                  {" – "}
-                  {activity.finish_date ? formatProjectDate(activity.finish_date) : "No finish"}
-                </p>
-                <Link
-                  href={`/projects/${activity.project_id}/schedule`}
-                  className="mt-3 inline-flex min-h-11 items-center text-sm font-medium"
-                >
-                  Open job schedule
-                </Link>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+      <ScheduleBoard
+        activities={activities}
+        resources={resources}
+        projects={projects}
+        history={history}
+        tasks={tasks.data ?? []}
+        scope={`${profile?.company_id}:${user.id}`}
+      />
+    </>
   );
 }
