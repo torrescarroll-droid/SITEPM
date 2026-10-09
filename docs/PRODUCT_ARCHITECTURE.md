@@ -1,5 +1,7 @@
 # SITEPM Product Architecture
 
+> 2026-10-09 audit reading note: the early time-layer/current-state sections below are historical. Retain the architecture and authorization boundaries; use the [dated capability inventory](product/FEATURE_INVENTORY.md) and [audit report](product/PRODUCT_KNOWLEDGE_AUDIT_2026-10-09.md) for current implementation/release status. The later Sprint 5 clarification already supersedes Stage-3-only/PDF-not-started descriptions.
+
 Status: documentation only. This file is the **canonical product true north**. It does not authorize schema, ingestion, or application work.
 
 Related: `SITEPM_BUILD_SPEC.md`, `docs/DATA_INGESTION_ARCHITECTURE.md`, `docs/DATA_SOURCE_REGISTRY.md`.
@@ -790,3 +792,12 @@ The earlier Stage 3/PDF-only implementation descriptions in this document are hi
 Explicit Sprint 5 authorization permits a company/project document desk, immutable canonical versions, explicit current promotion, archive/restore, PDF/JPG/PNG/DOCX/XLSX/PPTX, metadata search, existing digital-PDF text extraction and exact-version task/schedule/report links. The migration retains canonical document IDs, hashes, Storage paths and extraction relationships. Current/unarchived filtering applies before chunk ranking. The trusted byte verifier is separate from the client RPC and from the existing extractor; its credentials never enter browser bundles.
 
 This delivers project knowledge, not property transfer, OCR/vision, general construction/regulatory corpora, automatic approval or model authority. Models remain replaceable. Original evidence, retained history, permissions and builder judgment remain authoritative. See [Sprint 5 implementation and release controls](DOCUMENTS_PROJECT_INTELLIGENCE_SPRINT_2026-10-09.md).
+
+
+## 2026-10-09 — Product knowledge preservation addendum
+
+The [requirements record](product/PRODUCT_REQUIREMENTS.md) adds explicit future contracts for reviewer-verified physical progress, scope/value baselines, distinct financial/billing measures, shared project health, restricted client workspaces, master scheduling, authorized federation and selective offline operations. The [decision/discovery register](product/DECISIONS_AND_DISCOVERY.md) separates owner direction from anecdote and unresolved architecture choices. This does not replace the existing Toolbag/OS, Property, knowledge-class, provenance, privacy or consequential-action architecture.
+
+Current company isolation is not a completed fine-grained role/project/client permission system. Existing role labels and calendar resources must not imply external or financial authority. Source/byte verification is not physical-work certification. Current document promotion is not approval for construction. Current report drafts/TUS are not offline synchronization. Stable schedule IDs/history/edges are foundations, not formal baselines, actual labor or CPM.
+
+Long-term opportunities remain preserved, not automatically authorized. No schema/runtime work is introduced by this addendum. Historical instruction text referring to Ask Stage 3 should be reviewed separately for consistency with explicit completed Stage 4/Sprint 5 authorizations, without removing scope controls or authorizing unrelated AI features.
