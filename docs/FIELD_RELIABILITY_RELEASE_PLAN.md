@@ -39,3 +39,10 @@ Legacy saves remain nontransactional until the new application is deployed. Old 
 ## Remaining operating limits
 
 Draft recovery is same-tab SessionStorage, not offline background synchronization or cross-device recovery. Photos upload separately after confirmed report persistence. Local Storage blob acceptance was unavailable; report/crew/task writes and photo metadata relationships were tested. Receipts retain report payloads indefinitely under actor/company RLS; a future retention policy must preserve safe retry semantics. Responsive desktop-browser acceptance does not substitute for testing physical phones and intermittent cellular networks during beta use.
+
+
+## Receipt integrity hardening — 2026-10-09 (supersedes invoker-only postflight)
+
+The own-company receipt forgery concern was reproduced and fixed in isolated acceptance. Release Sprint 3 with **both** the original migration and `20261009214540_field_report_receipt_integrity.sql`, without reopening report writes between them. The latter closes receipt DML and replaces RPC ownership with a narrow NOLOGIN/NOBYPASSRLS field writer, fixed empty search_path and row_security=on. Existing client-writable receipts remain preserved but untrusted; uncertain pre-fix submissions require report inspection before a new request key. New legitimate retry semantics are preserved. Do not restore client receipt writes on rollback.
+
+Review [root cause, security/ACL matrix, before/after and full Sprint 3–6 isolated compatibility evidence](FIELD_REPORT_RECEIPT_INTEGRITY_2026-10-09.md). The original report/crew/task/photo compatibility and production safety requirements above still apply. This new revision requires engineering review, verified DB/Storage recovery and production preflight before release. No production operation occurred.
