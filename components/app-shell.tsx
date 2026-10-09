@@ -84,7 +84,7 @@ export function AppShell({
           <p className="font-medium">{userName}</p>
           <p className="text-stone-400">{companyName}</p>
           <p className="text-stone-400 capitalize">{roleLabel}</p>
-          <form action={signOut} onSubmit={clearDraftsOnLogout} title="Logging out clears this tab’s report drafts." className="mt-3">
+          <form action={signOut} onSubmit={clearDraftsOnLogout} title="Logging out clears this tab’s unsent drafts." className="mt-3">
             <button
               type="submit"
               className="control text-sm font-medium text-stone-200 hover:text-white"
@@ -103,13 +103,14 @@ export function AppShell({
 
       <div className="min-w-0 md:pl-60">
         <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-stone-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden">
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-xs font-medium tracking-[0.18em] text-stone-500 uppercase">
               LINEHORSE
             </p>
-            <p className="text-sm text-stone-600">{companyName}</p>
+            <p className="truncate text-sm text-stone-600">{companyName}</p>
           </div>
-          <form action={signOut} onSubmit={clearDraftsOnLogout} title="Logging out clears this tab’s report drafts.">
+          <Link href="/documents" className="control min-h-11 text-sm font-medium" aria-label="Company documents">Docs</Link>
+          <form action={signOut} onSubmit={clearDraftsOnLogout} title="Logging out clears this tab’s unsent drafts.">
             <button
               type="submit"
               className="control min-h-11 text-sm font-medium text-stone-700"

@@ -11,3 +11,5 @@ The interface is a superintendent's working desk: professional, rugged, precise,
 The canonical detailed architecture remains [docs/PRODUCT_ARCHITECTURE.md](docs/PRODUCT_ARCHITECTURE.md). This summary does not authorize additional product lines or Ask Stage 4. Sprint 4's explicit scheduling authorization adds structured planning and resource coordination to that foundation.
 
 The initial commercial objective is to earn the trust of **10 paying contractors using LINEHORSE on real projects**. Prioritize usefulness, reliability, retained project history, and customer trust over feature count.
+
+Sprint 5’s explicit authorization adds retained, immutable project document versions and useful retrieval to the existing evidence foundation. User-selected current issues, original bytes, source hashes, page citations and operational references preserve provenance. Extracted source text and AI interpretations remain distinct; uploading or promoting a document does not authorize downstream construction, schedule, financial or approval actions. This authorization does not start unrelated product lines.

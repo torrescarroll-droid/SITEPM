@@ -40,7 +40,9 @@ function mapDocument(row: DocumentRow): DocumentRecord {
     project_id: row.project_id,
     filename: row.filename,
     storage_path: row.storage_path,
-    document_type: isDocumentType(row.document_type) ? row.document_type : "other",
+    document_type: isDocumentType(row.document_type)
+      ? row.document_type
+      : "other",
     uploaded_by: row.uploaded_by,
     uploaded_by_name: author?.full_name ?? null,
     created_at: row.created_at,
@@ -58,7 +60,7 @@ async function queryReadyDocuments(filters: {
   const { supabase } = await requireCompanyContext();
   const applyFilters = (select: string) => {
     let query = supabase
-      .from("documents")
+      .from("current_project_documents")
       .select(select)
       .eq("company_id", filters.companyId)
       .eq("status", "ready")
@@ -124,5 +126,14 @@ export async function getAuthorizedDocument(
     return null;
   }
 
+  const membership = await supabase
+    .from("document_versions")
+    .select(
+      "family_id,document_families!document_versions_family_id_company_id_project_id_fkey!inner(archived)",
+    )
+    .eq("document_id", id)
+    .eq("document_families.archived", false)
+    .maybeSingle();
+  if (membership.error || !membership.data) return null;
   return mapDocument(data as unknown as DocumentRow);
 }
