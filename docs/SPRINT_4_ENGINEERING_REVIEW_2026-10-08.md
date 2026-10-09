@@ -1,6 +1,6 @@
 # Sprint 4 production-bound engineering review — 2026-10-08
 
-Verdict: **NOT READY**. Reviewed actual PR #4 head `c09ae344242431d97807f2349e49dd6768d94e08`, migration, existing baseline triggers/policies, server actions, calendar/directory/recovery components, query loaders, tests, Sprint 3 ancestry and release documentation. No production connection or migration was used.
+Original review verdict: **NOT READY**. Reviewed actual PR #4 head `c09ae344242431d97807f2349e49dd6768d94e08`, migration, existing baseline triggers/policies, server actions, calendar/directory/recovery components, query loaders, tests, Sprint 3 ancestry and release documentation. No production connection or migration was used.
 
 ## Reproduced blockers
 
@@ -35,3 +35,18 @@ Scale risks remain: full company reads and pairwise overlap detection, no stable
 Acceptance still needed after hardening: direct API relationship edits vs stale RPC; same-tenant receipt forgery; concurrent opposing dependency writes; inactive direct assignments; multi-page read/edit preservation and task options; clean baseline+Sprint 3+Sprint 4 migration replay; full desktop/mobile save/recovery rerun on the hardened build. Add these to the regular automated gate rather than relying only on this diagnostic.
 
 Sprint 4 remains stacked on Sprint 3 `44e5bda`; scheduling does not call the field-report RPC and field-reliability regression passes. Release Sprint 3 first, retarget PR #4 to main, then repeat schema/compatibility preflight. Production backup/restore verification and explicit release authorization remain prerequisites. No release recommendation is made until the P1 blockers are resolved.
+
+## Hardening follow-up — 2026-10-08
+
+Current verdict: **READY WITH CONDITIONS for engineering review**. The original findings above remain as the before-state record. All four confirmed defects now pass isolated database acceptance, after a clean baseline/Sprint 3/Sprint 4 migration replay. The former diagnostic is now an asserting acceptance suite included in `test:scheduling:db`.
+
+1. Assignment/dependency triggers advance the parent concurrency token; final RPC receipts carry the actual final revision. Direct client writes are denied and stale composite edits reject.
+2. Client receipt DML is revoked. Only the bounded transactional writer creates trusted save receipts. Pre-hardening receipts are retained but untrusted. Rollback, interrupted saves and exact repeated/concurrent requests are verified.
+3. RPC and lower-level dependency guards share company transaction locks before graph checks. Concurrent opposing and three-node writes reject cycles; unsupported stale-snapshot transaction isolation rejects.
+4. Database eligibility guards reject new inactive assignments. Existing unchanged assignments survive deactivation/metadata edits; changed expected counts reject atomically and removal remains allowed.
+
+The dedicated writer is NOLOGIN/NOBYPASSRLS, owns no tables or schema, has no client role members and uses empty search_path plus row_security=on. The narrow private identity bridge delegates only auth.uid(); ACL/owner/body and tenant policies were inspected and tested. No production connection, migration, deployment, merge or Sprint 3 release changes occurred. See [architecture, privilege matrix, exact test evidence, reproducible setup and remaining limitations](SPRINT_4_INTEGRITY_HARDENING_2026-10-08.md).
+
+Scheduling and Sprint 3 live database acceptance, operational/unit regressions, TypeScript, lint and supported build pass. Hardened desktop/mobile save, rejection, reload recovery, concurrent stale edit and interrupted exact retry were repeated in the isolated browser. Physical-device and large-portfolio/load testing remain unperformed. Existing pagination/history-window limitations remain; scale claims are not expanded. Stable identities, explicit predecessor edges, planned dates, resource assignments and retained audit snapshots support additive Gantt/baseline/actual/labor/metrics work without claiming those capabilities now.
+
+Release conditions remain verified production backup/recovery, Sprint 3 ordered release, retargeting/review against main, current-production schema/ACL preflight and explicit Sprint 4 release authorization. Keep scheduling writes blocked throughout migration/deployment or rollback; do not restore the vulnerable direct-write grants.

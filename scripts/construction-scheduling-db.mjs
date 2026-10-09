@@ -1,20 +1,9 @@
+import { isolatedEnvironment } from "./isolated-environment.mjs";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { parseEnv } from "node:util";
 import { randomUUID } from "node:crypto";
 import postgres from "postgres";
 import { createClient } from "@supabase/supabase-js";
-const env = parseEnv(readFileSync(".env.isolated.local", "utf8"));
-for (const [name, port] of [
-  ["API_URL", "55431"],
-  ["DB_URL", "55432"],
-]) {
-  const u = new URL(env[name]);
-  assert(
-    ["127.0.0.1", "localhost"].includes(u.hostname) && u.port === port,
-    "Isolated localhost only",
-  );
-}
+const env = isolatedEnvironment();
 const sql = postgres(env.DB_URL, { max: 3 });
 const run = randomUUID();
 async function account(label) {
@@ -116,7 +105,7 @@ try {
   const key = randomUUID();
   const created = await save(a, "activity", record, key);
   assert.ifError(created.error);
-  assert.equal(created.data.revision, 1);
+  assert.equal(created.data.revision, 3); // Activity plus two relationship changes
   const replay = await save(a, "activity", record, key);
   assert.ifError(replay.error);
   assert.equal(replay.data.id, record.id);
@@ -140,8 +129,8 @@ try {
     "2026-10-08T14:00:00+00:00",
   );
   const edits = await Promise.all([
-    save(a, "activity", { ...record, revision: 1, name: "Editor one" }),
-    save(a, "activity", { ...record, revision: 1, name: "Editor two" }),
+    save(a, "activity", { ...record, revision: created.data.revision, name: "Editor one" }),
+    save(a, "activity", { ...record, revision: created.data.revision, name: "Editor two" }),
   ]);
   assert.equal(edits.filter((r) => !r.error).length, 1);
   assert.equal(edits.filter((r) => r.error?.code === "40001").length, 1);
@@ -150,7 +139,7 @@ try {
     .select("*")
     .eq("id", record.id)
     .single();
-  assert.equal(now.data.revision, 2);
+  assert.equal(now.data.revision, created.data.revision + 1);
   const historyBefore = (
     await a.client
       .from("schedule_history")
@@ -161,7 +150,7 @@ try {
     (
       await save(a, "activity", {
         ...record,
-        revision: 2,
+        revision: now.data.revision,
         name: "Must roll back",
         assignments: [{ resource_id: other.id, expected_workers: 4 }],
       })
@@ -172,7 +161,7 @@ try {
     .select("revision,name")
     .eq("id", record.id)
     .single();
-  assert.equal(unchanged.data.revision, 2);
+  assert.equal(unchanged.data.revision, now.data.revision);
   assert.equal(unchanged.data.name, now.data.name);
   assert.equal(
     (
@@ -209,7 +198,7 @@ try {
     assert.ifError(r.error);
     assert.equal(r.data.length, 0);
   }
-  assert((await save(b, "activity", { ...record, revision: 2 })).error);
+  assert((await save(b, "activity", { ...record, revision: now.data.revision })).error);
   assert((await save(b, "resource", { ...employee, revision: 1 })).error);
   const deniedInsert = await b.client
     .from("schedule_resources")
@@ -336,7 +325,7 @@ try {
     (
       await save(a, "activity", {
         ...multi,
-        revision: 1,
+        revision: 3,
         name: "Updated multiple predecessors",
       })
     ).error,
@@ -371,7 +360,7 @@ try {
     (
       await save(a, "activity", {
         ...unchangedAssignmentRecord,
-        revision: 1,
+        revision: 2,
         notes: "Only description changed",
       })
     ).error,
@@ -391,13 +380,13 @@ try {
   );
   const cancelled = await save(a, "activity", {
     ...record,
-    revision: 2,
+    revision: now.data.revision,
     status: "cancelled",
     start_date: "2026-10-09",
     finish_date: "2026-10-09",
   });
   assert.ifError(cancelled.error);
-  assert.equal(cancelled.data.revision, 3);
+  assert.equal(cancelled.data.revision, now.data.revision + 1);
   const oldReplay = await save(a, "activity", record, key);
   assert.ifError(oldReplay.error);
   assert.equal(

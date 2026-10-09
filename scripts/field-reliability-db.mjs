@@ -1,15 +1,10 @@
+import { isolatedEnvironment } from "./isolated-environment.mjs";
 /** Destructive test fixtures are confined to the dedicated loopback SITEPM database. */
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { parseEnv } from 'node:util';
 import { randomUUID } from 'node:crypto';
 import postgres from 'postgres';
 import { createClient } from '@supabase/supabase-js';
-const env = parseEnv(readFileSync('.env.isolated.local', 'utf8'));
-const api = new URL(env.API_URL);
-const db = new URL(env.DB_URL);
-assert(['127.0.0.1','localhost'].includes(api.hostname) && api.port === '55431', 'Isolated API only');
-assert(['127.0.0.1','localhost'].includes(db.hostname) && db.port === '55432', 'Isolated DB only');
+const env = isolatedEnvironment();
 const sql = postgres(env.DB_URL, { max: 3 });
 const password = 'Local-only-SITEPM-test-2026!';
 const run = randomUUID();
@@ -70,7 +65,7 @@ try {
   const anonymous=createClient(env.API_URL,env.ANON_KEY,{auth:{persistSession:false}});assert((await anonymous.rpc('save_field_report',{p_request_id:randomUUID(),p_project_id:a.project,p_report_id:null,p_expected_revision:null,p_report:report,p_crews:[]})).error);
   console.log('PASS Company A/B read/write isolation, forged receipt denied, anonymous save denied');
   const competing=await Promise.all([call(a,{...editArgs,p_expected_revision:2,p_report:{...report,work_performed:'Editor one'}}),call(a,{...editArgs,p_expected_revision:2,p_report:{...report,work_performed:'Editor two'}})]);
-  assert.equal(competing.filter(result=>!result.error).length,1);assert.equal(competing.filter(result=>result.error?.code==='40001').length,1);
+  assert.equal(competing.filter(result=>!result.error).length,1);assert.equal(competing.filter(result=>result.error?.code==='40001').length,1,JSON.stringify(competing.map(result=>result.error ? {code:result.error.code,message:result.error.message} : 'committed')));
   assert.ifError((await call(a,{p_request_id:request})).error);
   assert.equal((await a.client.from('field_logs').select('revision').eq('id',id).single()).data.revision,3,'Old create replay must not revert newer report');
   console.log('PASS simultaneous editors: one commits, one conflicts; late retry cannot revert newer data');

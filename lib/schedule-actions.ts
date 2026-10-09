@@ -84,7 +84,7 @@ export async function saveScheduleRecord(
         };
       if (code === "42501")
         return {
-          error: "That job, task or resource is not available to your company.",
+          error: "That job, task or resource is unavailable. New or changed assignments require an active company resource.",
         };
       if (code.startsWith("22") || code.startsWith("23") || code === "P0001")
         return {

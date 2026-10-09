@@ -1,9 +1,8 @@
+import { isolatedEnvironment } from "./isolated-environment.mjs";
 import assert from 'node:assert/strict';
-import { readFileSync,writeFileSync } from 'node:fs';
-import { parseEnv } from 'node:util';
+import { writeFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
-const env=parseEnv(readFileSync('.env.isolated.local','utf8'));
-const url=new URL(env.API_URL);assert(['127.0.0.1','localhost'].includes(url.hostname)&&url.port==='55431');
+const env = isolatedEnvironment();
 const fixtures=[];
 for(const label of ['a','b']) {
  const client=createClient(env.API_URL,env.ANON_KEY,{auth:{persistSession:false}});
@@ -16,5 +15,5 @@ for(const label of ['a','b']) {
  fixtures.push({label,email,project:created.data.id,company:profile.data.company_id});
  await client.auth.signOut();
 }
-writeFileSync('.env.isolated-browser.local',JSON.stringify(fixtures));
+writeFileSync(new URL(env.API_URL).port === '55441' ? '.env.isolated-hardening-browser.local' : '.env.isolated-browser.local',JSON.stringify(fixtures));
 console.log(JSON.stringify(fixtures));

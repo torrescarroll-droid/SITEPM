@@ -1,11 +1,8 @@
+import { isolatedEnvironment } from "./isolated-environment.mjs";
 /** Synthetic browser fault controls, restricted to the dedicated local database. */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { parseEnv } from "node:util";
 import postgres from "postgres";
-const env = parseEnv(readFileSync(".env.isolated.local", "utf8"));
-const u = new URL(env.DB_URL);
-assert(["127.0.0.1", "localhost"].includes(u.hostname) && u.port === "55432");
+const env = isolatedEnvironment();
 const sql = postgres(env.DB_URL, { max: 1 });
 try {
   const mode = process.argv[2];

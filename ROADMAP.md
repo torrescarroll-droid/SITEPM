@@ -6,7 +6,7 @@ Aligned with [PRODUCT_VISION.md](PRODUCT_VISION.md) and the canonical [product a
 | --- | --- | --- |
 | Week 11 / Sprint 2 core operations and lookahead | Production baseline `12a0615` | Projects, tasks, field records, operational follow-ups, 14-day lookahead |
 | Sprint 3 field-data reliability | Implemented, PR #3 at `44e5bda`; not released | Atomic report/crew saves, recovery, idempotency, isolated write acceptance |
-| Sprint 4 construction scheduling and workforce coordination | Implemented on a branch stacked on Sprint 3; production-bound review blocked by database write-boundary integrity defects | Functional month/week/day project and company calendars, reusable resource directory, assignments, status, history, transactional saves |
+| Sprint 4 construction scheduling and workforce coordination | Implemented on a branch stacked on Sprint 3; integrity defects resolved in isolated acceptance; ready for engineering review with production release prerequisites | Functional month/week/day project and company calendars, reusable resource directory, assignments, status, history, transactional saves |
 | Next scheduling milestone | Planned | Contractor pilot feedback, larger-calendar query/windowing, resource capacity and dependency editing usability; validate actual-vs-planned evidence links before analytics |
 | Gantt and schedule analytics | Planned, not implemented | Dependency graph UI, explicit baselines/actuals, schedule variance, critical path, forecasting, labor/cost-code integration after data and customer validation |
 

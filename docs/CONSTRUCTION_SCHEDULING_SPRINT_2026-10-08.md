@@ -20,7 +20,7 @@ These are plans and assignments, **not attendance**. There is no invented presen
 
 ## Schema and authorization
 
-Migration: `supabase/migrations/20261008163441_construction_scheduling.sql`.
+Migrations: `supabase/migrations/20261008163441_construction_scheduling.sql` and `20261008201434_scheduling_integrity_boundary.sql`.
 
 Extends existing `schedule_activities` rather than duplicating schedules: revision, type, all-day, wall-clock times, IANA timezone, derived timestamptz boundaries and optional task reference. Existing date columns, IDs, dependencies, project relationships and compatible status keys remain. UI labels map `not_started` to Planned, `done` to Completed, `held` to On hold. Adds confirmed/delayed/cancelled. Unchanged assignments and predecessors are retained rather than generating false remove/re-add events.
 
@@ -33,7 +33,7 @@ New company-scoped tables:
 | schedule_history | Append-only snapshots of activity, status, dates, assignment and dependency changes, authenticated actor and timestamp |
 | schedule_requests | Actor/company-scoped request receipts for exact retries |
 
-Composite activity/company and resource/company foreign keys reject cross-company assignments. RLS uses existing `current_company_id()`. Project and task ownership are checked inside the database. No anonymous writes, service-role app credentials, participant access grants, or editable audit rows. Only narrow trigger-only audit functions use SECURITY DEFINER with fixed empty search paths and revoked direct execution. The save RPC uses SECURITY INVOKER and existing authenticated RLS.
+Composite activity/company and resource/company foreign keys reject cross-company assignments. RLS uses existing `current_company_id()`. Project and task ownership are checked inside the database. No anonymous writes, service-role app credentials, participant access grants, or editable audit rows. The hardened save RPC is the sole application write boundary, owned by a dedicated non-login, non-owner, non-BYPASSRLS role with company-scoped RLS. Direct client scheduling DML is revoked. Narrow identity/audit helpers have reviewed owners, empty search paths and restricted execution. See the [integrity hardening privilege review](SPRINT_4_INTEGRITY_HARDENING_2026-10-08.md).
 
 `save_construction_schedule` atomically saves activity, dependency, assignments and receipt. Resource saves use the same request/revision contract. Per-request advisory locking prevents duplicate commits; row locking plus expected revision rejects stale edits. A company advisory lock serializes RPC dependency changes. Exact receipt replay returns the prior result without overwriting subsequent edits. Direct authenticated table updates remain company-protected and revisioned/audited for compatibility; atomic composite editing is provided through the RPC.
 
@@ -72,9 +72,9 @@ The app launcher supplies isolated Supabase settings for both dev and supported 
 
 ## Release prerequisites and recovery
 
-Do not apply this migration to production from this sprint. Production backup/recovery prerequisite is still unresolved. First release Sprint 3 under its separately authorized reviewed plan. Review this additive migration against the then-current schema, verify backup and isolated restore, obtain explicit Sprint 4 release authorization, briefly pause schedule writes, apply only the approved migration, verify function signatures/grants/RLS/indexes/constraints, then deploy the matching application. Existing deployed date-only schedule writes remain accepted; new richer statuses should not be introduced until the new app is live. New app queries require the migration, so application-first deployment is unsupported.
+Do not apply this migration to production from this sprint. Production backup/recovery prerequisite is still unresolved. First release Sprint 3 under its separately authorized reviewed plan. Review this additive migration against the then-current schema, verify backup and isolated restore, obtain explicit Sprint 4 release authorization, briefly pause schedule writes, apply both approved scheduling migrations in order, verify function signatures/grants/RLS/indexes/constraints, then deploy the matching application. Legacy direct date-only scheduling writes are deliberately denied after hardening; keep schedule writes blocked until the matching app passes verification. New app queries require the migration, so application-first deployment is unsupported.
 
-If migration preflight fails, stop. If app rollout fails, pause schedule writes and restore the last compatible application while preserving the additive schema and captured records; inspect new status handling before re-enabling an old UI. Do not drop tables/columns, erase schedule history, reset credentials, or perform destructive restoration as an automated rollback. A forward fix or separately reviewed recovery is required for data issues.
+If migration preflight fails, stop. If app rollout fails, keep schedule writes blocked while preserving the schema and records. The Sprint 3 schedule writer is incompatible with the hardened write boundary; do not re-enable it. Do not drop tables/columns, erase schedule history, reset credentials, or perform destructive restoration as an automated rollback. A forward fix or separately reviewed recovery is required for data issues.
 
 ## Limits and next milestone
 
@@ -101,9 +101,13 @@ During verification, concurrent execution of standalone TypeScript and a build b
 - Calendar/directory UI: `components/schedule-board.tsx`, `resource-directory.tsx`, `schedule-record-form.tsx`, `expected-schedule.tsx`; navigation and lookahead components.
 - Company/project schedule pages, resource page, and route loading/error boundaries; Home expected-work integration.
 - `lib/schedule.ts`, `schedule-types.ts`, `schedule-actions.ts`, `schedule-logic.ts`, `construction-calendar.ts`, `operational-lookahead.ts`.
-- One scheduling migration; scheduling database/unit suites; local browser fixture controls; isolated app build launcher and package scripts.
+- Two scheduling migrations; scheduling database/unit suites; local browser fixture controls; isolated app build launcher and package scripts.
 - Product vision, roadmap, this implementation/acceptance/release document, and an architecture addendum. PROGRESS is appended separately and deliberately left uncommitted for user review. Main commissioning documentation is unchanged.
 
 ## Subsequent production-bound review
 
-The independent code/database review reproduced direct-write integrity blockers despite the original RPC acceptance passing. Current verdict is **NOT READY**; see [review findings and reproduction](SPRINT_4_ENGINEERING_REVIEW_2026-10-08.md). Earlier acceptance results describe their tested scope, not complete production readiness.
+The independent code/database review reproduced direct-write integrity blockers despite the original RPC acceptance passing. That review verdict was **NOT READY**; see [review findings and reproduction](SPRINT_4_ENGINEERING_REVIEW_2026-10-08.md). Earlier acceptance results describe their tested scope, not complete production readiness.
+
+## Integrity hardening acceptance
+
+The follow-up [integrity review and acceptance](SPRINT_4_INTEGRITY_HARDENING_2026-10-08.md) resolves all four database blockers through an exclusive RLS-bound transactional RPC, relationship revisions, locked graph validation and active-resource guards. Clean local replay, the four-defect acceptance, scheduling database tests and Sprint 3 compatibility passed. Current verdict is **READY WITH CONDITIONS for engineering review**; production release still requires the documented backup/recovery, ordered Sprint 3 release, schema/privilege preflight and explicit authorization.

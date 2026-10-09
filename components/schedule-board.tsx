@@ -537,7 +537,7 @@ export function ScheduleBoard({
                           defaultChecked={Boolean(assignment)}
                         />
                         {r.name} · {r.resource_type.replaceAll("_", " ")}
-                        {!r.active && " (inactive — remove before saving)"}
+                        {!r.active && " (inactive — unchanged assignment retained)"}
                       </label>
                       <label className="text-sm">
                         Expected workers for {r.name}
