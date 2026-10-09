@@ -30,7 +30,10 @@
     "test:operations": "node scripts/run-operational-lookahead-unit.mjs",
     "test:field-reliability": "node scripts/field-reliability-unit.mjs",
     "test:field-reliability:db": "node scripts/field-reliability-db.mjs",
-    "db:isolated:prepare": "node scripts/prepare-isolated-db.mjs"
+    "db:isolated:prepare": "node scripts/prepare-isolated-db.mjs",
+    "test:scheduling": "node scripts/construction-scheduling-unit.mjs",
+    "test:scheduling:db": "node scripts/construction-scheduling-db.mjs && node scripts/construction-scheduling-review.mjs",
+    "db:scheduling:prepare": "node scripts/prepare-scheduling-replay.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

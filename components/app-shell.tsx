@@ -10,6 +10,7 @@ const desktopNav = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Jobs" },
   { href: "/schedule", label: "Schedule" },
+  { href: "/resources", label: "Resources" },
   { href: "/tasks", label: "To-Dos" },
   { href: "/field", label: "Daily Reports" },
   { href: "/documents", label: "Plans & Docs" },
