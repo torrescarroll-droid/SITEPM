@@ -60,3 +60,10 @@ A baseline edge case is retained: `hasAttention` includes late schedule activiti
 ## Delivery
 
 Implementation is local, not pushed, merged, or deployed. Phase 6 is partial pending authenticated acceptance and founder visual review. `PROGRESS.md` is appended separately and intentionally uncommitted under repository instructions.
+
+
+## Next major scheduling UI milestone — October 7, 2026
+
+The project Schedule will use a functional, interactive, color-coded calendar as its primary interface. Provide month and week views; create and edit existing scheduled activities; show milestones, dependencies, delays, holds, and overdue work. Maintain consistent trade-specific colors and separate status icons/badges so status never obscures trade identity. Integrate existing activities with operational lookahead, dependency readiness, and task follow-through using current Supabase relationships, authentication, and company-scoped authorization.
+
+Follow LINEHORSE’s superintendent working desk direction: rugged, not rustic, restrained industrial colors, clear hierarchy, mobile-friendly controls, accessible text/status cues in addition to color. Reuse the previously supplied schedule reference image if it becomes available; no matching image was found in the current repository materials. This is the next scheduling UI milestone, not part of the active Field Data Reliability sprint. Acceptance requires persisted add/edit flows, month/week navigation, clear empty/loading/error states, and tested tenant isolation; a static calendar mockup does not satisfy it.

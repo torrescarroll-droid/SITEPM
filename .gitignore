@@ -42,3 +42,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Generated local-only migration baseline and Supabase runtime state
+/supabase/migrations/19700101000000_local_baseline.sql
+/supabase/.temp/
+/supabase/.branches/

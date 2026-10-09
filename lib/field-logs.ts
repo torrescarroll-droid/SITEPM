@@ -22,6 +22,7 @@ type FieldLogRow = {
   location_text: string | null;
   issue_flag: boolean | null;
   created_at: string;
+  revision?: number;
   author: { full_name: string | null } | { full_name: string | null }[] | null;
 };
 
@@ -34,7 +35,7 @@ type CrewRow = {
 };
 
 const fieldLogColumns =
-  "id, company_id, project_id, created_by, log_date, notes, work_performed, deliveries, equipment, delays, site_events, safety_notes, tomorrow, location_text, issue_flag, created_at";
+  "id, company_id, project_id, created_by, log_date, notes, work_performed, deliveries, equipment, delays, site_events, safety_notes, tomorrow, location_text, issue_flag, created_at, revision";
 const legacyFieldLogColumns =
   "id, company_id, project_id, created_by, log_date, notes, issue_flag, created_at";
 const fieldLogColumnsWithAuthor = `${fieldLogColumns}, author:profiles!field_logs_created_by_fkey(full_name)`;
@@ -60,6 +61,7 @@ function mapFieldLog(row: FieldLogRow): FieldLogRecord {
     location_text: row.location_text,
     issue_flag: Boolean(row.issue_flag),
     created_at: row.created_at,
+    revision: row.revision,
     crews: [],
   };
 }
