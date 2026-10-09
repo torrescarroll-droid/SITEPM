@@ -1,3 +1,4 @@
+import { ProjectDocumentLinks } from "@/components/project-document-links";
 import { requireCompanyContext } from "@/lib/auth-context";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -37,6 +38,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
         <TaskList tasks={linked} projectNames={{ [id]: project.name }} />
         <NewTaskForm projectId={id} projects={[{ id, name: project.name }]} sourceReport={{ id: report.id, location: report.location_text ?? null, description: report.delays || report.notes || report.work_performed || null }} />
       </section>
+      <ProjectDocumentLinks projectId={id} kind="field_log" targetId={reportId} />
     </div>
   );
 }

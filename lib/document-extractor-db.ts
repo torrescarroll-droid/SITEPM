@@ -57,7 +57,8 @@ function extractorConnection(): ExtractorSql | null {
   extractorSql = postgres(url, {
     max: 1,
     prepare: false,
-    ssl: "require",
+    // TLS remains mandatory for every remote connection. Local Supabase has no TLS.
+    ssl: ["127.0.0.1", "localhost"].includes(new URL(url).hostname) ? false : "require",
     connect_timeout: 15,
     idle_timeout: 20,
     max_lifetime: 60 * 5,

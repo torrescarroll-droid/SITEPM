@@ -33,7 +33,10 @@
     "db:isolated:prepare": "node scripts/prepare-isolated-db.mjs",
     "test:scheduling": "node scripts/construction-scheduling-unit.mjs",
     "test:scheduling:db": "node scripts/construction-scheduling-db.mjs && node scripts/construction-scheduling-review.mjs",
-    "db:scheduling:prepare": "node scripts/prepare-scheduling-replay.mjs"
+    "db:scheduling:prepare": "node scripts/prepare-scheduling-replay.mjs",
+    "test:documents": "node scripts/document-environment-unit.mjs && node scripts/run-document-management-unit.mjs && node scripts/document-actions-unit.mjs",
+    "test:documents:db": "node scripts/document-management-db.mjs && node scripts/document-search-db.mjs && node scripts/document-tus-db.mjs && node scripts/document-limits-db.mjs",
+    "db:documents:prepare": "node scripts/prepare-document-replay.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

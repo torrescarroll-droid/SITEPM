@@ -1,6 +1,6 @@
 /**
  * Stage 4C project-scoped document-chunk retrieval.
- * Not wired into Ask/LLM. Chunk body is untrusted DATA.
+ * Used by Ask and the document desk. Chunk body is untrusted DATA.
  */
 
 import { requireAuthorizedAskProject } from "@/lib/ask-scope";

@@ -1,3 +1,4 @@
+import { ProjectDocumentLinks } from "@/components/project-document-links";
 import { ProjectTabs } from "@/components/project-tabs";
 import { ScheduleBoard } from "@/components/schedule-board";
 import { PageHeader } from "@/components/ui";
@@ -44,6 +45,7 @@ export default async function ProjectSchedulePage({
         tasks={tasks.data ?? []}
         scope={`${profile?.company_id}:${user.id}`}
       />
+      <ProjectDocumentLinks projectId={id} kind="activity" />
     </>
   );
 }
