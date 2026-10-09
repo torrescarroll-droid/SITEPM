@@ -2,7 +2,7 @@
 
 Scope: inspected application actions, upload transport/recovery, document/current-version reads, work-reference UI, migration/backfill, RLS/function owners/ACLs, isolated Auth/Storage acceptance and Sprint 3/4 regressions. This is a code/isolated-environment review, not production preflight or an independent second engineer’s sign-off.
 
-Verdict: **NOT READY for merge/release; publish as a draft for engineering review.** The known blocking acceptance gap is final browser save/recovery and complete mobile interaction coverage. Database/Storage acceptance is real and separate; mock/unit/HTTP tests do not replace browser acceptance. No production operation is authorized.
+Verdict after acceptance completion: **READY WITH CONDITIONS for engineering/merge review, not authorized for release.** Desktop and emulated-mobile saved-flow acceptance now passes against the built application and isolated Auth/Storage/database. Release remains ordered behind Sprint 3/4, verified database and blob recovery, production preflight, restricted verifier configuration and explicit authorization. See `SPRINT_5_BROWSER_ACCEPTANCE_2026-10-09.md` for actual interactions and limitations. No production operation was performed.
 
 ## Issues found and resolved during implementation
 
@@ -18,7 +18,7 @@ Verdict: **NOT READY for merge/release; publish as a draft for engineering revie
 | Referenced operational work could later move to another project. | Typed composite FKs across document/task/activity/report/company/project; target moves reject rather than corrupt evidence. All three reference types tested. |
 | Capacity accounting initially trusted declared sizes, while Storage could retain a larger unverified object. | Reserve full bucket maximum per unverified/legacy file; only trusted verification releases unused space. Final limit acceptance uses 1-byte declarations to verify the 2 GiB reservation bound. Physical temporary/orphan Storage is not a hard billing quota. |
 | Cached UI success could be lost if revalidation failed after persistence. | Confirmed persistence remains success; cache invalidation is best-effort. Already verified receipts recover without another Storage fetch. Actual action harness verifies this behavior. |
-| Native document confirmation stalled browser automation. | New archive/promotion/link/draft confirmations use inline controls. Full final browser acceptance remains blocked by the runner’s failed click/keyboard dispatch; do not count that code change as proven acceptance. |
+| Native document confirmation stalled browser automation. | Inline confirmations avoid native dialogs. A fresh tab in the same selected browser after stale-tab cleanup restored click/keyboard dispatch; its underlying runner failure is not proven. Final desktop/mobile upload, promotion, links, archive/restore, search and interrupted confirmation/retry interactions now pass. No authentication or security workaround was introduced. |
 | Unused direct uploader remained a dead mutation path after revocation. | Remove obsolete upload action/form; retain authorized read entry point. Update historical extraction contract tests to the explicit processing flow and actual authorized lexical wrapper. |
 
 ## Security review
@@ -37,7 +37,7 @@ Old document reads retain canonical identities. The legacy direct uploader is de
 
 ## Remaining acceptance and operating risks
 
-- Complete final built-app browser save/promotion/link/archive/search/recovery, desktop/mobile/keyboard and tenant switching before marking ready.
+- Browser completion evidence is recorded separately, including rejected verification with zero success receipts and unchanged-file recovery with exactly one version/receipt. Browser byte-transfer disconnection and physical cellular behavior were not simulated; exact-offset chunk interruption/resume is covered separately by real Storage/TUS acceptance and transport unit tests.
 - Physical devices/cellular interruptions and production schema/Storage/configuration/backup-restore remain untested in this sprint.
 - Metadata search is bounded substring search; 1,000-family/25,000-chunk latency/realistic concurrency budget remains to be measured. Latest-100 history and 200-per-type work selectors need future navigation at scale.
 - Pending reservations are conservative and can exhaust a pilot company’s capacity; retained files are intentionally not automatically purged. Storage reconciliation, managed temporary upload lifecycle, alerting and a reviewed retention policy are prerequisites for broad rollout.
