@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import type { DocumentType, ProjectStatus, TaskPriority, TaskStatus } from "@/lib/demo-data";
+import Link from "next/link";
+import type {
+  DocumentType,
+  ProjectStatus,
+  TaskPriority,
+  TaskStatus,
+} from "@/lib/demo-data";
 
 const projectStatusLabel: Record<ProjectStatus, string> = {
   active: "Active",
@@ -28,14 +34,8 @@ export function PageHeader({
 }) {
   return (
     <header className="page-header">
-      {kicker ? (
-        <p className="eyebrow">
-          {kicker}
-        </p>
-      ) : null}
-      <h1 className="page-title">
-        {title}
-      </h1>
+      {kicker ? <p className="eyebrow">{kicker}</p> : null}
+      <h1 className="page-title">{title}</h1>
       {description ? (
         <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600 md:text-base">
           {description}
@@ -55,12 +55,32 @@ export function Card({
   id?: string;
 }) {
   return (
-    <section
-      id={id}
-      className={`panel ${className}`}
-    >
+    <section id={id} className={`panel ${className}`}>
       {children}
     </section>
+  );
+}
+
+export function WorkspaceMetric({
+  label,
+  value,
+  href,
+  detail,
+}: {
+  label: string;
+  value: number;
+  href: string;
+  detail: string;
+}) {
+  return (
+    <Link href={href} className="workspace-metric">
+      <span className="eyebrow">{label}</span>
+      <span className="workspace-metric-value">{value}</span>
+      <span className="text-xs text-stone-600">
+        {detail}
+        <span aria-hidden="true"> ↗</span>
+      </span>
+    </Link>
   );
 }
 
@@ -72,9 +92,7 @@ export function StatusPill({ status }: { status: ProjectStatus }) {
         ? "status-attention"
         : "status-success";
   return (
-    <span className={`status-badge ${tone}`}>
-      {projectStatusLabel[status]}
-    </span>
+    <span className={`status-badge ${tone}`}>{projectStatusLabel[status]}</span>
   );
 }
 
@@ -85,11 +103,7 @@ export function PriorityPill({ priority }: { priority: TaskPriority }) {
       : priority === "medium"
         ? "status-neutral"
         : "status-neutral";
-  return (
-    <span className={`status-badge ${tone}`}>
-      {priority}
-    </span>
-  );
+  return <span className={`status-badge ${tone}`}>{priority}</span>;
 }
 
 export function TaskStatusText({
@@ -103,8 +117,22 @@ export function TaskStatusText({
     return <span className="status-overdue text-sm font-medium">Overdue</span>;
   }
   const label =
-    status === "done" ? "Done" : status === "in_progress" ? "In progress" : "Open";
-  return <span className={status === "done" ? "status-success status-badge" : "status-neutral status-badge"}>{label}</span>;
+    status === "done"
+      ? "Done"
+      : status === "in_progress"
+        ? "In progress"
+        : "Open";
+  return (
+    <span
+      className={
+        status === "done"
+          ? "status-success status-badge"
+          : "status-neutral status-badge"
+      }
+    >
+      {label}
+    </span>
+  );
 }
 
 export function documentLabel(type: DocumentType) {
@@ -112,7 +140,5 @@ export function documentLabel(type: DocumentType) {
 }
 
 export function DemoNote({ children }: { children: ReactNode }) {
-  return (
-    <p className="notice">{children}</p>
-  );
+  return <p className="notice">{children}</p>;
 }

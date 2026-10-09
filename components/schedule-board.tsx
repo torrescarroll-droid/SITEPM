@@ -118,7 +118,7 @@ export function ScheduleBoard({
   }
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="calendar-toolbar flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap gap-2">
           <button
             className="control min-h-11 rounded border px-3"
@@ -176,7 +176,7 @@ export function ScheduleBoard({
           />
         </label>
         <button
-          className="control min-h-11 rounded-lg bg-shell px-4 text-white"
+          className="button-primary"
           onClick={() => create(anchor)}
           disabled={!projects.length}
         >
@@ -675,7 +675,7 @@ export function ScheduleBoard({
         {days.map((day) => (
           <section
             key={day}
-            className={`min-w-0 rounded-lg border p-2 ${day === today ? "border-stone-800 bg-stone-50" : "border-stone-200 bg-white"} ${view === "month" && day.slice(0, 7) !== anchor.slice(0, 7) ? "opacity-60" : ""}`}
+            className={`calendar-day min-w-0 rounded-lg border p-2 ${day === today ? "calendar-day-today border-stone-800" : "border-stone-200"} ${view === "month" && day.slice(0, 7) !== anchor.slice(0, 7) ? "opacity-60" : ""}`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               e.preventDefault();
@@ -698,7 +698,7 @@ export function ScheduleBoard({
                   <li key={a.id}>
                     <button
                       draggable
-                      className="min-h-11 w-full break-words rounded border border-stone-200 border-l-4 bg-stone-50 p-2 text-left text-sm hover:bg-stone-100"
+                      className="calendar-activity min-h-11 w-full break-words rounded border border-stone-200 border-l-4 bg-white p-2 text-left text-sm hover:bg-stone-100"
                       style={{ borderLeftColor: tradeColor(a.trade_name) }}
                       onDragStart={(e) =>
                         e.dataTransfer.setData("text/plain", a.id)

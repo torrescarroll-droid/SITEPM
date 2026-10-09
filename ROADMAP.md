@@ -24,3 +24,9 @@ The approved [document milestone](docs/SPRINT_5_DOCUMENTS_PROJECT_INTELLIGENCE_P
 Ordered releases remain Sprint 3 → Sprint 4 → Sprint 5. Sprint 5 targets the Sprint 4 development branch for an isolated review diff; retarget to main only after earlier releases and ancestry review. Backup/recovery must include Storage bytes as well as the database. No production release is authorized by development approval.
 
 Next recommended engineering milestone: contractor pilot hardening of document retrieval and schedule-to-field evidence, with completion of the outstanding browser gate first. OCR/drawing interpretation, revision comparison, RFI/submittal approvals, external access, deep folder trees, offline synchronization, Gantt/critical path and predictive/labor analytics remain planned. Customer discovery, beta recruitment, pricing and marketing toward 10 paying contractors continue in parallel.
+
+## Sprint 6 visual direction — 2026-10-09
+
+Sprint 5's browser gate subsequently passed at `5f3403a`, ready with documented release conditions. Sprint 6 stacks on that validated baseline and applies the user-supplied LINEHORSE visual reference to existing functionality: dark navigation, copper accents, warm surfaces, legible dense workspaces and responsive reusable patterns. It does not redesign product architecture or add mockup-only modules. See [visual system](docs/LINEHORSE_VISUAL_SYSTEM.md) and [implementation/acceptance](docs/SPRINT_6_VISUAL_TRANSFORMATION_2026-10-09.md).
+
+Release order now extends Sprint 3 → Sprint 4 → Sprint 5 → Sprint 6; production backup/recovery and explicit release authorization remain required. Customer discovery, beta recruitment, pricing and marketing remain parallel business workstreams. Contractor pilot usability review is the recommended next design milestone.

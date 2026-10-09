@@ -131,7 +131,7 @@ export function AskProjectForm({
         <button
           type="submit"
           disabled={pending}
-          className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60"
+          className="control min-h-11 w-full rounded-lg button-primary text-sm font-medium text-white disabled:opacity-60"
         >
           {pending ? "Asking…" : "Ask LINEHORSE"}
         </button>

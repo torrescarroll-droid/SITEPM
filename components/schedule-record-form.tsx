@@ -252,7 +252,7 @@ export function ScheduleRecordForm({
         </button>
       )}
       <button
-        className="control min-h-11 w-full rounded-lg bg-shell px-4 text-white disabled:opacity-60"
+        className="control min-h-11 w-full rounded-lg button-primary px-4 text-white disabled:opacity-60"
         disabled={!ready || pending}
       >
         {pending

@@ -77,7 +77,7 @@ export default function NewProjectPage() {
           <button
             type="submit"
             disabled={pending}
-            className="control min-h-11 rounded-lg bg-shell px-4 text-sm font-medium text-white disabled:opacity-60"
+            className="control min-h-11 rounded-lg button-primary px-4 text-sm font-medium text-white disabled:opacity-60"
           >
             {pending ? "Saving…" : "Save job"}
           </button>
