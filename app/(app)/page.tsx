@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {ExpectedSchedule} from "@/components/expected-schedule";
 import { TimeGreeting } from "@/components/time-greeting";
-import { Card, PageHeader, StatusPill } from "@/components/ui";
+import { Card, PageHeader, StatusPill, WorkspaceMetric } from "@/components/ui";
 import { requireCompanyContext } from "@/lib/auth-context";
 import { listCompanyFieldLogs } from "@/lib/field-logs";
 import { buildOperationalLookahead } from "@/lib/operational-lookahead";
@@ -40,6 +40,11 @@ export default async function DashboardPage() {
             : "Create a job to start the record for your company."
         }
       />
+      <div className="workspace-metrics" aria-label="Company work summary">
+        <WorkspaceMetric label="Active jobs" value={activeProjects.length} href="/projects" detail="Company project records" />
+        <WorkspaceMetric label="Overdue to-dos" value={overdueTasks.length} href="/tasks" detail="Actions needing attention" />
+        <WorkspaceMetric label="Recent reports" value={recentField.length} href="/field" detail="Latest reports shown below" />
+      </div>
       <div className="mb-5"><ExpectedSchedule activities={activities} resources={resources}/></div>
       <div className="home-grid">
         <section aria-label="Overdue to-dos" className="home-attention">

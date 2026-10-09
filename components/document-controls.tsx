@@ -157,7 +157,7 @@ export function DocumentControls({
                 maxLength={5000}
               />
             </label>
-            <button className="control bg-shell text-white">
+            <button className="control button-primary text-white">
               Save organization
             </button>
           </fieldset>

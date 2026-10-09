@@ -108,7 +108,7 @@ export async function DocumentDesk({
             />
             Also search current digital-PDF text (choose one job)
           </label>
-          <button className="control bg-shell text-white">
+          <button className="control button-primary text-white">
             Search documents
           </button>
         </form>

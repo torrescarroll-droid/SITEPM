@@ -110,7 +110,7 @@ export function ReliableReportForm({ scope, projectId, reportId, revision, child
       }}>Discard draft and reload latest</button> : null}
       {uncertain ? <p role="status" className="text-sm text-attention">Save not confirmed. Retry the same submission before changing it.</p> : null}
       {saved && !dirty && state.reportId ? <p role="status" className="text-sm text-stone-700">Report and crew saved. <Link className="underline" href={`/projects/${state.projectId}/field/${state.reportId}`}>Open saved report</Link></p> : null}
-      <button type="submit" disabled={!ready || pending || (saved && !dirty)} className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60">{pending ? "Saving report and crew…" : uncertain ? "Retry and confirm save" : reportId ? "Update report" : "Save daily report"}</button>
+      <button type="submit" disabled={!ready || pending || (saved && !dirty)} className="control min-h-11 w-full rounded-lg button-primary text-sm font-medium text-white disabled:opacity-60">{pending ? "Saving report and crew…" : uncertain ? "Retry and confirm save" : reportId ? "Update report" : "Save daily report"}</button>
       <p className="text-xs text-stone-500">Keep this tab open while saving. Logging out clears this tab’s drafts. Photos are added separately after the report is confirmed.</p>
     </form>
   );

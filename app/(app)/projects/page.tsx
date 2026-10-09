@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, StatusPill } from "@/components/ui";
+import { Card, StatusPill, PageHeader } from "@/components/ui";
 import { formatProjectDate, listCompanyProjects } from "@/lib/projects";
 
 export default async function ProjectsPage() {
@@ -8,22 +8,12 @@ export default async function ProjectsPage() {
   return (
     <div>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p className="text-xs font-medium tracking-[0.16em] text-stone-500 uppercase">
-            Jobs
-          </p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-stone-950 md:text-3xl">
-            Jobs
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600 md:text-base">
-            Open a job to see the desk, plans and docs, daily reports, to-dos,
-            and Ask LINEHORSE.
-          </p>
-        </div>
-        <Link
-          href="/projects/new"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-shell px-4 text-sm font-medium text-white"
-        >
+        <PageHeader
+          kicker="Projects"
+          title="Jobs"
+          description="Your project records, schedules, daily reports, to-dos, and source documents."
+        />
+        <Link href="/projects/new" className="button-primary shrink-0">
           Create job
         </Link>
       </div>
@@ -31,8 +21,8 @@ export default async function ProjectsPage() {
         <Card>
           <p className="font-medium">No jobs yet</p>
           <p className="mt-1 text-sm text-stone-600">
-            Create a job to start the record. It is stored for your
-            company only.
+            Create a job to start the record. It is stored for your company
+            only.
           </p>
         </Card>
       ) : (

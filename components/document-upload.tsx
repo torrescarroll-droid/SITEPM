@@ -297,7 +297,7 @@ export function DocumentUpload({
             />
           </label>
           <button
-            className="control w-full bg-shell text-white"
+            className="control w-full button-primary text-white"
             disabled={!projects.length}
           >
             {busy

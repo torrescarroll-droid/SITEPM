@@ -26,7 +26,7 @@ export function ResourceDirectory({
         attendance.
       </p>
       <button
-        className="control min-h-11 rounded-lg bg-shell px-4 text-white"
+        className="control min-h-11 rounded-lg button-primary px-4 text-white"
         onClick={() => setEditing(null)}
       >
         Add resource
