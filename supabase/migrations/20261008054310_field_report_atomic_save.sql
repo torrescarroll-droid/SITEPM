@@ -1,5 +1,7 @@
 -- Sprint 3. Additive; apply separately after review, never automatically to production.
 begin;
+set local lock_timeout = '5s';
+set local statement_timeout = '60s';
 alter table public.field_logs add column if not exists revision integer not null default 1 check (revision > 0);
 
 create or replace function public.field_logs_bump_revision() returns trigger
