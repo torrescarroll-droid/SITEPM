@@ -1,5 +1,6 @@
 import "server-only";
 import postgres from "postgres";
+import { documentDatabaseTls } from "./document-database-tls";
 let connection: ReturnType<typeof postgres> | undefined;
 export function documentVerifierConfigured() {
   return Boolean(process.env.SITEPM_DOCUMENT_DATABASE_URL?.trim());
@@ -20,11 +21,10 @@ export async function trustedDocumentOperation(
     throw Error(
       "File verification is temporarily unavailable. Your upload can be retried safely.",
     );
-  const local = ["127.0.0.1", "localhost"].includes(new URL(url).hostname);
   connection ??= postgres(url, {
     max: 2,
     prepare: false,
-    ssl: local ? false : "require",
+    ssl: documentDatabaseTls(url),
     connect_timeout: 10,
     idle_timeout: 20,
   });
