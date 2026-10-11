@@ -1,5 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { isReleasePaused, RELEASE_PAUSE_MESSAGE } from "./release-pause";
 import { requireCompanyContext } from "@/lib/auth-context";
 import { validCalendarDate } from "@/lib/operational-lookahead";
 import {
@@ -76,6 +77,7 @@ export async function saveScheduleRecord(
       p_record: record,
     });
     if (result.error) {
+      if (isReleasePaused(result.error)) return { error: RELEASE_PAUSE_MESSAGE };
       const code = result.error.code ?? "";
       if (code === "40001")
         return {

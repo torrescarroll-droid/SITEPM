@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { isReleasePaused, RELEASE_PAUSE_MESSAGE } from "./release-pause";
 import { requireCompanyContext } from "@/lib/auth-context";
 import { parseCrewRows, reportHasSubstance } from "@/lib/daily-report";
 import { validCalendarDate } from "@/lib/operational-lookahead";
@@ -48,6 +49,7 @@ async function save(formData: FormData, editing: boolean): Promise<FieldLogFormS
     });
   } catch { return failed("Save confirmation was interrupted. Retry this submission to check whether it saved; it will not create a duplicate.", true); }
   if (result.error) {
+    if (isReleasePaused(result.error)) return failed(RELEASE_PAUSE_MESSAGE);
     const code = result.error.code;
     if (code === "40001") return failed("This report changed since you opened it. Your draft is retained. Open the latest report in another tab and reconcile before reloading.");
     if (code === "42501") return failed("You no longer have permission to save this job or report. Nothing was saved.");

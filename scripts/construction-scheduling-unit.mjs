@@ -10,6 +10,7 @@ const jiti = createJiti(import.meta.url, {
 const cal = await jiti.import("../lib/construction-calendar.ts");
 const dates = await jiti.import("../lib/operational-lookahead.ts");
 const types = await jiti.import("../lib/schedule-types.ts");
+const releasePause = await jiti.import("../lib/release-pause.ts");
 assert.equal(cal.calendarDays("2026-10-08", "month").length, 42);
 assert.equal(cal.calendarDays("2026-10-08", "week")[0], "2026-10-05");
 assert.deepEqual(cal.calendarDays("2026-10-08", "day"), ["2026-10-08"]);
@@ -112,6 +113,7 @@ function harness(
     paths = [],
     module = { exports: {} };
   const mocks = {
+    "./release-pause": releasePause,
     "next/cache": { revalidatePath: (p) => paths.push(p) },
     "@/lib/auth-context": {
       requireCompanyContext: async () => ({
@@ -184,3 +186,6 @@ assert.deepEqual(cal.scheduleTaskOptions(taskOptions, "one").map(t => t.id), ["s
 assert.deepEqual(cal.scheduleTaskOptions(taskOptions, "one", "missing").map(t => t.id), ["same", "missing"]);
 assert.equal(cal.scheduleTaskOptions(taskOptions, "one", "same").length, 1);
 console.log("PASS task options retain omitted current link without showing another project's task options");
+
+for (const code of ['55000','PT503']) {h=harness({data:null,error:{code,message:'SITEPM_RELEASE_PAUSED'}});const r=await h.save({},form());assert.equal(r.error,releasePause.RELEASE_PAUSE_MESSAGE);assert(!r.id);assert(!r.uncertain);assert.equal(h.paths.length,0);}
+console.log('PASS schedule release pause: retained inputs, no success or uncertain save');

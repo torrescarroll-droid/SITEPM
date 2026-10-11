@@ -1,5 +1,6 @@
 "use server";
 import { createHash } from "node:crypto";
+import { isReleasePaused, RELEASE_PAUSE_MESSAGE } from "./release-pause";
 import { revalidatePath } from "next/cache";
 import { requireCompanyContext } from "@/lib/auth-context";
 import { DOCUMENT_BUCKET, isDocumentType } from "@/lib/document-types";
@@ -34,6 +35,7 @@ function refresh(project: string) {
 function failure(
   e: { code?: string; message?: string } | null,
 ): DocumentMutationResult {
+  if (isReleasePaused(e)) return { error: RELEASE_PAUSE_MESSAGE };
   if (e?.message === "Upload limit reached; retry later")
     return {
       error:
@@ -174,7 +176,8 @@ export async function confirmDocumentUpload(
     });
     refresh(d.project_id);
     return { data: result };
-  } catch {
+  } catch (e) {
+    if (isReleasePaused(e)) return { error: RELEASE_PAUSE_MESSAGE };
     return {
       error:
         "File verification was not confirmed. Reselect the same file to retry. Unsupported, changed or unsafe files cannot be published.",
@@ -231,7 +234,8 @@ export async function processDocumentText(
     await trustedDocumentOperation(user.id, "processingBegin", {
       document: documentId,
     });
-  } catch {
+  } catch (e) {
+    if (isReleasePaused(e)) return { error: RELEASE_PAUSE_MESSAGE };
     return {
       error:
         "Text indexing is busy or its limit was reached. Your file remains saved; retry later.",

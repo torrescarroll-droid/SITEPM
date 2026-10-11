@@ -14,6 +14,7 @@ const bytes = readFileSync(
     "tests/fixtures/pdf-text-extract/normal-multi-page.pdf",
   ),
   hash = createHash("sha256").update(bytes).digest("hex");
+const awaitPause = await jiti.import("../lib/release-pause.ts");
 function harness(options = {}) {
   const calls = [],
     trusted = [],
@@ -71,6 +72,7 @@ function harness(options = {}) {
     },
   };
   const mocks = {
+    "./release-pause": awaitPause,
     "node:crypto": { createHash },
     "next/cache": {
       revalidatePath() {
@@ -90,6 +92,7 @@ function harness(options = {}) {
       documentVerifierConfigured: () => !options.unconfigured,
       trustedDocumentOperation: async (actor, operation, input) => {
         trusted.push({ actor, operation, input });
+        if (options.trustedPause) throw {code:"55000",message:"SITEPM_RELEASE_PAUSED"};
         return { document_id: id, family_id: id, verified: true };
       },
     },
@@ -198,3 +201,7 @@ assert.equal(h.trusted.length, 0);
 console.log(
   "PASS actual document actions: validation, derived tenant/path/MIME, unavailable verifier, authorized byte/hash confirmation, rejection, stale edits and cache-failure success",
 );
+
+for (const code of ['55000','PT503']) {h=harness({rpcError:code,rpcMessage:'SITEPM_RELEASE_PAUSED'});let r=await h.actions.startDocumentUpload(request,input);assert.equal(r.error,awaitPause.RELEASE_PAUSE_MESSAGE);assert(!r.data);r=await h.actions.manageDocument(id,1,'archive',{});assert.equal(r.error,awaitPause.RELEASE_PAUSE_MESSAGE);assert(!r.data);}
+h=harness({trustedPause:true});assert.equal((await h.actions.confirmDocumentUpload(request)).error,awaitPause.RELEASE_PAUSE_MESSAGE);
+console.log('PASS document release pause: registration, archive and verification never claim saved');

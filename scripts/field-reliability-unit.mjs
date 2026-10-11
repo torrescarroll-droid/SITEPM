@@ -6,10 +6,12 @@ import { createJiti } from 'jiti';
 const jiti=createJiti(import.meta.url,{alias:{'@':process.cwd()},fsCache:false});
 const daily=await jiti.import('../lib/daily-report.ts');
 const dates=await jiti.import('../lib/operational-lookahead.ts');
+const releasePause=await jiti.import('../lib/release-pause.ts');
 const ids={project:'11111111-1111-4111-8111-111111111111',report:'22222222-2222-4222-8222-222222222222',request:'33333333-3333-4333-8333-333333333333'};
 function harness(options={}) {
  const calls=[],paths=[];const module={exports:{}};
  const mocks={
+  './release-pause':releasePause,
   'next/cache':{revalidatePath:path=>{paths.push(path);if(options.refreshThrows)throw Error('cache');}},
   '@/lib/auth-context':{requireCompanyContext:async()=>({profile:options.noCompany?null:{company_id:'company-a'},supabase:{rpc:async(name,args)=>{calls.push({name,args});if(options.throws)throw Error('lost response');return options.result??{data:[{report_id:ids.report,project_id:ids.project,revision:2}],error:null};}}})},
   '@/lib/daily-report':daily,'@/lib/operational-lookahead':dates,
@@ -34,3 +36,6 @@ const storage={get length(){return entries.size;},key:index=>[...entries.keys()]
 clearOtherReportDrafts(storage,'user-b');assert(!entries.has('sitepm-report-v1:company-a:user-a:new'));assert(entries.has('sitepm-report-v1:company-b:user-b:new'));assert(entries.has('unrelated'));
 clearOtherReportDrafts(storage);assert.deepEqual([...entries.keys()],['unrelated']);
 console.log('PASS tab draft storage: account switch removes other users drafts, logout clears report drafts, unrelated storage retained');
+
+for (const code of ['55000','PT503']) {h=harness({result:{data:null,error:{code,message:'SITEPM_RELEASE_PAUSED'}}});r=await h.actions.createFieldLog({},form());assert.equal(r.error,releasePause.RELEASE_PAUSE_MESSAGE);assert.equal(r.reportId,null);assert(!r.uncertain);assert.equal(h.paths.length,0);}
+console.log('PASS report release pause: draft/retry message, no success or uncertain save');
