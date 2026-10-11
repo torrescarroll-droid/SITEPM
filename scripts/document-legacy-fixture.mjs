@@ -34,23 +34,24 @@ export async function legacyFixture(e) {
     "tests/fixtures/pdf-text-extract/normal-multi-page.pdf",
   );
   const docs = [];
-  for (const status of ["ready", "pending", "failed"]) {
+  for (const [status, markdown] of [["ready", false], ["pending", false], ["failed", false], ["ready", true]]) {
+    const sourceBytes = markdown ? Buffer.from("# Legacy benchmark source\n") : bytes;
     const id = randomUUID(),
       d = {
         id,
         company_id: profile.company_id,
         project_id: job.data.id,
-        filename: status + ".pdf",
-        storage_path: `${profile.company_id}/${job.data.id}/${id}/${status}.pdf`,
+        filename: (markdown ? "legacy-markdown" : status) + ".pdf",
+        storage_path: `${profile.company_id}/${job.data.id}/${id}/${markdown ? "legacy-markdown" : status}.pdf`,
         document_type: "plans",
-        content_type: "application/pdf",
-        byte_size: bytes.length,
-        sha256: createHash("sha256").update(bytes).digest("hex"),
+        content_type: markdown ? "text/markdown" : "application/pdf",
+        byte_size: sourceBytes.length,
+        sha256: createHash("sha256").update(sourceBytes).digest("hex"),
         uploaded_by: profile.id,
         status: "pending",
       };
     assert.ifError((await client.from("documents").insert(d)).error);
-    if (status === "ready")
+    if (status === "ready" && !markdown)
       assert.ifError(
         (
           await client.storage
@@ -87,6 +88,11 @@ export async function legacyFixture(e) {
         "project_id",
         "storage_path",
         "sha256",
+        "filename",
+        "content_type",
+        "byte_size",
+        "uploaded_by",
+        "document_type",
         "status",
       ])
         assert.equal(canonical.data[key], d[key]);
@@ -107,7 +113,7 @@ export async function legacyFixture(e) {
       assert.ifError(versions.error);
       assert.equal(versions.data.length, 1);
       assert.equal(versions.data[0].version_number, 1);
-      if (d.status === "ready")
+      if (d.status === "ready" && d.content_type === "application/pdf")
         assert.ifError(
           (
             await client.storage

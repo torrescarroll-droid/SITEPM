@@ -5,11 +5,29 @@ set local statement_timeout='60s';
 lock table public.documents in access exclusive mode;
 alter table public.documents drop constraint documents_filename_safe;
 alter table public.documents add constraint documents_filename_safe check(filename ~ '^[A-Za-z0-9._ -]+\.(pdf|jpg|jpeg|png|docx|xlsx|pptx)$');
-alter table public.documents add constraint documents_supported_mime check(content_type = case lower(substring(filename from '\.([^.]+)$'))
+alter table public.documents add constraint documents_supported_mime check((content_type='text/markdown' and filename ~ '^[A-Za-z0-9._ -]+\.pdf$') or content_type = case lower(substring(filename from '\.([^.]+)$'))
  when 'pdf' then 'application/pdf' when 'jpg' then 'image/jpeg' when 'jpeg' then 'image/jpeg' when 'png' then 'image/png'
  when 'docx' then 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
  when 'xlsx' then 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
  when 'pptx' then 'application/vnd.openxmlformats-officedocument.presentationml.presentation' else null end);
+-- Preserve pre-existing Markdown benchmark sources without pretending they are PDFs.
+-- The CHECK admits their unchanged metadata; this trigger forbids creating new ones.
+-- Existing documents_lock_identity still prevents all canonical metadata changes.
+create function public.document_legacy_mime_guard() returns trigger
+language plpgsql security invoker set search_path='' as $$
+begin
+ if new.content_type='text/markdown' then
+  if TG_OP='INSERT' then
+   raise exception using errcode='23514',message='Markdown is not a supported new upload';
+  elsif new.content_type is distinct from old.content_type or new.filename is distinct from old.filename then
+   raise exception using errcode='23514',message='Legacy document metadata cannot be introduced or changed';
+  end if;
+ end if;
+ return new;
+end$$;
+revoke all on function public.document_legacy_mime_guard() from public,anon,authenticated,service_role;
+create trigger document_legacy_mime_guard before insert or update on public.documents
+ for each row execute function public.document_legacy_mime_guard();
 alter table public.documents add constraint documents_scoped_identity unique(id,company_id,project_id);
 create index document_capacity_scope on public.documents(company_id) include(byte_size);
 create table public.document_families(

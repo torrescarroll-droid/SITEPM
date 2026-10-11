@@ -453,6 +453,7 @@ try {
     (await begin(a, record(a, { content_type: "image/png" }))).error,
     "MIME must match immutable filename",
   );
+  assert((await begin(a, record(a, { content_type: 'text/markdown' }))).error, 'Legacy MIME cannot be forged for a new upload');
   assert(
     (await begin(a, record(a, { byte_size: 21 * 1024 * 1024 }))).error,
     "Database rejects oversized registration",

@@ -93,3 +93,17 @@ assert.throws(() => validateDocumentBytes("source.xlsx", zip(base)));
 console.log(
   "PASS document type/size/envelope validation, bounded Office ZIP, traversal/macros/embedding/external-link rejection",
 );
+
+// Legacy Markdown compatibility never expands the new-upload surface.
+assert.throws(() => documentFileIdentity("legacy.md", 100));
+assert.throws(() => validateDocumentBytes("legacy.pdf", Buffer.from("# Markdown source")));
+const migration = readFileSync("supabase/migrations/20261009010546_document_management.sql", "utf8");
+assert.match(migration, /content_type='text\/markdown' and filename/);
+assert.match(migration, /create trigger document_legacy_mime_guard before insert or update on public.documents/);
+assert.match(migration, /if TG_OP='INSERT' then\s+raise exception using errcode='23514'/);
+assert.match(migration, /new.content_type is distinct from old.content_type or new.filename is distinct from old.filename/);
+assert.match(migration, /revoke all on function public.document_legacy_mime_guard\(\) from public,anon,authenticated,service_role/);
+assert.match(migration, /select id,company_id,project_id,filename,document_type,case when status='ready' then id end,created_at,created_at from public.documents/);
+assert.match(migration, /select d.id,d.id,d.company_id,d.project_id,1,/);
+assert.match(readFileSync("sql/week6_documents.sql", "utf8"), /new.content_type is distinct from old.content_type/);
+console.log("PASS legacy MIME migration guard contracts, unchanged adoption relationships, Markdown extension and forged PDF byte rejection (no SQL executed)");
