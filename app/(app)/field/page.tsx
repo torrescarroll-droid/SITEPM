@@ -1,9 +1,12 @@
+import { requireCompanyContext } from "@/lib/auth-context";
 import { FieldLogList, NewFieldLogForm } from "@/components/field-log";
 import { PageHeader } from "@/components/ui";
 import { listCompanyFieldLogs } from "@/lib/field-logs";
 import { listCompanyProjects } from "@/lib/projects";
 
 export default async function FieldPage() {
+  const { user, profile } = await requireCompanyContext();
+  const draftScope = `${profile?.company_id}:${user.id}`;
   const [projects, logs] = await Promise.all([
     listCompanyProjects(),
     listCompanyFieldLogs(),
@@ -20,7 +23,7 @@ export default async function FieldPage() {
         description="Record the day on a job. Reports stay with your company."
       />
       <div className="grid items-start gap-6 xl:grid-cols-2">
-        <NewFieldLogForm
+        <NewFieldLogForm draftScope={draftScope}
           projects={projects.map((project) => ({
             id: project.id,
             name: project.name,
@@ -30,7 +33,7 @@ export default async function FieldPage() {
           <h2 className="mb-3 section-title">
             Recent
           </h2>
-          <FieldLogList logs={logs} projectNames={projectNames} showProject />
+          <FieldLogList draftScope={draftScope} logs={logs} projectNames={projectNames} showProject />
         </div>
       </div>
     </div>

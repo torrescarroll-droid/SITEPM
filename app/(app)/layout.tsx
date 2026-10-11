@@ -40,7 +40,7 @@ export default async function AppLayout({
   }
 
   return (
-    <AppShell userName={userName} companyName={companyName} roleLabel={roleLabel}>
+    <AppShell userId={user?.id} userName={userName} companyName={companyName} roleLabel={roleLabel}>
       {children}
     </AppShell>
   );

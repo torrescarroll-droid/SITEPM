@@ -1,37 +1,28 @@
-import { DocumentList, NewDocumentForm } from "@/components/document-list";
-import { ProjectTabs } from "@/components/project-tabs";
+import { DocumentDesk } from "@/components/document-desk";
 import { PageHeader } from "@/components/ui";
-import { PDF_ASK_EXPECTATION } from "@/lib/beta-copy";
-import { listProjectDocuments } from "@/lib/documents";
+import { ProjectTabs } from "@/components/project-tabs";
 import { getAuthorizedProject } from "@/lib/projects";
-
 export default async function ProjectDocumentsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const { id } = await params;
-  const project = await getAuthorizedProject(id);
-  const documents = await listProjectDocuments(id);
-
+  const [project, filters] = await Promise.all([
+    getAuthorizedProject(id),
+    searchParams,
+  ]);
   return (
     <div>
       <PageHeader
         kicker="Plans & Docs"
         title={project.name}
-        description={PDF_ASK_EXPECTATION}
+        description="Current files, source history and work references — private to your company."
       />
       <ProjectTabs projectId={id} active="documents" />
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(18rem,0.8fr)_minmax(0,1.4fr)]">
-        <NewDocumentForm
-          projectId={id}
-          projects={[{ id: project.id, name: project.name }]}
-        />
-        <DocumentList
-          documents={documents}
-          projectNames={{ [project.id]: project.name }}
-        />
-      </div>
+      <DocumentDesk projects={[project]} projectId={id} filters={filters} />
     </div>
   );
 }

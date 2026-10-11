@@ -35,7 +35,7 @@ export function buildOperationalLookahead(input: {
     .sort((a, b) => a.due_date!.localeCompare(b.due_date!) || a.title.localeCompare(b.title) || a.id.localeCompare(b.id));
   const unassigned = openTasks.filter((task) => !task.responsible_name?.trim());
   const undated = openTasks.filter((task) => !task.due_date);
-  const activities = allActivities.filter((activity) => activity.status !== "done" && (
+  const activities = allActivities.filter((activity) => activity.status !== "done" && activity.status !== "cancelled" && (
     activity.status === "in_progress" || activity.status === "held" ||
     (activity.start_date != null && activity.start_date <= through) ||
     (activity.finish_date != null && activity.finish_date <= through)
@@ -83,7 +83,7 @@ export function buildOperationalLookahead(input: {
     today, through, dueTasks, unassigned, undated, activities, trades, reportFollowUps,
     latestReport: reports.find((report) => report.log_date <= today) ?? null,
     taskProgress: { total: tasks.length, done: tasks.filter((task) => task.status === "done").length },
-    scheduleProgress: { total: allActivities.length, done: allActivities.filter((activity) => activity.status === "done").length },
+    scheduleProgress: { total: allActivities.filter(activity => activity.status !== "cancelled").length, done: allActivities.filter((activity) => activity.status === "done").length },
   };
 }
 

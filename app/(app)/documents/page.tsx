@@ -1,38 +1,23 @@
-import { DocumentList, NewDocumentForm } from "@/components/document-list";
+import { DocumentDesk } from "@/components/document-desk";
 import { PageHeader } from "@/components/ui";
-import { PDF_ASK_EXPECTATION } from "@/lib/beta-copy";
-import { listCompanyDocuments } from "@/lib/documents";
 import { listCompanyProjects } from "@/lib/projects";
-
-export default async function DocumentsPage() {
-  const [projects, documents] = await Promise.all([
+export default async function DocumentsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
+  const [projects, filters] = await Promise.all([
     listCompanyProjects(),
-    listCompanyDocuments(),
+    searchParams,
   ]);
-  const projectNames = Object.fromEntries(
-    projects.map((project) => [project.id, project.name]),
-  );
-
   return (
     <div>
       <PageHeader
         kicker="Plans & Docs"
-        title="Files"
-        description={`PDFs are stored privately for your company and tied to a job. ${PDF_ASK_EXPECTATION}`}
+        title="Document desk"
+        description="Find the right issue. Preserve the source. Coordinate the work."
       />
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(18rem,0.8fr)_minmax(0,1.4fr)]">
-        <NewDocumentForm
-          projects={projects.map((project) => ({
-            id: project.id,
-            name: project.name,
-          }))}
-        />
-        <DocumentList
-          documents={documents}
-          projectNames={projectNames}
-          showProject
-        />
-      </div>
+      <DocumentDesk projects={projects} filters={filters} />
     </div>
   );
 }

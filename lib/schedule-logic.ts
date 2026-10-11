@@ -23,7 +23,7 @@ export function activityIsLate(
   activity: Pick<ScheduleActivity, "status" | "finish_date">,
   today: string,
 ) {
-  if (activity.status === "done" || activity.status === "held") return false;
+  if (activity.status === "done" || activity.status === "held" || activity.status === "cancelled") return false;
   if (!activity.finish_date) return false;
   return activity.finish_date < today;
 }
@@ -32,7 +32,7 @@ export function activityIsCurrent(
   activity: Pick<ScheduleActivity, "status" | "start_date" | "finish_date">,
   today: string,
 ) {
-  if (activity.status === "done" || activity.status === "held") return false;
+  if (activity.status === "done" || activity.status === "held" || activity.status === "cancelled") return false;
   if (activityIsLate(activity, today)) return false;
   if (activity.status === "in_progress") return true;
   if (!activity.start_date) return false;
@@ -77,7 +77,7 @@ export function upcomingScheduleActivities(
   return activities
     .filter(
       (activity) =>
-        activity.status === "not_started" &&
+        (activity.status === "not_started" || activity.status === "confirmed") &&
         activity.start_date != null &&
         activity.start_date > today,
     )
@@ -117,7 +117,7 @@ export function schedulePosition(
   if (nextActivityId && activity.id === nextActivityId) return "next";
   if (activityIsCurrent(activity, today)) return "current";
   if (
-    activity.status === "not_started" &&
+    (activity.status === "not_started" || activity.status === "confirmed") &&
     activity.start_date != null &&
     activity.start_date > today
   ) {

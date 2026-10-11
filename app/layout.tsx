@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "LINEHORSE",
-  description: "Built for builders, by builders.",
+  description: "LINEHORSE — Keep your project running. Construction Intelligence. Built for builders, by builders.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -4,6 +4,7 @@
  */
 
 import postgres from "postgres";
+import { documentDatabaseTls } from "./document-database-tls";
 
 export const SITEPM_EXTRACTOR_DATABASE_URL_ENV = "SITEPM_EXTRACTOR_DATABASE_URL";
 
@@ -57,7 +58,8 @@ function extractorConnection(): ExtractorSql | null {
   extractorSql = postgres(url, {
     max: 1,
     prepare: false,
-    ssl: "require",
+    // Verify remote server identity; only non-production loopback may omit TLS.
+    ssl: documentDatabaseTls(url),
     connect_timeout: 15,
     idle_timeout: 20,
     max_lifetime: 60 * 5,

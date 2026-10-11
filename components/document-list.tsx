@@ -1,118 +1,8 @@
 "use client";
-
-import { useActionState } from "react";
-import { Card, DemoNote, documentLabel } from "@/components/ui";
+import { Card, documentLabel } from "@/components/ui";
 import { formatProjectDate } from "@/lib/format-date";
-import {
-  openProjectDocument,
-  uploadProjectDocument,
-  type DocumentFormState,
-} from "@/lib/document-actions";
-import { DOCUMENT_TYPES, type DocumentRecord } from "@/lib/document-types";
-
-const initialState: DocumentFormState = { error: null };
-
-export function NewDocumentForm({
-  projectId,
-  projects,
-}: {
-  projectId?: string;
-  projects: { id: string; name: string }[];
-}) {
-  const [state, action, pending] = useActionState(
-    uploadProjectDocument,
-    initialState,
-  );
-  const selectable = projectId
-    ? projects.filter((project) => project.id === projectId)
-    : projects;
-
-  if (selectable.length === 0) {
-    return (
-      <Card>
-        <h2 className="section-title">
-          Upload PDF
-        </h2>
-        <p className="mt-3 text-sm text-stone-600">
-          Create a job first. Files are saved to a company job.
-        </p>
-      </Card>
-    );
-  }
-
-  return (
-    <Card>
-      <h2 className="section-title">
-        Upload PDF
-      </h2>
-      <div className="mt-3">
-        <DemoNote>
-          Stored privately for your company. PDF only, 20 MB or smaller.
-          A file is source material. It does not become the schedule, a change
-          order, or a selection workflow. LINEHORSE can search selectable text
-          in digital PDFs. Scans, photos of pages, and drawings are not
-          searchable yet. The file can still save even if that text cannot be read.
-        </DemoNote>
-      </div>
-      <form action={action} className="mt-4 space-y-3">
-        {projectId ? (
-          <input type="hidden" name="project_id" value={projectId} />
-        ) : (
-          <label className="block text-sm font-medium">
-            Job
-            <select
-              name="project_id"
-              required
-              className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3"
-              defaultValue={selectable[0]?.id}
-            >
-              {selectable.map((project) => (
-                <option key={project.id} value={project.id}>
-                  {project.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
-        <label className="block text-sm font-medium">
-          Category
-          <select
-            name="document_type"
-            required
-            defaultValue="other"
-            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3"
-          >
-            {DOCUMENT_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {documentLabel(type)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block text-sm font-medium">
-          PDF
-          <input
-            name="file"
-            type="file"
-            required
-            accept="application/pdf,.pdf"
-            className="mt-1 min-h-11 w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm"
-          />
-        </label>
-        {state.error ? (
-          <p className="text-sm text-danger">{state.error}</p>
-        ) : null}
-        <button
-          type="submit"
-          disabled={pending}
-          className="control min-h-11 w-full rounded-lg bg-shell text-sm font-medium text-white disabled:opacity-60"
-        >
-          {pending ? "Uploading…" : "Upload PDF"}
-        </button>
-      </form>
-    </Card>
-  );
-}
+import { openProjectDocument } from "@/lib/document-actions";
+import { type DocumentRecord } from "@/lib/document-types";
 
 export function DocumentList({
   documents,
@@ -141,9 +31,7 @@ export function DocumentList({
           <p className="font-medium">{doc.filename}</p>
           <p className="mt-1 text-sm text-stone-600">
             {documentLabel(doc.document_type)}
-            {showProject
-              ? ` · ${projectNames[doc.project_id] ?? "Job"}`
-              : null}
+            {showProject ? ` · ${projectNames[doc.project_id] ?? "Job"}` : null}
           </p>
           <p className="text-sm text-stone-500">
             {doc.uploaded_by_name ?? "Crew"} ·{" "}

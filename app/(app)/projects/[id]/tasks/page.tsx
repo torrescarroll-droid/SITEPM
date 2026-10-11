@@ -1,3 +1,4 @@
+import { ProjectDocumentLinks } from "@/components/project-document-links";
 import { NewTaskForm, TaskList } from "@/components/task-list";
 import { ProjectTabs } from "@/components/project-tabs";
 import { PageHeader } from "@/components/ui";
@@ -27,6 +28,7 @@ export default async function ProjectTasksPage({
         tasks={tasks}
         projectNames={{ [project.id]: project.name }}
       />
+      <ProjectDocumentLinks projectId={id} kind="task" />
     </div>
   );
 }

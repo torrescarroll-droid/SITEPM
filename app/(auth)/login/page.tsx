@@ -10,13 +10,13 @@ export default function LoginPage() {
   const [state, action, pending] = useActionState(signIn, initialState);
 
   return (
-    <main className="w-full max-w-md rounded-2xl border border-stone-200 bg-white px-8 py-10 shadow-sm">
+    <main className="auth-card">
       <p className="text-xs font-medium tracking-[0.18em] text-stone-500 uppercase">
-        SITEPM
+        LINEHORSE
       </p>
       <h1 className="mt-2 text-2xl font-semibold tracking-tight">Sign in</h1>
       <p className="mt-2 text-sm text-stone-600">
-        AI Operating Layer for Construction
+        Construction Intelligence · Keep your project running.
       </p>
       <form action={action} className="mt-6 space-y-4">
         <label className="block text-sm font-medium">
@@ -45,7 +45,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60"
+          className="button-primary w-full disabled:opacity-60"
         >
           {pending ? "Signing in…" : "Sign in"}
         </button>

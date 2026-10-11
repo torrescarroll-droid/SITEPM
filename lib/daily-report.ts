@@ -30,7 +30,7 @@ export function parseCrewRows(formData: FormData): CrewEntryInput[] {
     let workerCount: number | null = null;
     if (countRaw) {
       const parsed = Number(countRaw);
-      if (!Number.isInteger(parsed) || parsed < 0) {
+      if (!Number.isInteger(parsed) || parsed < 0 || parsed > 2147483647) {
         throw new Error("Crew count must be a whole number.");
       }
       workerCount = parsed;

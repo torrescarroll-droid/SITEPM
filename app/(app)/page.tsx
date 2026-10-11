@@ -1,18 +1,19 @@
 import Link from "next/link";
+import {ExpectedSchedule} from "@/components/expected-schedule";
 import { TimeGreeting } from "@/components/time-greeting";
-import { Card, PageHeader, StatusPill } from "@/components/ui";
+import { Card, PageHeader, StatusPill, WorkspaceMetric } from "@/components/ui";
 import { requireCompanyContext } from "@/lib/auth-context";
 import { listCompanyFieldLogs } from "@/lib/field-logs";
 import { buildOperationalLookahead } from "@/lib/operational-lookahead";
-import { listCompanyScheduleActivities } from "@/lib/schedule";
+import { listScheduleResources, listCompanyScheduleActivities } from "@/lib/schedule";
 import { formatProjectDate, listCompanyProjects } from "@/lib/projects";
 import { listCompanyTasks } from "@/lib/tasks";
 import { taskIsOverdue } from "@/lib/task-types";
 
 export default async function DashboardPage() {
   const { profile } = await requireCompanyContext();
-  const [liveProjects, liveTasks, reports, activities] = await Promise.all([
-    listCompanyProjects(), listCompanyTasks(), listCompanyFieldLogs(), listCompanyScheduleActivities(),
+  const [liveProjects, liveTasks, reports, activities, resources] = await Promise.all([
+    listCompanyProjects(), listCompanyTasks(), listCompanyFieldLogs(), listCompanyScheduleActivities(), listScheduleResources(),
   ]);
   const recentField = reports.slice(0, 3);
   const lookaheads = new Map(liveProjects.map((project) => [project.id, buildOperationalLookahead({
@@ -39,6 +40,12 @@ export default async function DashboardPage() {
             : "Create a job to start the record for your company."
         }
       />
+      <div className="workspace-metrics" aria-label="Company work summary">
+        <WorkspaceMetric label="Active jobs" value={activeProjects.length} href="/projects" detail="Company project records" />
+        <WorkspaceMetric label="Overdue to-dos" value={overdueTasks.length} href="/tasks" detail="Actions needing attention" />
+        <WorkspaceMetric label="Recent reports" value={recentField.length} href="/field" detail="Latest reports shown below" />
+      </div>
+      <div className="mb-5"><ExpectedSchedule activities={activities} resources={resources}/></div>
       <div className="home-grid">
         <section aria-label="Overdue to-dos" className="home-attention">
         <Card>

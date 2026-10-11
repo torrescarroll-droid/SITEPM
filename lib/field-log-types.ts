@@ -24,5 +24,6 @@ export type FieldLogRecord = {
   location_text?: string | null;
   issue_flag: boolean;
   created_at: string;
+  revision?: number;
   crews?: FieldLogCrew[];
 };

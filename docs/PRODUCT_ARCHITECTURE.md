@@ -769,3 +769,24 @@ Research tracks (see `docs/DATA_SOURCE_REGISTRY.md`):
 **Do not start Ask Stage 4 from this document.** Do not implement the property schema, Digital Toolbag runtime, voice OS, Field-to-Office Pipeline, Jobsite Copilot, estimating, communications, contractor-maturity product lines, or client/homeowner surfaces. Architecture breadth is not MVP breadth. Do not change existing RLS from this document.
 
 Long-term design tests (not V1 gates): Field Test (low digital literacy, useful immediately); Word Test; Solo Contractor Test (multiple roles, no software silos); PM Test (management expertise without pretending field craft); Project-Management Test (less manual collect/structure/chase); Client Test (intent without pretending construction expertise); Translation Test (meaning across expertise); Growth Test (more useful as the contractor grows); Scale Test (one worker/task through many projects/organization); System Test (same authorized state, not disconnected products); Truth Test (views/derivations of one evidence-backed state); Moat Test (permissioned history improving future outcomes); Truck Test (§4).
+
+
+## Next major scheduling UI milestone — October 7, 2026
+
+The project Schedule will use a functional, interactive, color-coded calendar as its primary interface. Provide month and week views; create and edit existing scheduled activities; show milestones, dependencies, delays, holds, and overdue work. Maintain consistent trade-specific colors and separate status icons/badges so status never obscures trade identity. Integrate existing activities with operational lookahead, dependency readiness, and task follow-through using current Supabase relationships, authentication, and company-scoped authorization.
+
+Follow LINEHORSE’s superintendent working desk direction: rugged, not rustic, restrained industrial colors, clear hierarchy, mobile-friendly controls, accessible text/status cues in addition to color. Reuse the previously supplied schedule reference image if it becomes available; no matching image was found in the current repository materials. This is the next scheduling UI milestone, not part of the active Field Data Reliability sprint. Acceptance requires persisted add/edit flows, month/week navigation, clear empty/loading/error states, and tested tenant isolation; a static calendar mockup does not satisfy it.
+
+## 2026-10-08 — Authorized Sprint 4 scheduling addendum
+
+The authorized Construction Scheduling & Workforce Coordination sprint extends the existing company/project schedule with a reusable resource directory, month/week/day company and project calendars, transactional assignment/dependency saves, explicit timezone/status data and auditable revisions. Planned/confirmed work remains distinct from actual attendance and field evidence. This implementation is on a branch stacked on unreleased Sprint 3; it is not a production release.
+
+Current product positioning is **LINEHORSE — Construction Intelligence; Built for builders, by builders**. AI is an enabling technology over durable construction records and permissions. [PRODUCT_VISION.md](../PRODUCT_VISION.md), [ROADMAP.md](../ROADMAP.md) and the [Sprint 4 record](CONSTRUCTION_SCHEDULING_SPRINT_2026-10-08.md) capture the authorized scope. Gantt, critical path, formal baseline/actual analytics, forecasting and future product lines remain planned rather than implemented. Ask Stage 3 remains the authorized Ask milestone; this scheduling work does not start Ask Stage 4.
+
+## Repository implementation clarification — Sprint 5, 2026-10-09
+
+The earlier Stage 3/PDF-only implementation descriptions in this document are historical baseline records. Inspected code at Sprint 4 `870f9a2` already includes bounded digital-PDF extraction, a restricted extraction writer, PostgreSQL chunk retrieval and Ask page/hash citations. Sprint 5 reuses these capabilities rather than creating another corpus or AI dependency. No statement here verifies their production deployment/configuration.
+
+Explicit Sprint 5 authorization permits a company/project document desk, immutable canonical versions, explicit current promotion, archive/restore, PDF/JPG/PNG/DOCX/XLSX/PPTX, metadata search, existing digital-PDF text extraction and exact-version task/schedule/report links. The migration retains canonical document IDs, hashes, Storage paths and extraction relationships. Current/unarchived filtering applies before chunk ranking. The trusted byte verifier is separate from the client RPC and from the existing extractor; its credentials never enter browser bundles.
+
+This delivers project knowledge, not property transfer, OCR/vision, general construction/regulatory corpora, automatic approval or model authority. Models remain replaceable. Original evidence, retained history, permissions and builder judgment remain authoritative. See [Sprint 5 implementation and release controls](DOCUMENTS_PROJECT_INTELLIGENCE_SPRINT_2026-10-09.md).

@@ -1,0 +1,30 @@
+{
+  "description": "Explicit staged release order; not filename order. Preparation only: no migrations executed.",
+  "migrations": [
+    {
+      "order": 1,
+      "file": "20261008054310_field_report_atomic_save.sql",
+      "sha256": "0f34373bf78059a2fc0849ca07e13d70be16e1ed9c83ef560df65fb73653bb92"
+    },
+    {
+      "order": 2,
+      "file": "20261009214540_field_report_receipt_integrity.sql",
+      "sha256": "9d7247ec6d73399e3881b3657b45a9ea80186b449913dcc62dec67acc1981eb2"
+    },
+    {
+      "order": 3,
+      "file": "20261008163441_construction_scheduling.sql",
+      "sha256": "d46156da851caa64f5782d8a8564dfd1ea1df4c37f0d9746d1916f147d380a4a"
+    },
+    {
+      "order": 4,
+      "file": "20261008201434_scheduling_integrity_boundary.sql",
+      "sha256": "c55c34213cd04ce43059c1543843f7322830232b964f94c015df59e83628cf18"
+    },
+    {
+      "order": 5,
+      "file": "20261009010546_document_management.sql",
+      "sha256": "d3c5677bca0c9a6167046fd996621594b042d9522b7b25232863c2ffd85303e3"
+    }
+  ]
+}

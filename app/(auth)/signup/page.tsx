@@ -10,11 +10,13 @@ export default function SignupPage() {
   const [state, action, pending] = useActionState(signUp, initialState);
 
   return (
-    <main className="w-full max-w-md rounded-2xl border border-stone-200 bg-white px-8 py-10 shadow-sm">
+    <main className="auth-card">
       <p className="text-xs font-medium tracking-[0.18em] text-stone-500 uppercase">
-        SITEPM
+        LINEHORSE
       </p>
-      <h1 className="mt-2 text-2xl font-semibold tracking-tight">Create account</h1>
+      <h1 className="mt-2 text-2xl font-semibold tracking-tight">
+        Create account
+      </h1>
       <p className="mt-2 text-sm text-stone-600">
         Creates your company and owner profile. You will only see your company’s
         data.
@@ -66,7 +68,7 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 w-full rounded-xl bg-stone-900 text-sm font-medium text-white disabled:opacity-60"
+          className="button-primary w-full disabled:opacity-60"
         >
           {pending ? "Creating account…" : "Sign up"}
         </button>
