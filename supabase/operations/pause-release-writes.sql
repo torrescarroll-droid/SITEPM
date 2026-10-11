@@ -37,7 +37,7 @@ END $$;
 REVOKE ALL ON FUNCTION sitepm_release.check_request() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION sitepm_release.check_request() TO anon,authenticated,service_role;
 
-CREATE FUNCTION sitepm_release.block_write() RETURNS trigger
+CREATE OR REPLACE FUNCTION sitepm_release.block_write() RETURNS trigger
  LANGUAGE plpgsql SECURITY INVOKER SET search_path='' AS $$ BEGIN
  -- session_user prevents a postgres-owned extraction RPC bypassing the pause.
  -- JWT checks also make administrator-driven SET ROLE acceptance faithful.
@@ -52,7 +52,7 @@ END $$;
 REVOKE ALL ON FUNCTION sitepm_release.block_write() FROM PUBLIC,anon,authenticated,service_role;
 
 CREATE FUNCTION sitepm_release.refresh_write_guards() RETURNS void
- LANGUAGE plpgsql SECURITY INVOKER SET search_path='' AS $$ DECLARE t record; BEGIN
+ LANGUAGE plpgsql SECURITY INVOKER SET search_path='' AS $$ DECLARE t record;g record; BEGIN
  IF current_user <> 'postgres' OR session_user <> 'postgres' THEN
   RAISE EXCEPTION 'Administrator required';
  END IF;
@@ -61,6 +61,20 @@ CREATE FUNCTION sitepm_release.refresh_write_guards() RETURNS void
    OR (n.nspname='storage' AND c.relname='objects' AND c.relkind='r')
   ORDER BY n.nspname,c.relname
  LOOP
+  IF t.nspname='storage' THEN
+   -- TRIGGER privilege permits creation, not removal, on this managed table.
+   -- Reuse our retained trigger; never replace an unexpected definition.
+   SELECT * INTO g FROM pg_trigger
+    WHERE tgrelid='storage.objects'::regclass AND tgname='sitepm_release_write_pause';
+   IF FOUND THEN
+    IF g.tgfoid<>'sitepm_release.block_write()'::regprocedure
+     OR g.tgtype<>62 OR g.tgenabled<>'O' OR g.tgisinternal
+     OR g.tgnargs<>0 OR g.tgqual IS NOT NULL THEN
+     RAISE EXCEPTION 'Unexpected Storage pause trigger; nothing changed';
+    END IF;
+    CONTINUE;
+   END IF;
+  END IF;
   EXECUTE format('CREATE OR REPLACE TRIGGER sitepm_release_write_pause BEFORE INSERT OR UPDATE OR DELETE OR TRUNCATE ON %I.%I FOR EACH STATEMENT EXECUTE FUNCTION sitepm_release.block_write()',t.nspname,t.relname);
  END LOOP;
 END $$;

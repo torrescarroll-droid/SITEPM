@@ -113,7 +113,7 @@ is not deliberately disabled.
    reads, new screens, effective verifier ACLs and certificate-verified server
    authentication. A premature write must produce the pause message, never success.
 5. Once the matching deployment is healthy and old deployment instances are drained, run `resume-release-writes.sql`.
-   It removes only its own triggers and restores the previous authenticator hook
+   It removes only its own public-table triggers, makes the retained Storage trigger function a no-op, and restores the previous authenticator hook
    setting (including absent vs explicitly empty), without changing original ACLs/RLS.
    Its harmless no-op hook remains available during configuration reload overlap,
    preventing missing-function errors on pooled requests. This allows later pauses.
@@ -198,3 +198,65 @@ verifier login. Authenticated/bounded role pause behavior was tested through SQL
 Verifier login activation and certificate-verified password authentication remain
 part of explicitly authorized release provisioning. No production access, commit,
 push, migration or deployment occurred in this acceptance session.
+
+## Storage pause reversibility correction — restricted-permission PASS
+
+This correction supersedes the original expectation of zero total pause triggers
+following resume. Expected state is now **zero public pause triggers and one
+retained, inert Storage statement trigger**, with the original REST hook setting
+restored. No application migration or manifest checksum changed.
+
+Production preflight found that postgres has TRIGGER privilege on storage.objects
+but neither ownership nor SET/inherited membership of supabase_storage_admin.
+DROP TRIGGER requires table ownership. The pause can be installed, but the old
+resume attempted an operation outside this operator's permissions.
+
+The narrow correction retains the Storage trigger. Resume replaces the
+postgres-owned SECURITY INVOKER block_write function with a RETURN NULL no-op;
+this is a BEFORE STATEMENT trigger, so NULL does not suppress affected rows.
+The function retains its owner, search_path and revoked API execution privileges.
+Existing grants and Storage RLS still govern every write. Public guards are
+removed normally. A later pause replaces the same function with the blocking
+body and reuses the original Storage trigger after checking its function,
+events, statement timing, enabled state, arguments and absence of a WHEN clause.
+Unexpected definitions fail closed. No managed ownership changes, new production
+role privileges, credentials or SECURITY DEFINER bypass are introduced.
+
+### Reproducible focused test
+
+Run `python3 supabase/operations/test-storage-pause-reversibility.py` with Docker
+access. It uses PostgreSQL 17 binaries already present in the existing
+supabase_db_sitepm-isolated container and a private Unix-socket-only temporary
+cluster, with no host port or external connections. Existing databases/roles are
+untouched. The temporary server is stopped afterwards; its private synthetic
+fixture directory remains inside the container for inspection.
+
+Two complete pause → refresh → resume cycles passed with the exact release SQL:
+
+- Non-superuser postgres session, no Storage-owner membership or SET capability;
+  TRIGGER permission available. DROP TRIGGER was explicitly attempted and denied.
+- Pause rejected INSERT/UPDATE/DELETE/TRUNCATE on Storage and public writes.
+- After each resume, actual Storage insert/update/delete/truncate succeeded
+  inside a rolled-back transaction, proving the retained trigger permits writes.
+- Company A reads remained scoped; Company B inserts remained rejected by RLS.
+- API role could not replace the guard function; POST pre-request guard blocked.
+- Storage trigger OID unchanged across repeated pauses and refresh operations.
+- Original Storage rows (including photo.jpg), application rows, table ownership,
+  table ACLs, RLS/policies, role attributes/settings and memberships matched exactly
+  after each cycle. No public pause trigger remained; no role privilege changed.
+
+An initial test on the existing managed local database exposed Supabase privilege
+overrides: DROP TRIGGER succeeded despite no ownership membership. That fixture
+was cleaned up and its hook restored; its result was not used as restricted-
+permission acceptance. The private vanilla PostgreSQL fixture explicitly models
+the managed operator's existing pre-request parameter configuration capability,
+without granting managed-table ownership or changing production permissions.
+
+References: PostgreSQL 17 [DROP TRIGGER ownership requirement](https://www.postgresql.org/docs/17/sql-droptrigger.html)
+and [CREATE OR REPLACE FUNCTION ownership/ACL preservation](https://www.postgresql.org/docs/17/sql-createfunction.html).
+
+No production connections or changes, migrations, merge, deployment or Railway
+changes were performed for this correction. Next production operation, after
+explicit authorization of the updated PR head: install the corrected pause,
+verify gateway rejection and coverage, and confirm resume remains available
+before proceeding to migration.

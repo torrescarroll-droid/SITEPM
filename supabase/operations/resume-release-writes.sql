@@ -14,6 +14,7 @@ DO $$ DECLARE t record;previous text; BEGIN
   JOIN pg_namespace n ON n.oid=c.relnamespace
   WHERE g.tgname='sitepm_release_write_pause'
    AND g.tgfoid='sitepm_release.block_write()'::regprocedure
+   AND n.nspname='public'
   ORDER BY n.nspname,c.relname
  LOOP
   EXECUTE format('DROP TRIGGER sitepm_release_write_pause ON %I.%I',t.nspname,t.relname);
@@ -29,9 +30,12 @@ END $$;
 -- requests must not fail because their configured function was dropped early.
 CREATE OR REPLACE FUNCTION sitepm_release.check_request() RETURNS void
  LANGUAGE plpgsql SECURITY INVOKER SET search_path='' AS $$ BEGIN RETURN; END $$;
+-- Storage is managed-owned: retain its statement trigger and make our own
+-- function inert. No table ownership, elevated grants or trigger removal needed.
+CREATE OR REPLACE FUNCTION sitepm_release.block_write() RETURNS trigger
+ LANGUAGE plpgsql SECURITY INVOKER SET search_path='' AS $$ BEGIN RETURN NULL; END $$;
 DROP FUNCTION sitepm_release.refresh_write_guards();
-DROP FUNCTION sitepm_release.block_write();
 DROP TABLE sitepm_release.previous_hook;
 NOTIFY pgrst, 'reload config';
 COMMIT;
--- sitepm_release + its no-op hook intentionally remain for safe reload overlap.
+-- Private no-op functions + Storage statement trigger remain for safe reuse.
